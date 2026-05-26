@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>موقعي الشخصي | Portfolio</title>
+    <meta name="description" content="الموقع الشخصي - السيرة الذاتية، الإنجازات، والمشاريع">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Tajawal:wght@400;500;700;800;900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Loader -->
+    <div id="loader"><div class="ld-ring"></div></div>
+
+    <!-- Not Found -->
+    <div id="not-found" class="container hidden" style="display:none; flex-direction:column; align-items:center; justify-content:center; min-height:100vh; gap:1.5rem; text-align:center;">
+      <div style="font-size:5rem; animation: float-slow 3s ease-in-out infinite;">🔍</div>
+      <h2 style="font-size:2rem; font-weight:900;">لم يتم العثور على الملف الشخصي</h2>
+      <p style="color:var(--text-dim);">هذه الصفحة غير موجودة أو تم حذفها.</p>
+    </div>
+
+    <!-- Main Portfolio Wrapper -->
+    <div id="portfolio" class="hidden">
+
+      <!-- Ambient Glows -->
+      <div class="bg-glow glow-1"></div>
+      <div class="bg-glow glow-2"></div>
+
+      <!-- ─── NAVIGATION ─── -->
+      <nav class="navbar">
+          <div class="container nav-content">
+              <a href="#home" class="logo">Port<span>folio</span>.</a>
+              <ul class="nav-links">
+                  <li><a href="#about">من أنا</a></li>
+                  <li><a href="#experience">الخبرات</a></li>
+                  <li><a href="#skills">المهارات</a></li>
+                  <li><a href="#projects">المشاريع</a></li>
+                  <li><a href="#contact" class="btn-contact">تواصل معي</a></li>
+              </ul>
+              <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+              </button>
+          </div>
+      </nav>
+
+      <!-- Mobile Menu Overlay -->
+      <div class="mobile-menu-overlay" id="mobile-menu-overlay">
+          <button class="mobile-menu-close" onclick="toggleMobileMenu()">✕</button>
+          <ul class="mobile-nav-links">
+              <li><a href="#about" onclick="toggleMobileMenu()">من أنا</a></li>
+              <li><a href="#experience" onclick="toggleMobileMenu()">الخبرات</a></li>
+              <li><a href="#skills" onclick="toggleMobileMenu()">المهارات</a></li>
+              <li><a href="#projects" onclick="toggleMobileMenu()">المشاريع</a></li>
+              <li><a href="#contact" onclick="toggleMobileMenu()">تواصل معي</a></li>
+          </ul>
+      </div>
+
+      <!-- ─── HERO SECTION ─── -->
+      <header class="hero container" id="home">
+          <div class="hero-content reveal">
+              <span class="badge">مرحباً بك في مساحتي الإبداعية 👋</span>
+              <h1 class="hero-title">أنا <span id="hero-name">محمد</span>،<br><span id="hero-job-title" style="font-size:0.65em; -webkit-text-fill-color:var(--text-dim); background:none;">مطور برمجيات ومصمم.</span></h1>
+              <p class="hero-subtitle" id="hero-about">أسعى لتحويل الأفكار المعقدة إلى تجارب رقمية بسيطة، أنيقة، وعالية الأداء. أهتم بالتفاصيل المعمارية وأؤمن بقوة التصميم الجيد.</p>
+              <div class="hero-actions">
+                  <a href="#projects" class="btn btn-primary">
+                    <i class="fas fa-rocket"></i> تصفح أعمالي
+                  </a>
+                  <a href="#contact" class="btn btn-secondary">
+                    <i class="fas fa-paper-plane"></i> تواصل معي
+                  </a>
+              </div>
+              <div class="hero-stats" id="hero-stats">
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-projects">0</span>
+                  <span class="stat-label">مشروع</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-skills">0</span>
+                  <span class="stat-label">مهارة</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value" id="stat-exp">0+</span>
+                  <span class="stat-label">سنوات خبرة</span>
+                </div>
+              </div>
+          </div>
+          <div class="hero-image reveal reveal-delay">
+              <div class="image-wrapper">
+                <div class="profile-placeholder" id="profile-img-wrap">
+                    <i class="fas fa-user-astronaut"></i>
+                </div>
+              </div>
+          </div>
+      </header>
+
+      <!-- ─── ABOUT SECTION ─── -->
+      <section class="about container" id="about">
+          <div class="section-header reveal">
+              <span class="label">✦ معلومات عني</span>
+              <h2>نبذة <span>عني</span></h2>
+              <div class="section-divider"></div>
+              <p>من أنا وما الذي أقدمه</p>
+          </div>
+          <div class="about-grid reveal">
+              <div class="about-card glass-card">
+                  <i class="fas fa-server card-icon"></i>
+                  <h3>تطوير الواجهات الخلفية</h3>
+                  <p>بناء أنظمة قوية ومستقرة باستخدام تقنيات .NET مع التركيز على الأداء العالي والتصميم المعماري النظيف (Clean Architecture).</p>
+              </div>
+              <div class="about-card glass-card">
+                  <i class="fas fa-laptop-code card-icon"></i>
+                  <h3>تطوير الواجهات الأمامية</h3>
+                  <p>تصميم واجهات مستخدم تفاعلية وحديثة تضمن تجربة استخدام ممتازة على كافة الأجهزة المحمولة والمكتبية.</p>
+              </div>
+              <div class="about-card glass-card">
+                  <i class="fas fa-lightbulb card-icon"></i>
+                  <h3>حل المشكلات التقنية</h3>
+                  <p>تحليل المتطلبات المعقدة وتحويلها إلى حلول برمجية قابلة للتطوير والصيانة بكفاءة عالية ومعايير صناعية.</p>
+              </div>
+          </div>
+      </section>
+
+      <!-- ─── EXPERIENCE SECTION ─── -->
+      <section class="experience container" id="experience">
+          <div class="section-header reveal">
+              <span class="label">✦ المسيرة المهنية</span>
+              <h2>الخبرات <span>والإنجازات</span></h2>
+              <div class="section-divider"></div>
+              <p>مسيرتي المهنية والتعليمية على مدار السنين</p>
+          </div>
+          <div class="timeline" id="experience-timeline">
+              <!-- Populated dynamically -->
+              <div class="timeline-item reveal">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-content glass-card">
+                      <span class="timeline-date">2024 - الحاضر</span>
+                      <h3>مطور برمجيات أول</h3>
+                      <h4>شركة التقنية الحديثة</h4>
+                      <p>قيادة فريق التطوير لبناء تطبيقات مؤسسية متكاملة، وتحسين أداء قواعد البيانات بنسبة 40%.</p>
+                  </div>
+              </div>
+              <div class="timeline-item reveal">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-content glass-card">
+                      <span class="timeline-date">2022 - 2024</span>
+                      <h3>مطور Full Stack</h3>
+                      <h4>وكالة الإبداع الرقمي</h4>
+                      <p>تطوير وتصميم أكثر من 15 موقع وتطبيق ويب، ودمج خدمات الدفع الإلكتروني والـ APIs الخارجية.</p>
+                  </div>
+              </div>
+              <div class="timeline-item reveal">
+                  <div class="timeline-dot"></div>
+                  <div class="timeline-content glass-card">
+                      <span class="timeline-date">2021</span>
+                      <h3>بكالوريوس هندسة البرمجيات</h3>
+                      <h4>جامعة التكنولوجيا</h4>
+                      <p>تخرجت بمرتبة الشرف، ومشروع التخرج كان عبارة عن نظام ذكي لإدارة المستشفيات.</p>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- ─── SKILLS SECTION ─── -->
+      <section class="skills container" id="skills">
+          <div class="section-header reveal">
+              <span class="label">✦ الكفاءات التقنية</span>
+              <h2>المهارات <span>والتقنيات</span></h2>
+              <div class="section-divider"></div>
+              <p>الأدوات والتقنيات التي أستخدمها في بناء المشاريع</p>
+          </div>
+          <div class="skills-grid reveal" id="skills-grid">
+              <div class="empty-state">لا يوجد مهارات مضافة حالياً.</div>
+          </div>
+      </section>
+
+      <!-- ─── PROJECTS SECTION ─── -->
+      <section class="projects container" id="projects">
+          <div class="section-header reveal">
+              <span class="label">✦ معرض الأعمال</span>
+              <h2>أحدث <span>مشاريعي</span></h2>
+              <div class="section-divider"></div>
+              <p>بعض من الأعمال التي أفخر بها وأعكف على تطويرها</p>
+          </div>
+          <div class="projects-grid" id="projects-grid">
+              <!-- Populated dynamically -->
+              <div class="project-card glass-card reveal">
+                  <div class="project-img">
+                      <i class="fas fa-shopping-cart"></i>
+                  </div>
+                  <div class="project-info">
+                      <div class="project-tags">
+                          <span>.NET Core</span>
+                          <span>MVC</span>
+                      </div>
+                      <h3>منصة تجارة إلكترونية</h3>
+                      <p>نظام متكامل لإدارة المنتجات والطلبات بتصميم حديث ولوحة تحكم شاملة.</p>
+                      <a href="#" class="project-link">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+                  </div>
+              </div>
+              <div class="project-card glass-card reveal">
+                  <div class="project-img">
+                      <i class="fas fa-stethoscope"></i>
+                  </div>
+                  <div class="project-info">
+                      <div class="project-tags">
+                          <span>Web API</span>
+                          <span>React</span>
+                      </div>
+                      <h3>نظام إدارة عيادات</h3>
+                      <p>تطبيق ويب لحجز المواعيد وإدارة سجلات المرضى بشكل آمن وسلس.</p>
+                      <a href="#" class="project-link">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+                  </div>
+              </div>
+              <div class="project-card glass-card reveal">
+                  <div class="project-img">
+                      <i class="fas fa-briefcase"></i>
+                  </div>
+                  <div class="project-info">
+                      <div class="project-tags">
+                          <span>UI/UX</span>
+                          <span>Frontend</span>
+                      </div>
+                      <h3>موقع محفظة شخصية</h3>
+                      <p>تصميم مبتكر لعرض الأعمال الشخصية بطريقة تفاعلية وجذابة وفائقة الأداء.</p>
+                      <a href="#" class="project-link">عرض التفاصيل <i class="fas fa-arrow-left"></i></a>
+                  </div>
+              </div>
+          </div>
+      </section>
+
+      <!-- ─── CONTACT SECTION ─── -->
+      <section class="contact container" id="contact">
+          <div class="contact-box glass-card reveal">
+              <div class="contact-info">
+                  <h2>لنتحدث عن <span>مشروعك القادم</span></h2>
+                  <p>أنا متاح دائماً للنقاش حول الأفكار الجديدة، المشاريع، أو حتى لمجرد إلقاء التحية. دعنا نبني شيئاً رائعاً معاً.</p>
+                  <div class="social-links" id="social-links">
+                      <a href="#" class="social-icon" title="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                      <a href="#" class="social-icon" title="GitHub"><i class="fab fa-github"></i></a>
+                      <a href="#" class="social-icon" title="Twitter"><i class="fab fa-twitter"></i></a>
+                      <a href="mailto:hello@example.com" class="social-icon" title="Email"><i class="fas fa-envelope"></i></a>
+                  </div>
+              </div>
+              <div class="contact-action">
+                  <a href="mailto:hello@example.com" class="btn btn-primary btn-large" id="direct-email-btn">
+                      <i class="fas fa-paper-plane"></i> أرسل لي رسالة
+                  </a>
+              </div>
+          </div>
+      </section>
+
+      <!-- Footer -->
+      <footer>
+          <div class="container">
+              <p>&copy; 2026 <span id="footer-name" style="color:var(--accent2);">Portfolio</span> — جميع الحقوق محفوظة | صُنع بشغف 💜</p>
+          </div>
+      </footer>
+
+    </div><!-- /#portfolio -->
+
+    <!-- Floating Share Button -->
+    <button class="share-btn hidden" id="share-btn" onclick="copyLink()">
+      <i class="fas fa-link"></i> نسخ رابط الملف الشخصي
+    </button>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace Link.Dev.Profolie.BLL.Dto.ExperienceDto
+{
+    public class UpdateExperienceDto
+    {
+        [Required]
+        public int Id { get; set; }
+
+        [Required]
+        [MaxLength(200)]
+        public string Title { get; set; } = null!;
+
+        [Required]
+        [MaxLength(200)]
+        public string Company { get; set; } = null!;
+
+        [Required]
+        public string StartDate { get; set; } = null!;
+
+        public string? EndDate { get; set; }
+
+        [MaxLength(2000)]
+        public string? Description { get; set; }
+
+        [Required]
+        public string UserId { get; set; } = null!;
+    }
+}

@@ -1,0 +1,1141 @@
+<!-- ══════════ MAIN APP ══════════ -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" [class.collapsed]="sidebarCollapsed()" [class.mobile-open]="mobileSidebarOpen()">
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <span class="logo-icon"><img src="/mz_brand_logo.png" alt="MZ Logo"></span>
+        <span class="logo-text" *ngIf="!sidebarCollapsed()">Mohammed Zaghloul</span>
+      </div>
+      <button class="sidebar-toggle" (click)="toggleSidebar()">☰</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item" [class.active]="activeSection() === 'profile'" (click)="showSection('profile')">
+        <span class="nav-icon">👤</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Profile</span>
+      </button>
+      <button class="nav-item" [class.active]="activeSection() === 'projects'" (click)="showSection('projects')">
+        <span class="nav-icon">🗂️</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Projects</span>
+      </button>
+      <button class="nav-item" [class.active]="activeSection() === 'experiences'" (click)="showSection('experiences')">
+        <span class="nav-icon">🎓</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Experience</span>
+      </button>
+      <button class="nav-item" [class.active]="activeSection() === 'skills'" (click)="showSection('skills')">
+        <span class="nav-icon">⚡</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Skills</span>
+      </button>
+      <button class="nav-item" [class.active]="activeSection() === 'contacts'" (click)="showSection('contacts')">
+        <span class="nav-icon">🔗</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Contacts</span>
+      </button>
+      <button class="nav-item" [class.active]="activeSection() === 'appearance'" (click)="showSection('appearance')">
+        <span class="nav-icon">🎨</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Appearance</span>
+      </button>
+      <button class="nav-item" [class.active]="activeSection() === 'custom-css'" (click)="showSection('custom-css')">
+        <span class="nav-icon">💻</span>
+        <span class="nav-label" *ngIf="!sidebarCollapsed()">Custom CSS</span>
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div class="user-badge" *ngIf="!sidebarCollapsed()">
+        <div class="user-avatar">{{ getInitials(profile()?.userName) }}</div>
+        <div class="user-info">
+          <div class="user-name">{{ formatUserName(profile()?.userName) || 'Loading…' }}</div>
+          <div class="user-role">Portfolio Owner</div>
+        </div>
+      </div>
+      <button class="btn-logout" (click)="logout()" title="Sign out">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+    </div>
+  </aside>
+
+  <!-- MAIN CONTENT -->
+  <main class="main-content">
+
+    <!-- TOP BAR -->
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="mobile-menu-btn" (click)="toggleSidebar()">☰</button>
+        <div class="breadcrumb" style="text-transform: capitalize;">{{ activeSection() }}</div>
+      </div>
+      <div class="topbar-right">
+        <div class="api-status" *ngIf="!isProduction()">
+          <span class="status-dot"></span>
+          <span class="status-text">API Connected</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- ─── PROFILE SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'profile'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">My Profile</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">Manage your master personal details and biography.</p>
+        </div>
+        <div style="display:flex; gap:.6rem">
+          <button class="btn btn-secondary" style="padding: 8px 18px; font-size:0.9rem;" (click)="copyProfileLink()" title="Copy public portfolio link">🔗 Share</button>
+          <button class="btn btn-primary" style="padding: 8px 18px; font-size:0.9rem;" (click)="openProfileModal()">Edit Profile</button>
+        </div>
+      </div>
+
+      <div class="profile-grid" style="display:grid; grid-template-columns: 2fr 1fr; gap:1.5rem;">
+        <!-- Main Profile Card -->
+        <div class="profile-card profile-section">
+          <!-- Skeleton Loader -->
+          <div class="profile-skeleton" *ngIf="loadingProfile()">
+            <div class="sk sk-avatar"></div>
+            <div class="sk sk-line w60"></div>
+            <div class="sk sk-line w40"></div>
+            <div class="sk sk-line w80"></div>
+          </div>
+          
+          <!-- Loaded Profile -->
+          <div class="profile-loaded" *ngIf="!loadingProfile()">
+            <div class="profile-avatar-wrap" style="margin: 0 auto 1.5rem auto;">
+              <img class="profile-avatar-img" *ngIf="profile()?.image" [src]="getProfileImageUrl()" alt="Profile" />
+              <div class="profile-avatar-fallback" *ngIf="!profile()?.image">{{ getInitials(profile()?.userName) }}</div>
+            </div>
+            <div class="profile-meta" style="text-align:center;">
+              <h3 class="profile-name">{{ formatUserName(profile()?.userName) }}</h3>
+              <p class="profile-email">{{ profile()?.email }}</p>
+              <span class="profile-title-badge">{{ profile()?.title || 'No Title Specified' }}</span>
+              <div style="display:flex; align-items:center; justify-content:center; gap:10px; margin-top:10px;">
+                <span class="profile-status" [class.active]="profile()?.isActive">
+                  {{ profile()?.isActive ? '● Active' : '● Inactive' }}
+                </span>
+                <button (click)="togglePortfolioStatus()" style="padding:6px 12px; background:var(--accent); border:none; border-radius:6px; color:#fff; font-size:0.8rem; cursor:pointer; font-weight:600;">
+                  {{ profile()?.isActive ? 'Deactivate' : 'Activate' }}
+                </button>
+              </div>
+            </div>
+
+            <!-- Profile Stats -->
+            <div class="profile-stats" style="display:grid; grid-template-columns: repeat(4, 1fr); gap:1rem; margin: 2rem 0; padding: 1.5rem; background:var(--surface2); border-radius:16px; border:1px solid var(--border);">
+              <div class="stat-item" style="text-align:center;">
+                <div class="stat-icon" style="font-size:1.5rem; margin-bottom:0.5rem;">🗂️</div>
+                <div class="stat-value" style="font-size:2rem; font-weight:800; color:var(--accent2);">{{ projects().length }}</div>
+                <div class="stat-label" style="color:var(--muted); font-size:0.85rem; margin-top:0.25rem;">Projects</div>
+              </div>
+              <div class="stat-item" style="text-align:center;">
+                <div class="stat-icon" style="font-size:1.5rem; margin-bottom:0.5rem;">⚡</div>
+                <div class="stat-value" style="font-size:2rem; font-weight:800; color:var(--accent);">{{ skills().length }}</div>
+                <div class="stat-label" style="color:var(--muted); font-size:0.85rem; margin-top:0.25rem;">Skills</div>
+              </div>
+              <div class="stat-item" style="text-align:center;">
+                <div class="stat-icon" style="font-size:1.5rem; margin-bottom:0.5rem;">🎓</div>
+                <div class="stat-value" style="font-size:2rem; font-weight:800; color:var(--success);">{{ experiences().length }}</div>
+                <div class="stat-label" style="color:var(--muted); font-size:0.85rem; margin-top:0.25rem;">Experiences</div>
+              </div>
+              <div class="stat-item" style="text-align:center;">
+                <div class="stat-icon" style="font-size:1.5rem; margin-bottom:0.5rem;">🔗</div>
+                <div class="stat-value" style="font-size:2rem; font-weight:800; color:var(--danger);">{{ contacts().length }}</div>
+                <div class="stat-label" style="color:var(--muted); font-size:0.85rem; margin-top:0.25rem;">Contacts</div>
+              </div>
+            </div>
+
+            <div class="profile-about">
+              <h4>About Me / Bio</h4>
+              <p>{{ profile()?.about || 'No biography written yet.' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Info Card -->
+        <div class="profile-sidebar" style="display:flex; flex-direction:column; gap:1.5rem;">
+          <!-- Portfolio Preview Card -->
+        
+
+          <!-- Profile Link Card -->
+          <div class="sidebar-card glass-card" style="padding:1.5rem; border-radius:16px;">
+            <h4 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:#fff;"><span>🔗</span> <span class="card-title-text">Profile Link</span></h4>
+            <div style="background:var(--surface2); padding:1rem; border-radius:12px; border:1px solid var(--border); margin-bottom:1rem;">
+              <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.5rem;">Your public portfolio URL:</div>
+              <div style="font-size:0.9rem; color:var(--accent2); word-break:break-all;">{{ 'portfolio/' + authService.userId() }}</div>
+            </div>
+            <button class="btn btn-primary" style="width:100%;" (click)="copyProfileLink()">🔗 Copy Profile Link</button>
+          </div>
+
+          <!-- Visibility Card -->
+          <div class="sidebar-card glass-card" style="padding:1.5rem; border-radius:16px;">
+            <h4 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:#fff;"><span>👁️</span> <span class="card-title-text">Public Sections Visibility</span></h4>
+            <div class="visibility-list" style="display:flex; flex-direction:column; gap:12px;">
+              <div class="visibility-item" style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.9rem;">👤 Hero &amp; About</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" [checked]="themeService.visibility().hero" (change)="toggleVisibility('hero')" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="visibility-item" style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.9rem;">🎓 Experience</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" [checked]="themeService.visibility().experience" (change)="toggleVisibility('experience')" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="visibility-item" style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.9rem;">⚡ Skills</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" [checked]="themeService.visibility().skills" (change)="toggleVisibility('skills')" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="visibility-item" style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.9rem;">🗂️ Projects</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" [checked]="themeService.visibility().projects" (change)="toggleVisibility('projects')" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+              <div class="visibility-item" style="display:flex; justify-content:space-between; align-items:center;">
+                <span style="font-size:0.9rem;">🔗 Contacts</span>
+                <label class="toggle-switch">
+                  <input type="checkbox" [checked]="themeService.visibility().contact" (change)="toggleVisibility('contact')" />
+                  <span class="toggle-track"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── PROJECTS SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'projects'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Projects</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">Showcase your latest developments and systems.</p>
+        </div>
+        <button class="btn btn-primary" style="padding: 8px 18px; font-size:0.9rem;" (click)="openAddProject()">+ Add Project</button>
+      </div>
+
+      <div class="loading-state" *ngIf="loadingProjects()">
+        <span class="ld-ring"></span>
+        <p style="margin-top: 1rem; color: var(--muted);">Loading your projects...</p>
+      </div>
+
+      <div class="cards-grid" *ngIf="!loadingProjects()" cdkDropList (cdkDropListDropped)="onProjectDrop($event)" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="projects().length === 0" style="grid-column: 1/-1;">
+          <div class="empty-icon-wrapper">
+            <span class="empty-icon">🗂️</span>
+          </div>
+          <h3>No Projects Yet</h3>
+          <p>Start showcasing your work by adding your first project.</p>
+          <button class="btn btn-primary" style="margin-top: 1rem;" (click)="openAddProject()">+ Add Your First Project</button>
+        </div>
+
+        <!-- Project Cards -->
+        <div class="project-card glass-card" *ngFor="let p of projects()" cdkDrag>
+          <div class="project-card-img" style="height:150px; background:var(--surface2); display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <img *ngIf="p.image" [src]="getProjectImageUrl(p.image)" [alt]="p.name" style="width:100%; height:100%; object-fit:cover;" />
+            <span *ngIf="!p.image" style="font-size:3rem;">🗂️</span>
+          </div>
+          <div class="project-card-body" style="padding:15px; display:flex; flex-direction:column; gap:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <div cdkDragHandle style="cursor:grab; opacity:0.6; font-size:1.2rem;">⋮⋮</div>
+              <div class="project-card-name" style="font-weight:700; font-size:1.1rem; color:#fff;">{{ p.name }}</div>
+            </div>
+            <div class="project-card-desc" style="color:var(--muted); font-size:0.85rem; min-height:40px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden;">{{ p.description || 'No description provided.' }}</div>
+            <div *ngIf="p.techStack" style="color:var(--accent); font-size:0.8rem; font-weight:600;">🛠️ {{ p.techStack }}</div>
+            <div *ngIf="p.startDate || p.endDate" style="color:var(--muted); font-size:0.8rem;">📅 {{ (p.startDate | date:'yyyy-MM-dd') }}{{ p.endDate ? ' - ' + (p.endDate | date:'yyyy-MM-dd') : '' }}</div>
+            <div style="display:flex; gap:10px; flex-wrap:wrap;">
+              <a *ngIf="p.link" [href]="p.link" target="_blank" rel="noopener" class="project-card-link" style="font-size:0.85rem; color:var(--accent2); text-decoration:none;">🔗 View Link</a>
+              <a *ngIf="p.githubLink" [href]="p.githubLink" target="_blank" rel="noopener" class="project-card-link" style="font-size:0.85rem; color:var(--accent); text-decoration:none;">💻 GitHub</a>
+            </div>
+            <div class="card-actions" style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px; border-top:1px solid var(--border); padding-top:10px;">
+              <button class="btn-icon" style="background:none; border:none; color:var(--accent2); cursor:pointer; font-size:0.85rem;" (click)="openProjectDetails(p)">👁️ View</button>
+              <button class="btn-icon" style="background:none; border:none; color:var(--text); cursor:pointer; font-size:0.85rem;" (click)="openEditProject(p)">✏️ Edit</button>
+              <button class="btn-icon del" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:0.85rem;" (click)="confirmDelete('project', p.id)">🗑️ Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── EXPERIENCES SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'experiences'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Experiences</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">Manage your career milestones and academic backgrounds.</p>
+        </div>
+        <button class="btn btn-primary" style="padding: 8px 18px; font-size:0.9rem;" (click)="openAddExperience()">+ Add Experience</button>
+      </div>
+
+      <div class="loading-state" *ngIf="loadingExperiences()">
+        <span class="ld-ring"></span>
+        <p style="margin-top: 1rem; color: var(--muted);">Loading your experiences...</p>
+      </div>
+
+      <div class="cards-grid" *ngIf="!loadingExperiences()" style="display:flex; flex-direction:column; gap:15px;">
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="experiences().length === 0">
+          <div class="empty-icon-wrapper">
+            <span class="empty-icon">🎓</span>
+          </div>
+          <h3>No Experiences Yet</h3>
+          <p>Add your work history, education, and certifications to build your profile.</p>
+          <button class="btn btn-primary" style="margin-top: 1rem;" (click)="openAddExperience()">+ Add Experience</button>
+        </div>
+
+        <!-- Experience Row -->
+        <div class="exp-card glass-card" *ngFor="let e of experiences()" style="padding:20px; display:flex; justify-content:space-between; align-items:flex-start;">
+          <div>
+            <span class="timeline-date" style="padding:3px 10px; background:var(--surface2); border-radius:12px; font-size:0.8rem; font-weight:600; color:var(--accent2);">{{ e.startDate || 'Present' }}{{ e.endDate ? ' - ' + e.endDate : '' }}</span>
+            <h3 style="font-size:1.3rem; font-weight:700; margin:8px 0 3px 0; color:#fff;">{{ e.title }}</h3>
+            <h4 style="font-size:0.95rem; font-weight:500; color:var(--accent); margin:0 0 10px 0;">{{ e.company }}</h4>
+            <p style="color:var(--text); font-size:0.9rem; margin-bottom:8px;">{{ getCleanExpDesc(e.description) }}</p>
+            <div *ngIf="getExpCertState(e.description)" style="font-size:0.8rem; color:var(--success); font-weight:600; display:flex; align-items:center; gap:8px;">
+              ✓ Certificate Attached
+            </div>
+          </div>
+          <div class="card-actions" style="display:flex; gap:10px;">
+            <button class="btn-icon" style="background:none; border:none; color:var(--text); cursor:pointer;" (click)="openEditExperience(e)">✏️</button>
+            <button class="btn-icon del" style="background:none; border:none; color:var(--danger); cursor:pointer;" (click)="confirmDelete('experience', e.id)">🗑️</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── SKILLS SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'skills'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Skills</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">List your expert languages, packages, and technologies.</p>
+        </div>
+        <button class="btn btn-primary" style="padding: 8px 18px; font-size:0.9rem;" (click)="openAddSkill()">+ Add Skill</button>
+      </div>
+
+      <div class="loading-state" *ngIf="loadingSkills()">
+        <span class="ld-ring"></span>
+        <p style="margin-top: 1rem; color: var(--muted);">Loading your skills...</p>
+      </div>
+
+      <div class="skills-container" *ngIf="!loadingSkills()" style="display:flex; flex-wrap:wrap; gap:12px;">
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="skills().length === 0">
+          <div class="empty-icon-wrapper">
+            <span class="empty-icon">⚡</span>
+          </div>
+          <h3>No Skills Added</h3>
+          <p>Highlight your technical expertise by adding your skills.</p>
+          <button class="btn btn-primary" style="margin-top: 1rem;" (click)="openAddSkill()">+ Add Your First Skill</button>
+        </div>
+
+        <!-- Skill Pill -->
+        <div class="skill-chip" *ngFor="let s of skills()" style="display:flex; align-items:center; gap:8px; padding:6px 14px; background:var(--surface); border:1px solid var(--border); border-radius:20px; font-weight:600; font-size:0.95rem;">
+          <span>⚡ {{ s.name }}</span>
+          <div class="skill-chip-actions" style="display:flex; gap:6px; margin-left:10px;">
+            <button class="skill-btn" style="background:none; border:none; cursor:pointer; color:var(--text); font-size:0.8rem;" (click)="openEditSkill(s)">✏️</button>
+            <button class="skill-btn del" style="background:none; border:none; cursor:pointer; color:var(--danger); font-size:0.8rem;" (click)="confirmDelete('skill', s.id)">✕</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── CONTACTS SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'contacts'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Contacts</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">Connect with professional handles and networking platforms.</p>
+        </div>
+        <button class="btn btn-primary" style="padding: 8px 18px; font-size:0.9rem;" *ngIf="contacts().length === 0" (click)="openAddContact()">+ Add Contact</button>
+      </div>
+
+      <div class="loading-state" *ngIf="loadingContacts()">
+        <span class="ld-ring"></span>
+        <p style="margin-top: 1rem; color: var(--muted);">Loading your contacts...</p>
+      </div>
+
+      <div class="contacts-container" *ngIf="!loadingContacts()" style="overflow: hidden;">
+        <!-- Empty State -->
+        <div class="empty-state" *ngIf="contacts().length === 0">
+          <div class="empty-icon-wrapper">
+            <span class="empty-icon">🔗</span>
+          </div>
+          <h3>No Contacts Added</h3>
+          <p>Connect with others by adding your social media and contact links.</p>
+          <button class="btn btn-primary" style="margin-top: 1rem;" (click)="openAddContact()">+ Add Contact Info</button>
+        </div>
+
+        <!-- Contact Box -->
+        <div class="contact-card" *ngFor="let c of contacts()" style="background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:15px; overflow: hidden; display: flex; flex-direction: column; gap: 15px;">
+          <div class="contact-card-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; flex-wrap: wrap; gap: 10px;">
+            <div class="contact-card-email" style="font-weight:700; color:#fff; font-size:1.05rem; flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">📧 {{ c.email }}</div>
+            <div class="card-actions" style="display:flex; gap:8px; flex-shrink: 0;">
+              <button class="btn-icon" style="background:none; border:none; color:var(--text); cursor:pointer; font-size:1rem;" (click)="openEditContact(c)" title="Edit">✏️</button>
+              <button class="btn-icon del" style="background:none; border:none; color:var(--danger); cursor:pointer; font-size:1rem;" (click)="confirmDelete('contact', c.id)" title="Delete">🗑️</button>
+            </div>
+          </div>
+          <div class="contact-links" style="display:flex; flex-direction:column; gap:10px;">
+            <div *ngIf="c.github" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>🐙</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-weight:600; color:var(--text); font-size:0.9rem;">GitHub</span>
+                  <span style="color:var(--muted); font-size:0.75rem;">{{ c.github }}</span>
+                </div>
+              </div>
+              <a [href]="c.github" target="_blank" style="color:var(--accent2); text-decoration:none; font-size:0.8rem;">Visit →</a>
+            </div>
+            <div *ngIf="c.linkedin" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>💼</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-weight:600; color:var(--text); font-size:0.9rem;">LinkedIn</span>
+                  <span style="color:var(--muted); font-size:0.75rem;">{{ c.linkedin }}</span>
+                </div>
+              </div>
+              <a [href]="c.linkedin" target="_blank" style="color:var(--accent2); text-decoration:none; font-size:0.8rem;">Visit →</a>
+            </div>
+            <div *ngIf="c.facebook" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>📘</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-weight:600; color:var(--text); font-size:0.9rem;">Facebook</span>
+                  <span style="color:var(--muted); font-size:0.75rem;">{{ c.facebook }}</span>
+                </div>
+              </div>
+              <a [href]="c.facebook" target="_blank" style="color:var(--accent2); text-decoration:none; font-size:0.8rem;">Visit →</a>
+            </div>
+            <div *ngIf="c.instagram" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>📸</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-weight:600; color:var(--text); font-size:0.9rem;">Instagram</span>
+                  <span style="color:var(--muted); font-size:0.75rem;">{{ c.instagram }}</span>
+                </div>
+              </div>
+              <a [href]="c.instagram" target="_blank" style="color:var(--accent2); text-decoration:none; font-size:0.8rem;">Visit →</a>
+            </div>
+            <div *ngIf="c.tikTok" style="display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--bg); border:1px solid var(--border); border-radius:8px;">
+              <div style="display:flex; align-items:center; gap:8px;">
+                <span>🎵</span>
+                <div style="display:flex; flex-direction:column;">
+                  <span style="font-weight:600; color:var(--text); font-size:0.9rem;">TikTok</span>
+                  <span style="color:var(--muted); font-size:0.75rem;">{{ c.tikTok }}</span>
+                </div>
+              </div>
+              <a [href]="c.tikTok" target="_blank" style="color:var(--accent2); text-decoration:none; font-size:0.8rem;">Visit →</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── APPEARANCE SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'appearance'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Appearance</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">Configure page layouts, glass themes, and display conditions.</p>
+        </div>
+        <button class="btn btn-secondary" style="padding: 8px 18px; font-size:0.9rem;" (click)="copyProfileLink()">🔗 Copy Profile Link</button>
+      </div>
+
+      <div class="appearance-grid" style="display:grid; grid-template-columns: 1fr; gap:25px;">
+        <!-- Theme Panel -->
+        <div class="appearance-panel" style="background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:15px;">
+          <div class="appearance-panel-title" style="font-weight:700; margin-bottom:15px; font-size:1.1rem; color:#fff;">🎨 Portfolio Theme Selection</div>
+          
+          <div class="theme-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '1'" (click)="selectThemeCard('1')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-nebula" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #6c63ff 0%, #a855f7 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌌 Nebula</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '2'" (click)="selectThemeCard('2')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-ocean" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌊 Ocean</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '3'" (click)="selectThemeCard('3')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-minimal" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">✨ Minimal</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '4'" (click)="selectThemeCard('4')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-aurora" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #00ffa3 0%, #00d4ff 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌌 Aurora</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '5'" (click)="selectThemeCard('5')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-cyberpunk" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #ff007a 0%, #7928ca 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">⚡ Cyberpunk</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '6'" (click)="selectThemeCard('6')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-sakura" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f472b6 0%, #fb7185 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌸 Sakura</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '7'" (click)="selectThemeCard('7')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-midnight" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌙 Midnight</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '8'" (click)="selectThemeCard('8')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-forest" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #059669 0%, #10b981 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌲 Forest</div>
+            </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '9'" (click)="selectThemeCard('9')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-sunset" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f97316 0%, #ef4444 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌅 Sunset</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section Visibility & Order Panel -->
+        <div class="appearance-panel" style="background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:15px;">
+          <div class="appearance-panel-title" style="font-weight:700; margin-bottom:15px; font-size:1.1rem; color:#fff;">📋 Section Visibility &amp; Order</div>
+          
+          <div class="section-controls" cdkDropList (cdkDropListDropped)="onSectionDrop($event)" style="display:flex; flex-direction:column; gap:12px;">
+            <ng-container *ngFor="let sec of themeService.visibility().sectionOrder">
+              <!-- Render for each section -->
+              <div class="section-control-item" cdkDrag style="display:flex; align-items:center; justify-content:space-between; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:move;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <div cdkDragHandle style="font-size:1.2rem; cursor:grab; opacity:0.6; user-select:none;">⋮⋮</div>
+                  <span style="font-size:1.2rem;">
+                    {{ sec === 'hero' ? '👤' : (sec === 'about' ? '📝' : (sec === 'skills' ? '⚡' : (sec === 'experience' ? '🎓' : (sec === 'projects' ? '🗂️' : '📧')))) }}
+                  </span>
+                  <span style="font-weight:600; text-transform:capitalize;">{{ sec === 'experience' ? 'Experience' : (sec === 'projects' ? 'Projects' : (sec === 'skills' ? 'Skills' : (sec === 'contact' ? 'Contact' : (sec === 'about' ? 'About' : 'Hero & Bio')))) }}</span>
+                </div>
+                <div style="display:flex; align-items:center; gap:8px;">
+                  <button type="button" (click)="moveSection(sec, -1)" class="btn-sort" title="Move Up">
+                    <span class="sort-arrow">▲</span>
+                  </button>
+                  <button type="button" (click)="moveSection(sec, 1)" class="btn-sort" title="Move Down">
+                    <span class="sort-arrow">▼</span>
+                  </button>
+                  <label style="display:flex; align-items:center; gap:6px; cursor:pointer;">
+                    <input type="checkbox" [checked]="sec === 'about' ? themeService.visibility().hero : themeService.visibility()[sec]" (change)="toggleSectionVisibility(sec === 'about' ? 'hero' : sec)" style="width:18px; height:18px; cursor:pointer;" [disabled]="sec === 'about'" />
+                    <span style="font-size:0.8rem; color:var(--muted);">Visible</span>
+                  </label>
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+
+      <div class="appearance-save-bar" style="margin-top:20px; display:flex; align-items:center; gap:15px;">
+        <button class="btn btn-primary" (click)="saveAppearance()" [disabled]="isSubmitting()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:12px; font-weight:700;">
+          <span *ngIf="!isSubmitting()" style="display:inline-flex; align-items:center; gap:8px;">
+            <span style="font-size:1.15rem; filter: drop-shadow(0 0 4px #fff);">⚡</span>
+            <span>Save Appearance Settings</span>
+          </span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+        <span class="appearance-saved-msg" *ngIf="appearanceSaved()" style="color:var(--success); font-weight:600;">✓ Saved successfully!</span>
+      </div>
+    </section>
+
+    <!-- ─── CUSTOM CSS SECTION ─── -->
+    <section class="content-section" [class.active]="activeSection() === 'custom-css'">
+      <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
+        <div>
+          <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Custom CSS</h2>
+          <p style="color:var(--muted); font-size:0.95rem;">Design custom styles, glows, and animations for your public portfolio.</p>
+        </div>
+        <button class="btn btn-secondary" style="padding: 8px 18px; font-size:0.9rem;" (click)="copyProfileLink()">🔗 Copy Profile Link</button>
+      </div>
+
+      <!-- Custom CSS Editor Panel -->
+      <div class="appearance-panel" style="background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:15px;">
+        <div class="appearance-panel-title" style="font-weight:700; margin-bottom:15px; font-size:1.1rem; color:#fff;">💻 Custom CSS Stylesheet Editor &amp; Live Preview</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;">Type custom CSS rules to override page variables, backgrounds, fonts, or animations. Preview your changes instantly on the right!</div>
+        <div style="font-size:0.75rem; color:var(--danger); margin-bottom:20px; padding:8px; background:rgba(255,0,0,0.1); border:1px solid var(--danger); border-radius:6px;">⚠️ Security Warning: Custom CSS can break your portfolio. Use with caution.</div>
+        
+        <!-- Toolbar for CSS Workspace -->
+        <div class="editor-toolbar" style="display: flex; justify-content: space-between; align-items: center; background: var(--surface2); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
+          <!-- Left: Layout Switcher -->
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Layout:</span>
+            <button class="btn-tool" (click)="setEditorLayout('split')" [style.background]="editorLayout() === 'split' ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="editorLayout() === 'split' ? 'var(--accent2)' : 'var(--muted)'" [style.border-color]="editorLayout() === 'split' ? 'var(--accent2)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
+              ◀️▶️ Split View
+            </button>
+            <button class="btn-tool" (click)="setEditorLayout('stacked')" [style.background]="editorLayout() === 'stacked' ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="editorLayout() === 'stacked' ? 'var(--accent2)' : 'var(--muted)'" [style.border-color]="editorLayout() === 'stacked' ? 'var(--accent2)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
+              🔼🔽 Stacked View (Full Desktop)
+            </button>
+          </div>
+          
+          <!-- Right: Device Mode -->
+          <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Preview Device:</span>
+            <button class="btn-tool" (click)="setPreviewMode('mobile')" [style.background]="previewMode() === 'mobile' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'mobile' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'mobile' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
+              📱 Mobile
+            </button>
+            <button class="btn-tool" (click)="setPreviewMode('tablet')" [style.background]="previewMode() === 'tablet' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'tablet' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'tablet' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
+              📟 Tablet
+            </button>
+            <button class="btn-tool" (click)="setPreviewMode('desktop')" [style.background]="previewMode() === 'desktop' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'desktop' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'desktop' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
+              💻 Desktop
+            </button>
+            
+            <!-- Open in New Tab Link -->
+            <a [href]="'/portfolio/' + authService.userId()" target="_blank" class="btn-tool" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; background: rgba(255,255,255,0.02); color: var(--text-primary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; font-weight: 600;">
+              ↗️ Open in New Tab
+            </a>
+            
+            <!-- Styling Guide Button -->
+            <button type="button" (click)="showCssGuideModal.set(true)" class="btn-tool" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--accent); cursor: pointer; background: rgba(108, 99, 255, 0.1); color: var(--accent2); display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; font-weight: 600;">
+              📖 Styling Guide
+            </button>
+          </div>
+        </div>
+
+        <div class="css-workspace-layout" [class.layout-split]="editorLayout() === 'split'" [class.layout-stacked]="editorLayout() === 'stacked'">
+          <!-- Left Column: CSS Editor -->
+          <div class="css-editor-column" [style.height]="editorLayout() === 'split' ? 'auto' : '280px'" style="display: flex; flex-direction: column; gap: 10px; position: relative;">
+            <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent2);">✍️ Stylesheet Editor</div>
+            <div style="position: relative; flex: 1; display: flex; flex-direction: column; height: 100%;">
+              <textarea 
+                #cssTextarea
+                [value]="decodeCss(themeService.visibility().custom_css || '')" 
+                (input)="onCssInput($any($event.target).value, cssTextarea)"
+                (keydown)="onKeyDown($event, cssTextarea)"
+                rows="18" 
+                placeholder="/* Example: */&#10;body { background: #0b1020 !important; }&#10;.hero-title span { color: #00ffc4 !important; }&#10;.navbar { background: rgba(0,0,0,0.8) !important; }" 
+                style="width:100%; height: 100%; min-height: 220px; font-family: 'Consolas', 'Courier New', monospace; font-size:0.85rem; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#a78bfa; line-height:1.5; resize:none;"
+              ></textarea>
+              
+              <!-- Autocomplete Floating Popup -->
+              <div *ngIf="cssSuggestions().length > 0" class="css-autocomplete-dropdown" style="position: absolute; bottom: 12px; left: 12px; right: 12px; background: var(--surface2); border: 2px solid var(--border); border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); z-index: 100; overflow: hidden;">
+                <div style="font-size: 0.7rem; color: var(--muted); padding: 6px 12px; background: rgba(255,255,255,0.02); border-bottom: 1px solid var(--border); display: flex; justify-content: space-between;">
+                  <span>💡 CSS Auto-Suggestions</span>
+                  <span>Click or press Enter/Tab to insert</span>
+                </div>
+                <ul style="list-style: none; margin: 0; padding: 0;">
+                  <li *ngFor="let item of cssSuggestions(); let idx = index" 
+                      (mousedown)="$event.preventDefault(); insertSuggestion(item, cssTextarea)"
+                      [style.background]="idx === activeSuggestionIndex() ? 'rgba(108, 99, 255, 0.2)' : 'transparent'"
+                      style="padding: 8px 12px; display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: background 0.2s; border-bottom: 1px solid rgba(255,255,255,0.02);"
+                      class="suggestion-item">
+                    <div style="display: flex; align-items: center; gap: 8px;">
+                      <span [style.background]="item.type === 'Class' ? '#7c3aed' : (item.type === 'Variable' ? '#06b6d4' : '#a855f7')"
+                            style="font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; color: #fff; font-weight: 700;">
+                        {{ item.type }}
+                      </span>
+                      <span style="font-family: 'Consolas', monospace; font-size: 0.8rem; color: #fff; font-weight: 600;">{{ item.name }}</span>
+                    </div>
+                    <span style="font-size: 0.75rem; color: var(--muted);">{{ item.description }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Right Column: Interactive Live Preview -->
+          <div class="css-preview-column" style="display: flex; flex-direction: column; gap: 10px; min-width: 0;">
+            <div style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; padding: 0 4px; margin-bottom: 12px; margin-top: 8px;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--accent2);">👁️ Interactive Live Preview</span>
+              <span style="font-size: 0.7rem; color: var(--success); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background: rgba(34, 211, 165, 0.1); border: 1px solid rgba(34, 211, 165, 0.2); border-radius: 12px;">
+                <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success);"></span>
+                Connected
+              </span>
+            </div>
+            <div class="preview-iframe-wrapper" 
+                 [style.height]="editorLayout() === 'split' ? '850px' : '1050px'"
+                 style="overflow-x: auto; overflow-y: hidden; background: #070913; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 20px 20px; position: relative; border: 2px solid var(--border); border-radius: 12px; display: flex; align-items: stretch; justify-content: flex-start; padding: 25px 10px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
+              <iframe 
+                *ngIf="safePortfolioUrl()"
+                #previewIframe
+                [src]="safePortfolioUrl()"
+                (load)="onIframeLoaded()"
+                [style.width]="previewMode() === 'mobile' ? '375px' : (previewMode() === 'tablet' ? '768px' : '100%')"
+                [style.max-width]="previewMode() === 'mobile' ? '375px' : (previewMode() === 'tablet' ? '768px' : '100%')"
+                [style.border]="previewMode() === 'desktop' ? 'none' : '4px solid var(--accent)'"
+                [style.border-radius]="previewMode() === 'desktop' ? '0' : '20px'"
+                [style.box-shadow]="previewMode() === 'desktop' ? 'none' : '0 10px 30px rgba(var(--accent-rgb), 0.3)'"
+                style="height: 100%; border: none; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); background: #0d0f17; display: block; margin: 0 auto;"
+              ></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="appearance-save-bar" style="margin-top:20px; display:flex; align-items:center; gap:15px;">
+        <button class="btn btn-primary" (click)="saveAppearance()" [disabled]="isSubmitting()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:12px; font-weight:700;">
+          <span *ngIf="!isSubmitting()" style="display:inline-flex; align-items:center; gap:8px;">
+            <span style="font-size:1.15rem; filter: drop-shadow(0 0 4px #fff);">⚡</span>
+            <span>Save Appearance Settings</span>
+          </span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+        <span class="appearance-saved-msg" *ngIf="appearanceSaved()" style="color:var(--success); font-weight:600;">✓ Saved successfully!</span>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Toast Notification -->
+<div *ngIf="toast()" class="toast" [class.success]="toast()?.type === 'success'" [class.error]="toast()?.type === 'error'" style="position:fixed; top:20px; right:20px; z-index:9999; animation:slideInRight 0.3s ease;">
+  <div style="display:flex; align-items:center; gap:10px; padding:16px 24px; border-radius:12px; background:var(--surface); border:2px solid var(--border); box-shadow:0 8px 24px rgba(0,0,0,0.4); min-width:300px;">
+    <span style="font-size:1.5rem;">{{ toast()?.type === 'success' ? '✅' : '❌' }}</span>
+    <span style="color:var(--text); font-weight:600;">{{ toast()?.message }}</span>
+  </div>
+</div>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- Profile Modal -->
+<div class="modal-overlay" *ngIf="showProfileModal()" (click)="showProfileModal.set(false)">
+  <div class="modal" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header">
+      <h3>Edit Profile Settings</h3>
+      <button class="modal-close" (click)="showProfileModal.set(false)">✕</button>
+    </div>
+    <form [formGroup]="profileForm" (ngSubmit)="handleSaveProfile()">
+      <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; padding:1.25rem 1.5rem;">
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Username</label>
+          <input type="text" formControlName="userName" placeholder="Your Display Name" required style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Professional Title</label>
+          <input type="text" formControlName="title" placeholder="e.g. Senior Full-Stack Developer" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Email</label>
+          <input type="email" formControlName="email" placeholder="your.email@example.com" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Used for login and contact</small>
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Biography / About Me</label>
+          <textarea formControlName="about" rows="3" placeholder="Write a short summary about your background…" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff; resize:none; font-family:inherit;"></textarea>
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Profile Image</label>
+          
+          <!-- Image Preview -->
+          <div *ngIf="profileImgPreviewUrl || getProfileImageUrl()" style="position:relative; width:120px; height:120px; margin-bottom:12px;">
+            <img [src]="profileImgPreviewUrl || getProfileImageUrl()" alt="Profile preview" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid var(--border);" />
+            <button type="button" (click)="removeProfileImage()" style="position:absolute; top:-8px; right:-8px; background:var(--danger); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center;">✕</button>
+          </div>
+          
+          <!-- Upload Area -->
+          <div class="file-upload-area" (click)="profileImgInput.click()" style="cursor:pointer; min-height:60px; padding:12px; border:2px dashed var(--border); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface2); transition:all 0.2s;">
+            <input #profileImgInput type="file" style="display:none;" accept="image/*" (change)="onProfileFileSelected($event)" />
+            <span style="font-size:1.5rem; margin-bottom:4px;">📷</span>
+            <span style="font-size:0.85rem; color:var(--muted);">{{ selectedProfileImgFile ? selectedProfileImgFile.name : 'Click to upload or drag image here' }}</span>
+          </div>
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Recommended: Square image, at least 400x400px. Max 5MB.</small>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showProfileModal.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || profileForm.invalid">
+          <span *ngIf="!isSubmitting()">Save Details</span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Project Modal -->
+<div class="modal-overlay" *ngIf="showProjectModal()" (click)="showProjectModal.set(false)">
+  <div class="modal" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header">
+      <h3>{{ projectForm.get('id')?.value ? 'Edit Project' : 'Add Project' }}</h3>
+      <button class="modal-close" (click)="showProjectModal.set(false)">✕</button>
+    </div>
+    <form [formGroup]="projectForm" (ngSubmit)="handleSaveProject()">
+      <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; padding:1.25rem 1.5rem;">
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Project Name *</label>
+          <input type="text" formControlName="name" placeholder="E-Commerce Platform" required style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Description</label>
+          <textarea formControlName="description" rows="4" placeholder="Describe what you built, what technologies you used, and what problems you solved..." style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff; resize:none; font-family:inherit;"></textarea>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Live Demo Link</label>
+          <input type="url" formControlName="link" placeholder="https://my-project.com" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">GitHub Repository</label>
+          <input type="url" formControlName="githubLink" placeholder="https://github.com/username/repo" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Tech Stack</label>
+          <input type="text" formControlName="techStack" placeholder="React, TypeScript, Tailwind CSS, Node.js" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Separate technologies with commas</small>
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Cover Image</label>
+          
+          <!-- Image Preview -->
+          <div *ngIf="projectImgPreviewUrl" style="position:relative; width:200px; height:120px; margin-bottom:12px;">
+            <img [src]="projectImgPreviewUrl" alt="Project cover" style="width:100%; height:100%; object-fit:cover; border-radius:8px; border:2px solid var(--border);" />
+            <button type="button" (click)="removeProjectImage()" style="position:absolute; top:-8px; right:-8px; background:var(--danger); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center;">✕</button>
+          </div>
+          
+          <!-- Upload Area -->
+          <div class="file-upload-area" (click)="projectImgInput.click()" style="cursor:pointer; min-height:60px; padding:12px; border:2px dashed var(--border); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface2); transition:all 0.2s;">
+            <input #projectImgInput type="file" style="display:none;" accept="image/*" (change)="onProjectFileSelected($event)" />
+            <span style="font-size:1.5rem; margin-bottom:4px;">📷</span>
+            <span style="font-size:0.85rem; color:var(--muted);">{{ selectedProjectImgFile ? selectedProjectImgFile.name : 'Click to upload or drag a cover image' }}</span>
+          </div>
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Recommended: 16:9 ratio, at least 1200x675px. Max 5MB.</small>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Start Date *</label>
+          <input type="date" formControlName="startDate" required style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">End Date</label>
+          <input type="date" formControlName="endDate" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label style="display:flex; align-items:center; gap:6px; margin-top:8px; cursor:pointer;">
+            <input type="checkbox" formControlName="isOngoing" style="width:18px; height:18px; cursor:pointer;" />
+            <span style="font-size:0.8rem; color:var(--muted);">Ongoing / Present</span>
+          </label>
+          <div *ngIf="projectForm.errors?.['dateInvalid']" style="color:var(--danger); font-size:0.7rem; margin-top:4px;">End date cannot be before start date</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showProjectModal.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || projectForm.invalid">
+          <span *ngIf="!isSubmitting()">Save Project</span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Project Details Modal -->
+<div class="modal-overlay" *ngIf="showProjectDetailsModal()" (click)="showProjectDetailsModal.set(false)">
+  <div class="modal" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header">
+      <h3>Project Details</h3>
+      <button class="modal-close" (click)="showProjectDetailsModal.set(false)">✕</button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="selectedProject()">
+        <div class="project-detail-image" style="height:200px; background:var(--surface2); border-radius:12px; overflow:hidden; margin-bottom:1.5rem; display:flex; align-items:center; justify-content:center;">
+          <img *ngIf="selectedProject().image" [src]="getProjectImageUrl(selectedProject().image)" [alt]="selectedProject().name" style="width:100%; height:100%; object-fit:cover;" />
+          <span *ngIf="!selectedProject().image" style="font-size:4rem;">🗂️</span>
+        </div>
+        <h2 style="font-size:1.8rem; font-weight:700; color:#fff; margin-bottom:1rem;">{{ selectedProject().name }}</h2>
+        <p style="color:var(--text); line-height:1.6; margin-bottom:1.5rem;">{{ selectedProject().description || 'No description provided.' }}</p>
+        
+        <div *ngIf="selectedProject().techStack" style="margin-bottom:1rem;">
+          <label style="font-weight:600; color:var(--accent2);">🛠️ Tech Stack:</label>
+          <p style="color:var(--text); margin-top:0.5rem;">{{ selectedProject().techStack }}</p>
+        </div>
+        
+        <div *ngIf="selectedProject().startDate || selectedProject().endDate" style="margin-bottom:1rem;">
+          <label style="font-weight:600; color:var(--accent2);">📅 Project Timeline:</label>
+          <p style="color:var(--text); margin-top:0.5rem;">{{ selectedProject().startDate }}{{ selectedProject().endDate ? ' - ' + selectedProject().endDate : '' }}</p>
+        </div>
+        
+        <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:1.5rem;">
+          <a *ngIf="selectedProject().link" [href]="selectedProject().link" target="_blank" rel="noopener" class="btn btn-primary" style="text-decoration:none;">🔗 View Project</a>
+          <a *ngIf="selectedProject().githubLink" [href]="selectedProject().githubLink" target="_blank" rel="noopener" class="btn btn-secondary" style="text-decoration:none;">💻 GitHub</a>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="showProjectDetailsModal.set(false)">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- Skill Modal -->
+<div class="modal-overlay" *ngIf="showSkillModal()" (click)="showSkillModal.set(false)">
+  <div class="modal" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header">
+      <h3>{{ skillForm.get('id')?.value ? 'Edit Skill' : 'Add Skill' }}</h3>
+      <button class="modal-close" (click)="showSkillModal.set(false)">✕</button>
+    </div>
+    <form [formGroup]="skillForm" (ngSubmit)="handleSaveSkill()">
+      <div class="modal-body">
+        <div class="field-group">
+          <label>Skill Name *</label>
+          <input type="text" formControlName="name" placeholder="e.g. C#, Angular, Docker..." required />
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showSkillModal.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || skillForm.invalid">
+          <span *ngIf="!isSubmitting()">Save Skill</span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Experience Modal -->
+<div class="modal-overlay" *ngIf="showExperienceModal()" (click)="showExperienceModal.set(false)">
+  <div class="modal" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header">
+      <h3>{{ experienceForm.get('id')?.value ? 'Edit Experience' : 'Add Experience' }}</h3>
+      <button class="modal-close" (click)="showExperienceModal.set(false)">✕</button>
+    </div>
+    <form [formGroup]="experienceForm" (ngSubmit)="handleSaveExperience()">
+      <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; padding:1.25rem 1.5rem;">
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Title / Degree / Cert *</label>
+          <input type="text" formControlName="title" placeholder="e.g. Senior Software Engineer" required style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Company / Org *</label>
+          <input type="text" formControlName="company" placeholder="e.g. Tech Solutions Inc." required style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Start Date *</label>
+          <input type="month" formControlName="startDate" required style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">YYYY-MM</small>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">End Date</label>
+          <input type="month" formControlName="endDate" style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">YYYY-MM (leave empty if current)</small>
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem; color:var(--text);">
+            <input type="checkbox" formControlName="isCurrentRole" (change)="toggleCurrentRole($event)" style="width:18px; height:18px; cursor:pointer;" />
+            <span>✓ I CURRENTLY WORK HERE (CURRENT ROLE)</span>
+          </label>
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Job Description / Key Tasks</label>
+          <textarea formControlName="description" rows="5" placeholder="Describe your responsibilities, achievements, and technologies used..." style="width:100%; padding:8px 12px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff; resize:none; font-family:inherit;"></textarea>
+        </div>
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Certificate Image</label>
+          
+          <!-- Certificate Preview -->
+          <div *ngIf="certImgPreviewUrl || currentCertUrl" style="position:relative; width:200px; height:140px; margin-bottom:12px;">
+            <img [src]="certImgPreviewUrl || currentCertUrl" alt="Certificate preview" style="width:100%; height:100%; object-fit:contain; border-radius:8px; border:2px solid var(--border); background:var(--surface2);" />
+          </div>
+          
+          <!-- Upload Area -->
+          <div class="file-upload-area" (click)="certImgInput.click()" style="cursor:pointer; min-height:60px; padding:12px; border:2px dashed var(--border); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface2); transition:all 0.2s;">
+            <input #certImgInput type="file" style="display:none;" accept="image/*,application/pdf" (change)="onCertFileSelected($event)" />
+            <span style="font-size:1.5rem; margin-bottom:4px;">📜</span>
+            <span style="font-size:0.85rem; color:var(--muted);">{{ selectedCertImgFile ? selectedCertImgFile.name : 'Upload Certificate' }}</span>
+          </div>
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Upload certificate, diploma, or verification document (image or PDF, max 5MB)</small>
+          <button *ngIf="certImgPreviewUrl || currentCertUrl" type="button" (click)="removeCertificate()" style="margin-top:8px; padding:6px 12px; background:var(--danger); border:none; border-radius:6px; color:#fff; font-size:0.8rem; cursor:pointer;">✕ Remove Certificate</button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showExperienceModal.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || experienceForm.invalid">
+          <span *ngIf="!isSubmitting()">Save Experience</span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Contact Modal -->
+<div class="modal-overlay" *ngIf="showContactModal()" (click)="showContactModal.set(false)">
+  <div class="modal" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header">
+      <h3>{{ contactForm.get('id')?.value ? 'Edit Contact Links' : 'Register Contacts' }}</h3>
+      <button class="modal-close" (click)="showContactModal.set(false)">✕</button>
+    </div>
+    <form [formGroup]="contactForm" (ngSubmit)="handleSaveContact()">
+      <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; padding:1.25rem 1.5rem;">
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Email Address *</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">📧</span>
+            <input type="email" formControlName="email" placeholder="contact@example.com" required style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">GitHub Profile Link</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">💻</span>
+            <input type="url" formControlName="github" placeholder="https://github.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">LinkedIn Profile Link</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">💼</span>
+            <input type="url" formControlName="linkedin" placeholder="https://linkedin.com/in/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Facebook Profile Link</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">👥</span>
+            <input type="url" formControlName="facebook" placeholder="https://facebook.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Instagram Handle Link</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">📸</span>
+            <input type="url" formControlName="instagram" placeholder="https://instagram.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom: 0;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">TikTok Account Link</label>
+          <div style="position:relative; display:flex; align-items:center;">
+            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">🎵</span>
+            <input type="url" formControlName="tiktok" placeholder="https://tiktok.com/@..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="showContactModal.set(false)">Cancel</button>
+        <button type="submit" class="btn btn-primary" [disabled]="isSubmitting() || contactForm.invalid">
+          <span *ngIf="!isSubmitting()">Save Contacts</span>
+          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal-overlay" *ngIf="showDeleteModal()" (click)="showDeleteModal.set(false)">
+  <div class="modal modal-sm" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease;">
+    <div class="modal-header danger-header">
+      <h3>Confirm Deletion</h3>
+      <button class="modal-close" (click)="showDeleteModal.set(false)">✕</button>
+    </div>
+    <div class="modal-body">
+      <p>Are you sure you want to permanently delete this item? This action is irreversible.</p>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="showDeleteModal.set(false)">Cancel</button>
+      <button type="button" class="btn btn-danger" style="background:var(--danger); border-color:var(--danger); color:#fff;" (click)="executeDelete()">🗑️ Delete Item</button>
+    </div>
+  </div>
+</div>
+
+<!-- CSS Styling Guide Modal -->
+<div class="modal-overlay" *ngIf="showCssGuideModal()" (click)="showCssGuideModal.set(false)" style="z-index: 1100;">
+  <div class="modal modal-lg" (click)="$event.stopPropagation()" style="animation: slideUp .4s ease; max-width: 900px; width: 95%;">
+    <div class="modal-header" style="background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border-bottom: 1px solid var(--border);">
+      <h3 style="display: flex; align-items: center; gap: 8px; margin: 0; background: linear-gradient(135deg, #fff 0%, var(--accent2) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
+        🎨 Custom CSS & Styling Guide
+      </h3>
+      <button class="modal-close" (click)="showCssGuideModal.set(false)">✕</button>
+    </div>
+    
+    <div class="modal-body" style="padding: 1.75rem; color: var(--text-dim); line-height: 1.6; max-height: 70vh; overflow-y: auto; background: var(--surface);">
+      <div style="background: rgba(108, 99, 255, 0.05); border: 1px solid rgba(108, 99, 255, 0.2); padding: 12px 16px; border-radius: 10px; margin-bottom: 20px; font-size: 0.85rem;">
+        💡 <strong>Developer Documentation:</strong> We've created a comprehensive documentation file in the repository root: <code style="color: var(--accent2); background: rgba(0,0,0,0.3); padding: 2px 6px; border-radius: 4px; font-family: monospace;">CUSTOM_CSS_GUIDE.md</code>. Any developer or designer editing your portfolio stylesheet can use either that file or this interactive in-app guide!
+      </div>
+
+      <h4 style="color: #fff; margin-bottom: 12px; font-size: 1rem; border-left: 3px solid var(--accent2); padding-left: 8px;">🚀 Core Selectors Registry</h4>
+      <p style="font-size: 0.85rem; margin-bottom: 15px;">Use these exact classes inside the Stylesheet Editor to target and override sections of your public page:</p>
+      
+      <div style="overflow-x: auto; margin-bottom: 25px; border: 1px solid var(--border); border-radius: 8px; background: rgba(0,0,0,0.15);">
+        <table style="width: 100%; border-collapse: collapse; font-size: 0.85rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 1px solid var(--border); background: var(--surface2); color: #fff;">
+              <th style="padding: 10px 14px;">Component</th>
+              <th style="padding: 10px 14px;">Selector</th>
+              <th style="padding: 10px 14px;">Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 14px; font-weight: 600; color: #fff;">Navigation Bar</td>
+              <td style="padding: 10px 14px; font-family: monospace; color: var(--accent2);">.navbar</td>
+              <td style="padding: 10px 14px; color: var(--text-dim);">Floating nav bar. Target <code style="color:var(--accent);">.logo</code> or <code style="color:var(--accent);">.nav-links a</code> to override links.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 14px; font-weight: 600; color: #fff;">Hero Name</td>
+              <td style="padding: 10px 14px; font-family: monospace; color: var(--accent2);">.hero-title span</td>
+              <td style="padding: 10px 14px; color: var(--text-dim);">Your full name gradient text span (e.g. "Mohammed Zaghloul").</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 14px; font-weight: 600; color: #fff;">Hero Role Title</td>
+              <td style="padding: 10px 14px; font-family: monospace; color: var(--accent2); font-weight: bold;">.hero-title-role</td>
+              <td style="padding: 10px 14px; color: var(--text-dim);">Your professional title (e.g. "Full-Stack Software Engineer"). Supports hover scale effects.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 14px; font-weight: 600; color: #fff;">Project Cards</td>
+              <td style="padding: 10px 14px; font-family: monospace; color: var(--accent2);">.project-card</td>
+              <td style="padding: 10px 14px; color: var(--text-dim);">Interactive portfolio project cards. Supports shadow effects and transform scaling.</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 14px; font-weight: 600; color: #fff;">Frosted Cards</td>
+              <td style="padding: 10px 14px; font-family: monospace; color: var(--accent2);">.glass-card</td>
+              <td style="padding: 10px 14px; color: var(--text-dim);">Premium frosted glass cards utilizing CSS backdrop-filters.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 style="color: #fff; margin-bottom: 12px; font-size: 1rem; border-left: 3px solid var(--accent2); padding-left: 8px;">🎨 Design System CSS Variables</h4>
+      <p style="font-size: 0.85rem; margin-bottom: 15px;">MZ Portfolio is powered by a high-grade dynamic design system. Override these variables inside a <code style="color:var(--accent);">:root</code> block to redefine themes instantly:</p>
+      
+      <div style="background: var(--surface2); padding: 15px; border-radius: 10px; border: 1px solid var(--border); font-family: monospace; font-size: 0.8rem; margin-bottom: 25px; white-space: pre-wrap; overflow-x: auto; color: #a78bfa;">
+:root {{ '{' }}
+  --bg:           #080a10;  /* Main Page Background */
+  --surface:      #0f121d;  /* Frosted Card Backdrops */
+  --surface2:     #171b2c;  /* Elevated Interactive Elements */
+  --border:       rgba(255, 255, 255, 0.08); /* Faint Grid Borders */
+  --text:         #ffffff;  /* Solid Primary Text */
+  --accent:       #6c63ff;  /* Primary Cosmic Accent (Violet) */
+  --accent2:      #a855f7;  /* Secondary Cosmic Accent (Purple) */
+{{ '}' }}
+      </div>
+
+      <h4 style="color: #fff; margin-bottom: 12px; font-size: 1rem; border-left: 3px solid var(--accent2); padding-left: 8px;">🌌 Premium Ready-To-Use Recipes</h4>
+      <p style="font-size: 0.85rem; margin-bottom: 15px;">Copy and paste these templates directly into the editor to completely transform your layout:</p>
+      
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <div style="background: var(--surface2); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+          <div style="font-weight: 700; color: #fff; font-size: 0.85rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span>🌟 Recipe A: Pulsing Cosmic Neon Glow</span>
+          </div>
+          <pre style="margin: 0; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-x: auto; color: #00ffc4;">
+/* Pulsing Cosmic Neon */
+.project-card {{ '{' }}
+  border: 1px solid rgba(0, 255, 196, 0.25) !important;
+  box-shadow: 0 10px 30px rgba(0, 255, 196, 0.05) !important;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
+{{ '}' }}
+.project-card:hover {{ '{' }}
+  transform: translateY(-8px) scale(1.02) !important;
+  border-color: #00ffc4 !important;
+  box-shadow: 0 20px 40px rgba(0, 255, 196, 0.25) !important;
+{{ '}' }}
+          </pre>
+        </div>
+
+        <div style="background: var(--surface2); padding: 15px; border-radius: 10px; border: 1px solid var(--border);">
+          <div style="font-weight: 700; color: #fff; font-size: 0.85rem; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <span>👾 Recipe B: Digital Cyberpunk Grid</span>
+          </div>
+          <pre style="margin: 0; font-family: monospace; font-size: 0.8rem; white-space: pre-wrap; overflow-x: auto; color: #ff007a;">
+/* Cyberpunk Dev Grid */
+body {{ '{' }}
+  background: #060814 !important;
+  background-image: 
+    linear-gradient(rgba(255, 0, 122, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 0, 122, 0.05) 1px, transparent 1px) !important;
+  background-size: 30px 30px !important;
+{{ '}' }}
+          </pre>
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer" style="background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); border-top: 1px solid var(--border);">
+      <button type="button" class="btn btn-secondary" (click)="showCssGuideModal.set(false)">Close Guide</button>
+    </div>
+  </div>
+</div>
+

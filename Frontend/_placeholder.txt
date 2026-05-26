@@ -1,0 +1,4 @@
+/* ═══════════════════════════════════════════
+   Portfolio — index.html update
+   Hero section with stats, refined labels
+═══════════════════════════════════════════ */

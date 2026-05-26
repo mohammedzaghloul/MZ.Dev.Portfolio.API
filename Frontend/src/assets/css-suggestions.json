@@ -1,0 +1,48 @@
+{
+  "classes": [
+    { "name": ".hero-title", "description": "Hero section main title / name" },
+    { "name": ".hero-subtitle", "description": "Hero section job headline text" },
+    { "name": ".navbar", "description": "Global floating navigation bar container" },
+    { "name": ".nav-links a", "description": "Links inside the navigation menu" },
+    { "name": ".btn-primary", "description": "Cosmic violet accent glow button" },
+    { "name": ".btn-secondary", "description": "Outline glass dark button" },
+    { "name": ".glass-card", "description": "Reflective glassmorphism container card" },
+    { "name": ".project-card", "description": "Individually wrapped showcase project card" },
+    { "name": ".timeline-content", "description": "Career milestone experience content wrapper" },
+    { "name": ".timeline-date", "description": "Pill capsule displaying experience date ranges" },
+    { "name": ".skill-pill", "description": "Rounded glowing badge container for skill items" },
+    { "name": ".logo", "description": "Brand name logo on the top-left of the navbar" },
+    { "name": ".badge", "description": "Introductory small text capsule above hero name" },
+    { "name": ".contact-box", "description": "Glass contact form widget container" }
+  ],
+  "variables": [
+    { "name": "--bg", "description": "Global canvas deep dark cosmic background" },
+    { "name": "--surface", "description": "Glassmorphism card backdrop fill color" },
+    { "name": "--surface2", "description": "Secondary slightly lighter card backdrop" },
+    { "name": "--surface3", "description": "Highly transparent structural fill" },
+    { "name": "--border", "description": "Subtle border styling for dividers and cards" },
+    { "name": "--border-hi", "description": "Accent border styling on card hover focus" },
+    { "name": "--accent", "description": "Primary theme cosmic glow color" },
+    { "name": "--accent2", "description": "Secondary glowing complementary color" },
+    { "name": "--accent3", "description": "Tertiary warm glow background highlight" },
+    { "name": "--accent-glow", "description": "Cosmic shadow glow backdrop color" },
+    { "name": "--text-primary", "description": "Bright crisp white main reading text" },
+    { "name": "--text-secondary", "description": "Muted reading secondary description text" },
+    { "name": "--muted", "description": "Faded caption text and icons" }
+  ],
+  "properties": [
+    { "name": "color: ", "description": "Sets the text foreground color" },
+    { "name": "background: ", "description": "Sets background fills, gradients, or colors" },
+    { "name": "font-family: ", "description": "Overrides font-family typography" },
+    { "name": "font-size: ", "description": "Sets the size of the font" },
+    { "name": "font-weight: ", "description": "Sets font thickness (e.g. 700 for Bold)" },
+    { "name": "border-radius: ", "description": "Rounds the corners of an element" },
+    { "name": "border: ", "description": "Applies a solid, dashed, or stylized outline" },
+    { "name": "box-shadow: ", "description": "Applies outer neon glow or shadow effects" },
+    { "name": "display: flex; ", "description": "Enables robust flexbox grid alignments" },
+    { "name": "opacity: ", "description": "Sets transparency of the element (0.0 to 1.0)" },
+    { "name": "transform: scale(1.05); ", "description": "Slightly enlarges the element size" },
+    { "name": "transition: all 0.3s ease; ", "description": "Ensures silky smooth hover transitions" },
+    { "name": "filter: blur(20px); ", "description": "Applies blur/glassmorphism sweep styling" }
+  ]
+}

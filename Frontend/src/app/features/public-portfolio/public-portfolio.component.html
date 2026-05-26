@@ -1,0 +1,287 @@
+<!-- Custom User CSS -->
+<div *ngIf="safeCustomCss()" [innerHTML]="safeCustomCss()"></div>
+
+<!-- Loader -->
+<div id="loader" [class.fade]="!loading()"><div class="ld-ring"></div></div>
+
+<!-- Not Found -->
+<div id="not-found" class="container" style="text-align: center; padding: 100px 0; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; gap: 1.5rem;" [style.display]="notFound() ? 'flex' : 'none'">
+  <div class="nf-icon" style="font-size: 5rem;">🔍</div>
+  <h2 style="color: #fff; font-weight: 800;">{{ t[activeLang()].notFoundTitle }}</h2>
+  <p style="color: var(--muted);">{{ t[activeLang()].notFoundSub }}</p>
+</div>
+
+<!-- Main Portfolio -->
+<div id="portfolio" *ngIf="profile() && !notFound()">
+  <!-- Background Glow / Aurora Particles -->
+  <div class="bg-glow glow-1"></div>
+  <div class="bg-glow glow-2"></div>
+  <div class="bg-glow glow-3"></div>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-content">
+      <a href="#" class="logo">{{ formatUserName(profile().userName) }}</a>
+      <ul class="nav-links">
+        <li *ngIf="themeService.visibility().hero"><a href="#about">{{ t[activeLang()].about }}</a></li>
+        <li *ngIf="themeService.visibility().experience"><a href="#experience">{{ t[activeLang()].experience }}</a></li>
+        <li *ngIf="themeService.visibility().projects"><a href="#projects">{{ t[activeLang()].projects }}</a></li>
+        <li *ngIf="themeService.visibility().contact"><a href="#contact" class="btn-contact">{{ t[activeLang()].contact }}</a></li>
+        
+        <!-- Language Dropdown -->
+        <li class="lang-dropdown">
+          <button class="lang-dropdown-btn">🌐 <span class="lang-text">{{ t[activeLang()].langLabel }}</span> <i class="fas fa-chevron-down"></i></button>
+          <div class="lang-dropdown-content">
+            <a (click)="onLangSwitch('ar')" style="cursor: pointer;" class="lang-item">العربية</a>
+            <a (click)="onLangSwitch('en')" style="cursor: pointer;" class="lang-item">English</a>
+          </div>
+        </li>
+      </ul>
+      <button class="mobile-menu-btn" (click)="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
+    </div>
+  </nav>
+
+  <!-- Mobile Menu Overlay -->
+  <div class="mobile-menu-overlay" [class.active]="mobileMenuOpen()">
+    <button class="mobile-menu-close" (click)="toggleMobileMenu()">✕</button>
+    <ul class="mobile-nav-links">
+      <li *ngIf="themeService.visibility().hero"><a href="#about" (click)="toggleMobileMenu()">{{ t[activeLang()].about }}</a></li>
+      <li *ngIf="themeService.visibility().experience"><a href="#experience" (click)="toggleMobileMenu()">{{ t[activeLang()].experience }}</a></li>
+      <li *ngIf="themeService.visibility().skills"><a href="#skills" (click)="toggleMobileMenu()">{{ t[activeLang()].skills }}</a></li>
+      <li *ngIf="themeService.visibility().projects"><a href="#projects" (click)="toggleMobileMenu()">{{ t[activeLang()].projects }}</a></li>
+      <li *ngIf="themeService.visibility().contact"><a href="#contact" (click)="toggleMobileMenu()">{{ t[activeLang()].contact }}</a></li>
+    </ul>
+  </div>
+
+  <!-- Dynamic Section Container -->
+  <ng-container *ngFor="let sec of sectionOrder()">
+    
+    <!-- Hero Section -->
+    <header class="hero container" id="home" *ngIf="sec === 'hero' && themeService.visibility().hero">
+      <div class="hero-content reveal active">
+        <span class="badge">{{ t[activeLang()].welcome }}</span>
+        <h1 class="hero-title">{{ t[activeLang()].iAm }}<span>{{ formatUserName(profile().userName) }}</span>،<br> <span class="hero-title-role">{{ profile().title || t[activeLang()].titleFallback }}</span>.</h1>
+        <p class="hero-subtitle">{{ getShortBio() }}</p>
+        <div class="hero-actions">
+          <a href="#projects" class="btn btn-primary">{{ t[activeLang()].browseProjects }}</a>
+          <a href="#contact" class="btn btn-secondary">{{ t[activeLang()].contactMe }}</a>
+        </div>
+      </div>
+      <div class="hero-image reveal reveal-delay active">
+        <div class="image-wrapper">
+          <img *ngIf="profile().image && !imageLoadFailed()" [src]="getProfileImageUrl(profile().image)" [alt]="formatUserName(profile().userName)" class="profile-avatar-image" (error)="imageLoadFailed.set(true)">
+          <div *ngIf="!profile().image || imageLoadFailed()" class="profile-placeholder" style="width: 100%; height: 100%; border-radius: 50%; background: linear-gradient(135deg,var(--surface2),var(--surface)); display:flex; align-items:center; justify-content:center; font-size:6rem;">👤</div>
+          
+          <!-- Float Badges -->
+          <div class="hero-float-badge badge-projects">
+            <span>🗂️</span><span>{{ projects().length }} {{ t[activeLang()].projectSuffix }}</span>
+          </div>
+          <div class="hero-float-badge badge-skills">
+            <span>⚡</span><span>{{ skills().length }} {{ t[activeLang()].skillSuffix }}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- About Section (Fully Dynamic & Profile-Specific) -->
+    <section class="about container" id="about" *ngIf="sec === 'about' && themeService.visibility().hero">
+      <div class="section-header reveal active">
+        <h2>{{ t[activeLang()].aboutTitle }}<span>{{ t[activeLang()].aboutTitleSpan }}</span></h2>
+        <p>{{ t[activeLang()].aboutSubtitle }}</p>
+      </div>
+      
+      <div class="about-content reveal active" style="max-width: 900px; margin: 0 auto;">
+        <div class="about-main-card glass-card">
+          <!-- Ambient glowing blob inside card -->
+          <div class="about-glow"></div>
+          
+          <div class="about-body">
+            <div class="about-quote-icon">“</div>
+            <p class="about-text">
+              {{ profile().about || t[activeLang()].aboutFallback }}
+            </p>
+            <div class="about-brand-tag">
+              <span class="dot"></span>
+              {{ profile().title || t[activeLang()].titleFallback }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Experience & Education Section -->
+    <section class="experience container" id="experience" *ngIf="sec === 'experience' && themeService.visibility().experience">
+      <div class="section-header reveal active">
+        <h2>{{ t[activeLang()].experienceTitle }}<span>{{ t[activeLang()].experienceTitleSpan }}</span></h2>
+        <p>{{ t[activeLang()].experienceSubtitle }}</p>
+      </div>
+      <div class="timeline" *ngIf="experiences().length > 0; else noExperiences">
+        <div class="timeline-item reveal active" *ngFor="let exp of experiences(); let i = index" [style.transition-delay]="(i * 0.1) + 's'">
+          <div class="timeline-dot"></div>
+          <div class="timeline-content glass-card">
+            <span class="timeline-date">{{ getExperienceDateRange(exp) }}</span>
+            <h3>{{ exp.title }}</h3>
+            <h4>{{ exp.company }}</h4>
+            <p *ngIf="getExperienceDescription(exp.description).text">{{ getExperienceDescription(exp.description).text }}</p>
+            
+            <!-- Certificate Badge -->
+            <div style="margin-top: 15px;" *ngIf="getExperienceDescription(exp.description).certUrl">
+              <a [href]="getFullCertUrl(getExperienceDescription(exp.description).certUrl)" (click)="openCertificate($event, getFullCertUrl(getExperienceDescription(exp.description).certUrl))" class="btn btn-primary" style="padding: 6px 15px; font-size: 0.85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600; cursor: pointer; transition: var(--transition);">
+                <i class="fas fa-certificate"></i> {{ t[activeLang()].viewCertificate }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ng-template #noExperiences>
+        <p style="text-align:center; color:var(--muted)">{{ t[activeLang()].noExperience }}</p>
+      </ng-template>
+    </section>
+
+    <!-- Skills Section -->
+    <section class="skills container" id="skills" *ngIf="sec === 'skills' && themeService.visibility().skills">
+      <div class="section-header reveal active">
+        <h2>{{ t[activeLang()].skillsTitle }}<span>{{ t[activeLang()].skillsTitleSpan }}</span></h2>
+        <p>{{ t[activeLang()].skillsSubtitle }}</p>
+      </div>
+      <div class="skills-grid reveal active">
+        <ng-container *ngIf="skills().length > 0; else noSkills">
+          <div class="skill-pill" *ngFor="let s of skills()">
+            <span class="dot"></span>
+            <span>{{ s.name }}</span>
+          </div>
+        </ng-container>
+        <ng-template #noSkills>
+          <div class="empty-state">{{ t[activeLang()].noSkills }}</div>
+        </ng-template>
+      </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section class="projects container" id="projects" *ngIf="sec === 'projects' && themeService.visibility().projects">
+      <div class="section-header reveal active">
+        <h2>{{ t[activeLang()].projectsTitle }}<span>{{ t[activeLang()].projectsTitleSpan }}</span></h2>
+        <p>{{ t[activeLang()].projectsSubtitle }}</p>
+      </div>
+      
+      <div class="projects-grid" *ngIf="projects().length > 0; else noProjects">
+        <div class="project-card-wrapper" *ngFor="let project of projects(); let i = index" [style.transition-delay]="(i * 0.1) + 's'" (mouseenter)="hoverCardId.set(project.id)" (mouseleave)="hoverCardId.set(null)">
+          <!-- Blurred Glowing Blobs behind the card -->
+          <div class="project-card-glow glow-blue" *ngIf="i % 3 === 0"></div>
+          <div class="project-card-glow glow-purple" *ngIf="i % 3 === 1"></div>
+          <div class="project-card-glow glow-cyan" *ngIf="i % 3 === 2"></div>
+          
+          <div class="project-card glass-card reveal active">
+            <!-- Glass Shimmer Reflection Layer -->
+            <div class="glass-shimmer"></div>
+            
+            <!-- Image Wrapper with Parallax Depth -->
+            <div class="project-img-wrap">
+              <div class="project-img" [style.background-image]="project.image ? 'url(' + getProfileImageUrl(project.image) + ')' : 'none'" [class.has-image]="project.image">
+                <i class="fas fa-cube fallback-icon" *ngIf="!project.image"></i>
+              </div>
+              <div class="glass-overlay"></div>
+            </div>
+            
+            <div class="project-info">
+              <!-- Futuristic Tag Pills -->
+              <div class="tech-pills-wrap" *ngIf="project.techStack">
+                <span class="tech-pill" *ngFor="let tech of getUniqueTechStack(project.techStack)">
+                  <span class="pill-dot"></span>
+                  {{ tech }}
+                </span>
+              </div>
+              <div class="tech-pills-wrap" *ngIf="!project.techStack">
+                <span class="tech-pill">
+                  <span class="pill-dot"></span>
+                  System
+                </span>
+              </div>
+              
+              <h3>{{ project.name }}</h3>
+              
+              <!-- Project Timeline -->
+              <div class="project-date" *ngIf="project.startDate || project.endDate" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 600; color: var(--accent2); background: rgba(167, 139, 250, 0.08); border: 1px solid rgba(167, 139, 250, 0.15); padding: 5px 12px; border-radius: 12px; margin: 8px 0 12px; font-family: 'Space Grotesk', 'Cairo', sans-serif;">
+                <span class="pill-dot" style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent2); box-shadow: 0 0 10px var(--accent2);"></span>
+                <span>{{ getProjectDateRange(project) }}</span>
+              </div>
+              
+              <p>{{ project.description || (activeLang() === 'en' ? 'No description available for this project.' : 'لا يوجد وصف متاح لهذا المشروع.') }}</p>
+              
+              <!-- CTA Button with Magnetic Hover -->
+              <div class="cta-wrap">
+                <a [routerLink]="['/project', userId(), project.id]" class="project-cta">
+                  <span>{{ t[activeLang()].viewDetails }}</span>
+                  <i class="fas" [class.fa-arrow-left]="activeLang() === 'ar'" [class.fa-arrow-right]="activeLang() === 'en'"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <ng-template #noProjects>
+        <p style="text-align:center; color:var(--muted); font-size:1.1rem; padding: 40px 0;">{{ t[activeLang()].noProjects }}</p>
+      </ng-template>
+    </section>
+
+    <!-- Contact Section -->
+    <section class="contact container" id="contact" *ngIf="sec === 'contact' && themeService.visibility().contact">
+      <div class="contact-box glass-card reveal active" *ngIf="contact()">
+        <div class="contact-info">
+          <h2>{{ t[activeLang()].contactTitle }}<span>{{ t[activeLang()].contactTitleSpan }}</span></h2>
+          <p>{{ t[activeLang()].contactSubtitle }}</p>
+          
+          <!-- Social Icons -->
+          <div class="social-links">
+            <a [href]="'mailto:' + contact().email" class="social-icon" *ngIf="contact().email">
+              <i class="fas fa-envelope"></i>
+            </a>
+            <a [href]="contact().github" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().github">
+              <i class="fab fa-github"></i>
+            </a>
+            <a [href]="contact().linkedin" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().linkedin">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a [href]="contact().facebook" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().facebook">
+              <i class="fab fa-facebook-f"></i>
+            </a>
+            <a [href]="contact().instagram" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().instagram">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a [href]="contact().tikTok" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().tikTok">
+              <i class="fab fa-tiktok"></i>
+            </a>
+          </div>
+        </div>
+        <div class="contact-action">
+          <a [href]="'mailto:' + contact().email" class="btn btn-primary btn-large" *ngIf="contact().email">
+            <i class="fas fa-paper-plane"></i> {{ t[activeLang()].sendMessage }}
+          </a>
+        </div>
+      </div>
+      <div class="contact-box glass-card reveal active" *ngIf="!contact()">
+        <div style="text-align: center; width: 100%;">{{ t[activeLang()].noContact }}</div>
+      </div>
+    </section>
+
+  </ng-container>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-brand">{{ formatUserName(profile().userName) }}</div>
+      <p>
+        &copy; 2026 {{ t[activeLang()].footerRights }}
+      </p>
+      <button class="share-btn" [class.hidden]="loading() || notFound() || isLoginPage()" (click)="copyLink()" style="margin-top: 1.5rem;">
+        <i class="fas" [class.fa-link]="!copied()" [class.fa-check]="copied()"></i> {{ shareButtonText() }}
+      </button>
+    </div>
+  </footer>
+</div>
+
+<!-- Back to Top Button -->
+<button class="back-to-top" [class.visible]="showBackToTop()" (click)="scrollToTop()">
+  <i class="fas fa-arrow-up"></i>
+</button>

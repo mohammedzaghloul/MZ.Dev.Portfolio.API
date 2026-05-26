@@ -1,0 +1,152 @@
+<div class="auth-wrapper" dir="ltr">
+  <div class="auth-glow"></div>
+  <div class="auth-glow auth-glow-2"></div>
+  
+  <!-- LEFT COLUMN: Form -->
+  <div class="auth-left">
+    <div class="auth-card" id="auth-card">
+
+      <!-- TABS -->
+      <div class="auth-tabs">
+        <button class="auth-tab" routerLink="/login">Sign In</button>
+        <button class="auth-tab active">Register</button>
+      </div>
+
+      <!-- REGISTER FORM -->
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <img src="/mz_brand_logo.png" alt="MZ Logo" style="width:76px; height:76px; border-radius:18px; box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.2); border: 1.5px solid rgba(255,255,255,0.08); margin: 0 auto 12px; display:block;" />
+          </div>
+          <h1 class="auth-title">Create account</h1>
+          <p class="auth-subtitle">Start building your portfolio</p>
+        </div>
+
+        <div class="field-group">
+          <label for="reg-username">Username</label>
+          <div class="input-wrap">
+            <input 
+              type="text" 
+              id="reg-username" 
+              formControlName="username" 
+              placeholder="johndoe" 
+              maxlength="30" 
+              required 
+            />
+            <i class="fas fa-user"></i>
+          </div>
+          <div *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid" class="form-error" style="margin-top: 4px; padding: 4px 8px;">
+            <span *ngIf="registerForm.get('username')?.errors?.['required']">Username is required.</span>
+            <span *ngIf="registerForm.get('username')?.errors?.['maxlength']">Username cannot exceed 30 characters.</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="reg-email">Email Address</label>
+          <div class="input-wrap">
+            <input 
+              type="email" 
+              id="reg-email" 
+              formControlName="email" 
+              placeholder="you@example.com" 
+              required 
+            />
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="form-error" style="margin-top: 4px; padding: 4px 8px;">
+            <span *ngIf="registerForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="registerForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="reg-password">Password</label>
+          <div class="input-wrap">
+            <input 
+              type="password" 
+              id="reg-password" 
+              formControlName="password" 
+              placeholder="••••••••" 
+              required 
+            />
+            <i class="fas fa-lock"></i>
+          </div>
+          <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="form-error" style="margin-top: 4px; padding: 4px 8px;">
+            <span *ngIf="registerForm.get('password')?.errors?.['required']">Password is required.</span>
+            <span *ngIf="registerForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="reg-confirm">Confirm Password</label>
+          <div class="input-wrap">
+            <input 
+              type="password" 
+              id="reg-confirm" 
+              formControlName="confirmPassword" 
+              placeholder="••••••••" 
+              required 
+            />
+            <i class="fas fa-shield-alt"></i>
+          </div>
+          <div *ngIf="registerForm.get('confirmPassword')?.touched && registerForm.get('confirmPassword')?.invalid" class="form-error" style="margin-top: 4px; padding: 4px 8px;">
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['required']">Confirm password is required.</span>
+            <span *ngIf="registerForm.get('confirmPassword')?.errors?.['passwordMismatch']">Passwords do not match.</span>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" [disabled]="isLoading()" style="padding: 12px; font-weight: 700; font-size:1rem; cursor:pointer;">
+          <span class="btn-text" *ngIf="!isLoading()">Create Account <i class="fas fa-check" style="margin-left: 6px;"></i></span>
+          <span *ngIf="isLoading()" class="ld-ring" style="width:20px; height:20px; border-width:2px; display:inline-block; vertical-align:middle;"></span>
+        </button>
+
+        <div *ngIf="errorMsg()" class="form-error">
+          {{ errorMsg() }}
+        </div>
+
+        <div *ngIf="successMsg()" class="form-success">
+          {{ successMsg() }}
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Hero Branding -->
+  <div class="auth-right">
+    <div class="auth-right-glow"></div>
+    <div class="auth-right-content">
+      <div class="brand-showcase">
+        <div class="brand-badge">🚀 Get Started</div>
+        <h2 class="brand-heading">Start your professional journey today</h2>
+        <p class="brand-paragraph">Create your developer account, unlock customizable glassmorphism templates, and share your certificates and contacts in one cohesive space.</p>
+        
+        <!-- Another cool holographic visual representing public portfolio -->
+        <div class="holo-preview glass-card">
+          <div class="holo-header">
+            <div class="holo-dots">
+              <span class="h-dot"></span><span class="h-dot"></span><span class="h-dot"></span>
+            </div>
+            <div class="holo-title-bar">Public Portfolio Page</div>
+          </div>
+          <div class="holo-body portfolio-body">
+            <div class="holo-main full-width">
+              <div class="holo-profile-top">
+                <div class="holo-avatar large"></div>
+                <div class="holo-meta">
+                  <div class="holo-line w40"></div>
+                  <div class="holo-line w20"></div>
+                </div>
+              </div>
+              <div class="holo-line w80"></div>
+              <div class="holo-chips">
+                <div class="holo-chip"></div><div class="holo-chip"></div><div class="holo-chip"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

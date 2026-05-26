@@ -1,0 +1,35 @@
+# ==========================================
+# Root .gitignore for MZ Dev Portfolio Project
+# ==========================================
+
+# Visual Studio & VS Code
+.vs/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.dbmdl
+
+# Build and Binary Folders (.NET Backend)
+**/bin/
+**/obj/
+**/publish/
+
+# Angular Frontend
+Frontend/node_modules/
+Frontend/dist/
+Frontend/.angular/
+Frontend/tmp/
+Frontend/out-tsc/
+Frontend/bazel-out/
+Frontend/npm-debug.log
+Frontend/yarn-error.log
+
+# System files
+.DS_Store
+Thumbs.db

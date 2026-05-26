@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Link.Dev.Portfolio.Api/Link.Dev.Portfolio.Api.csproj" />
+  <Project Path="Link.Dev.Portfolio.BLL/Link.Dev.Portfolio.BLL.csproj" />
+  <Project Path="Link.Dev.Portfolio.DAL/Link.Dev.Portfolio.DAL.csproj" />
+</Solution>

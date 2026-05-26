@@ -1,0 +1,119 @@
+<div class="auth-wrapper" dir="ltr">
+  <div class="auth-glow"></div>
+  <div class="auth-glow auth-glow-2"></div>
+  
+  <!-- LEFT COLUMN: Form -->
+  <div class="auth-left">
+    <div class="auth-card" id="auth-card">
+
+      <!-- TABS -->
+      <div class="auth-tabs">
+        <button class="auth-tab active">Sign In</button>
+        <button class="auth-tab" routerLink="/register">Register</button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="auth-form">
+        <div class="auth-header">
+          <div class="auth-logo">
+            <img src="/mz_brand_logo.png" alt="MZ Logo" style="width:76px; height:76px; border-radius:18px; box-shadow: 0 8px 24px rgba(var(--accent-rgb), 0.2); border: 1.5px solid rgba(255,255,255,0.08); margin: 0 auto 12px; display:block;" />
+          </div>
+          <h1 class="auth-title">Welcome back</h1>
+          <p class="auth-subtitle">Sign in to your portfolio</p>
+        </div>
+
+        <div class="field-group">
+          <label for="login-email">Email Address</label>
+          <div class="input-wrap">
+            <input 
+              type="email" 
+              id="login-email" 
+              formControlName="email" 
+              placeholder="you@example.com" 
+              required 
+            />
+            <i class="fas fa-envelope"></i>
+          </div>
+          <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="form-error" style="margin-top: 4px; padding: 4px 8px;">
+            <span *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</span>
+            <span *ngIf="loginForm.get('email')?.errors?.['email']">Please enter a valid email address.</span>
+          </div>
+        </div>
+
+        <div class="field-group">
+          <label for="login-password">Password</label>
+          <div class="input-wrap">
+            <input 
+              type="password" 
+              id="login-password" 
+              formControlName="password" 
+              placeholder="••••••••" 
+              required 
+            />
+            <i class="fas fa-lock"></i>
+          </div>
+          <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="form-error" style="margin-top: 4px; padding: 4px 8px;">
+            <span *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</span>
+            <span *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</span>
+          </div>
+        </div>
+
+        <div class="field-group checkbox-group" style="margin-bottom: 1.5rem;">
+          <label class="checkbox-label" style="display:flex; align-items:center; gap:8px;">
+            <input type="checkbox" id="login-remember" style="width:16px; height:16px;" />
+            Remember me
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-full" [disabled]="isLoading()" style="padding: 12px; font-weight: 700; font-size:1rem; cursor:pointer;">
+          <span class="btn-text" *ngIf="!isLoading()">Sign In <i class="fas fa-sign-in-alt" style="margin-left: 6px;"></i></span>
+          <span *ngIf="isLoading()" class="ld-ring" style="width:20px; height:20px; border-width:2px; display:inline-block; vertical-align:middle;"></span>
+        </button>
+
+        <div *ngIf="errorMsg()" class="form-error">
+          {{ errorMsg() }}
+        </div>
+      </form>
+
+    </div>
+  </div>
+
+  <!-- RIGHT COLUMN: Hero Branding -->
+  <div class="auth-right">
+    <div class="auth-right-glow"></div>
+    <div class="auth-right-content">
+      <div class="brand-showcase">
+        <div class="brand-badge">✨ Mohamed Zaghloul</div>
+        <h2 class="brand-heading">Build your premium professional portfolio</h2>
+        <p class="brand-paragraph">Manage your milestones, showcase creative projects, choose HSL-tailored themes, and present your career to the world with high performance.</p>
+        
+        <!-- Interactive holographic dashboard preview card -->
+        <div class="holo-preview glass-card">
+          <div class="holo-header">
+            <div class="holo-dots">
+              <span class="h-dot"></span><span class="h-dot"></span><span class="h-dot"></span>
+            </div>
+            <div class="holo-title-bar">MZ Dashboard</div>
+          </div>
+          <div class="holo-body">
+            <div class="holo-sidebar">
+              <div class="holo-line w50"></div>
+              <div class="holo-line w30"></div>
+              <div class="holo-line w60"></div>
+            </div>
+            <div class="holo-main">
+              <div class="holo-avatar"></div>
+              <div class="holo-line w80"></div>
+              <div class="holo-line w40"></div>
+              <div class="holo-grid">
+                <div class="holo-grid-item"></div>
+                <div class="holo-grid-item"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</div>

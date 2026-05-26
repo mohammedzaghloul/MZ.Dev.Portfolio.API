@@ -1,0 +1,84 @@
+<div class="project-details">
+  <div class="container">
+    <!-- Loading State -->
+    <div class="loading" *ngIf="loading()">
+      <div class="ld-ring"></div>
+    </div>
+
+    <!-- Not Found State -->
+    <div class="not-found" *ngIf="notFound()">
+      <h2>Project Not Found</h2>
+      <p>This project does not exist or has been deleted.</p>
+      <button class="back-btn" (click)="goBack()" style="margin-top: 2rem;">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+      </button>
+    </div>
+
+    <!-- Project Details -->
+    <div *ngIf="project() && !loading()">
+      <!-- Back Button -->
+      <button class="back-btn" (click)="goBack()">
+        <i class="fas fa-arrow-left"></i> Back to Portfolio
+      </button>
+
+      <!-- Project Header -->
+      <div class="project-header">
+        <h1 class="project-title">{{ project().name }}</h1>
+        
+        <!-- Project Meta -->
+        <div class="project-meta">
+          <div class="meta-item" *ngIf="project().startDate || project().endDate">
+            <i class="fas fa-calendar"></i>
+            <span>{{ getProjectDateRange(project()) }}</span>
+          </div>
+          <div class="meta-item" *ngIf="project().techStack">
+            <i class="fas fa-code"></i>
+            <span>{{ getUniqueTechStack(project().techStack).length }} Technologies</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Project Image -->
+      <div class="project-image">
+        <img *ngIf="project().image" [src]="getProjectImageUrl(project().image)" [alt]="project().name">
+        <div *ngIf="!project().image" class="project-image-placeholder">
+          <i class="fas fa-cube"></i>
+        </div>
+      </div>
+
+      <!-- Content Grid -->
+      <div class="content-grid">
+        <!-- Main Content -->
+        <div class="main-content">
+          <h2 class="section-title">About This Project</h2>
+          <p class="description">
+            {{ project().description || 'No description available for this project.' }}
+          </p>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <!-- Tech Stack Card -->
+          <div class="sidebar-card">
+            <h2 class="section-title">Technologies Used</h2>
+            <div class="tech-stack" *ngIf="project().techStack">
+              <span class="tech-tag" *ngFor="let tech of getUniqueTechStack(project().techStack)">
+                {{ tech }}
+              </span>
+            </div>
+            <p *ngIf="!project().techStack" style="color: var(--text-secondary);">No technologies listed.</p>
+          </div>
+
+          <!-- Actions Card -->
+          <div class="sidebar-card" *ngIf="project().link">
+            <h2 class="section-title">Project Links</h2>
+            <a [href]="project().link" target="_blank" rel="noopener noreferrer" class="action-btn">
+              <i class="fas fa-external-link-alt"></i>
+              View Live Project
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
