@@ -2141,14 +2141,20 @@ export class DashboardComponent implements OnInit {
     const uid = this.authService.userId() || '';
     const id = this.contactForm.get('id')?.value || 0;
 
+    const githubRaw = this.contactForm.get('github')?.value || '';
+    const linkedinRaw = this.contactForm.get('linkedin')?.value || '';
+    const facebookRaw = this.contactForm.get('facebook')?.value || '';
+    const instagramRaw = this.contactForm.get('instagram')?.value || '';
+    const tiktokRaw = this.contactForm.get('tiktok')?.value || '';
+
     const payload = {
       id,
       email: this.contactForm.get('email')?.value || '',
-      github: this.contactForm.get('github')?.value || null,
-      linkedin: this.contactForm.get('linkedin')?.value || null,
-      facebook: this.contactForm.get('facebook')?.value || null,
-      instagram: this.contactForm.get('instagram')?.value || null,
-      tikTok: this.contactForm.get('tiktok')?.value || null,
+      github: this.formatSocialLink(githubRaw, 'github') || null,
+      linkedin: this.formatSocialLink(linkedinRaw, 'linkedin') || null,
+      facebook: this.formatSocialLink(facebookRaw, 'facebook') || null,
+      instagram: this.formatSocialLink(instagramRaw, 'instagram') || null,
+      tikTok: this.formatSocialLink(tiktokRaw, 'tiktok') || null,
       userId: uid
     };
 
@@ -2170,6 +2176,42 @@ export class DashboardComponent implements OnInit {
         },
         error: () => this.isSubmitting.set(false)
       });
+    }
+  }
+
+  formatSocialLink(value: string, platform: string): string {
+    if (!value) return '';
+    let val = value.trim();
+    if (!val) return '';
+
+    // If it's already a full URL, return it as-is
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      return val;
+    }
+
+    // Extract handle if it's an email address
+    let handle = val;
+    if (val.includes('@')) {
+      handle = val.split('@')[0];
+    }
+
+    // Remove leading slashes, @ symbols or whitespace
+    handle = handle.replace(/^[/\s@]+/, '');
+
+    // Now format based on platform
+    switch (platform.toLowerCase()) {
+      case 'github':
+        return `https://github.com/${handle}`;
+      case 'linkedin':
+        return `https://linkedin.com/in/${handle}`;
+      case 'facebook':
+        return `https://facebook.com/${handle}`;
+      case 'instagram':
+        return `https://instagram.com/${handle}`;
+      case 'tiktok':
+        return `https://tiktok.com/@${handle}`;
+      default:
+        return val;
     }
   }
 

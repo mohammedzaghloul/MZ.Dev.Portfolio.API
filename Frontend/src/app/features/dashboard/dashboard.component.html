@@ -1068,7 +1068,7 @@
       <button class="modal-close" (click)="showContactModal.set(false)">✕</button>
     </div>
     <form [formGroup]="contactForm" (ngSubmit)="handleSaveContact()">
-      <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:12px; padding:1.25rem 1.5rem;">
+      <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:15px; padding:1.25rem 1.5rem;">
         <div class="field-group" style="margin-bottom: 0;">
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Email Address *</label>
           <div style="position:relative; display:flex; align-items:center;">
@@ -1080,35 +1080,43 @@
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">GitHub Profile Link</label>
           <div style="position:relative; display:flex; align-items:center;">
             <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">💻</span>
-            <input type="url" formControlName="github" placeholder="https://github.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+            <input type="text" formControlName="github" placeholder="https://github.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
           </div>
         </div>
         <div class="field-group" style="margin-bottom: 0;">
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">LinkedIn Profile Link</label>
           <div style="position:relative; display:flex; align-items:center;">
             <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">💼</span>
-            <input type="url" formControlName="linkedin" placeholder="https://linkedin.com/in/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+            <input type="text" formControlName="linkedin" placeholder="https://linkedin.com/in/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
           </div>
         </div>
         <div class="field-group" style="margin-bottom: 0;">
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Facebook Profile Link</label>
           <div style="position:relative; display:flex; align-items:center;">
             <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">👥</span>
-            <input type="url" formControlName="facebook" placeholder="https://facebook.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+            <input type="text" formControlName="facebook" placeholder="https://facebook.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
           </div>
         </div>
         <div class="field-group" style="margin-bottom: 0;">
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Instagram Handle Link</label>
           <div style="position:relative; display:flex; align-items:center;">
             <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">📸</span>
-            <input type="url" formControlName="instagram" placeholder="https://instagram.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+            <input type="text" formControlName="instagram" placeholder="https://instagram.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
           </div>
         </div>
         <div class="field-group" style="margin-bottom: 0;">
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">TikTok Account Link</label>
           <div style="position:relative; display:flex; align-items:center;">
             <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">🎵</span>
-            <input type="url" formControlName="tiktok" placeholder="https://tiktok.com/@..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+            <input type="text" formControlName="tiktok" placeholder="https://tiktok.com/@..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          </div>
+        </div>
+        
+        <!-- Elegant Help Tip -->
+        <div style="grid-column: span 2; display: flex; gap: 10px; align-items: flex-start; padding: 12px; background: rgba(108, 99, 255, 0.04); border: 1px dashed rgba(108, 99, 255, 0.2); border-radius: 8px; margin-top: 5px;">
+          <span style="font-size: 1.1rem; line-height: 1;">💡</span>
+          <div style="font-size: 0.75rem; color: var(--text-dim); line-height: 1.4; text-align: left;">
+            <strong>Intelligent Auto-Formatting Enabled!</strong> You can enter full profile URLs, plain usernames, or email addresses. The system will automatically convert them into clean, working, absolute social links upon saving.
           </div>
         </div>
       </div>
