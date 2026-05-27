@@ -46,6 +46,7 @@ import { PortfolioService } from '../../core/services/portfolio.service';
     .project-details {
       padding: 8rem 2rem 4rem;
       min-height: 100vh;
+      background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.08) 0%, rgba(11, 16, 32, 0) 70%);
     }
 
     .container {
@@ -241,6 +242,97 @@ import { PortfolioService } from '../../core/services/portfolio.service';
     .action-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 0 60px rgba(124, 58, 237, 0.45);
+    }
+
+    /* GitHub Button */
+    .action-btn-github {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      font-weight: 700;
+      font-size: 1rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .action-btn-github:hover {
+      background: rgba(255, 255, 255, 0.08) !important;
+      border-color: rgba(255, 255, 255, 0.2) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 255, 255, 0.05);
+    }
+
+    /* Interactive tag animation */
+    .tech-tag {
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+    .tech-tag:hover {
+      background: rgba(6, 182, 212, 0.12) !important;
+      border-color: var(--accent-cyan) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(6, 182, 212, 0.15) !important;
+    }
+
+    .project-main-card {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 35px;
+      background: rgba(11, 16, 32, 0.65);
+      border: 2px solid var(--glass-border);
+      padding: 35px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-card);
+      align-items: start;
+      backdrop-filter: blur(10px);
+    }
+
+    .project-details-image {
+      width: 100%;
+      height: 260px;
+      border-radius: 16px;
+      overflow: hidden;
+      border: 2px solid var(--glass-border);
+      position: relative;
+      background: #070a14;
+    }
+
+    .actions-card {
+      background: rgba(255, 255, 255, 0.01);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      backdrop-filter: blur(5px);
+    }
+
+    .tech-card {
+      background: rgba(11, 16, 32, 0.65);
+      border: 2px solid var(--glass-border);
+      padding: 30px;
+      border-radius: 24px;
+      box-shadow: var(--shadow-card);
+      backdrop-filter: blur(10px);
+    }
+
+    /* Split Grid responsiveness */
+    @media (max-width: 768px) {
+      .project-main-card {
+        grid-template-columns: 1fr !important;
+        padding: 20px !important;
+        gap: 25px !important;
+      }
+      .project-details-image {
+        height: 200px !important;
+      }
     }
 
     .loading {

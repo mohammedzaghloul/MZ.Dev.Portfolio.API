@@ -1,82 +1,77 @@
 <div class="project-details">
-  <div class="container">
+  <div class="container" style="max-width: 1100px;">
     <!-- Loading State -->
     <div class="loading" *ngIf="loading()">
       <div class="ld-ring"></div>
     </div>
-
+    
     <!-- Not Found State -->
     <div class="not-found" *ngIf="notFound()">
       <h2>Project Not Found</h2>
-      <p>This project does not exist or has been deleted.</p>
-      <button class="back-btn" (click)="goBack()" style="margin-top: 2rem;">
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;">This project does not exist or has been deleted.</p>
+      <button class="back-btn" (click)="goBack()">
         <i class="fas fa-arrow-left"></i> Back to Portfolio
       </button>
     </div>
 
-    <!-- Project Details -->
-    <div *ngIf="project() && !loading()">
-      <!-- Back Button -->
-      <button class="back-btn" (click)="goBack()">
-        <i class="fas fa-arrow-left"></i> Back to Portfolio
-      </button>
-
-      <!-- Project Header -->
-      <div class="project-header">
-        <h1 class="project-title">{{ project().name }}</h1>
-        
-        <!-- Project Meta -->
-        <div class="project-meta">
-          <div class="meta-item" *ngIf="project().startDate || project().endDate">
-            <i class="fas fa-calendar"></i>
-            <span>{{ getProjectDateRange(project()) }}</span>
-          </div>
-          <div class="meta-item" *ngIf="project().techStack">
-            <i class="fas fa-code"></i>
-            <span>{{ getUniqueTechStack(project().techStack).length }} Technologies</span>
-          </div>
-        </div>
+    <!-- Project Content -->
+    <div *ngIf="project() && !loading()" style="display: flex; flex-direction: column; gap: 30px; animation: fadeIn 0.5s ease;">
+      <div>
+        <button class="back-btn" (click)="goBack()" style="margin-bottom: 0;">
+          <i class="fas fa-arrow-left"></i> Back to Portfolio
+        </button>
       </div>
-
-      <!-- Project Image -->
-      <div class="project-image">
-        <img *ngIf="project().image" [src]="getProjectImageUrl(project().image)" [alt]="project().name">
-        <div *ngIf="!project().image" class="project-image-placeholder">
-          <i class="fas fa-cube"></i>
-        </div>
-      </div>
-
-      <!-- Content Grid -->
-      <div class="content-grid">
-        <!-- Main Content -->
-        <div class="main-content">
-          <h2 class="section-title">About This Project</h2>
-          <p class="description">
-            {{ project().description || 'No description available for this project.' }}
-          </p>
-        </div>
-
-        <!-- Sidebar -->
-        <div class="sidebar">
-          <!-- Tech Stack Card -->
-          <div class="sidebar-card">
-            <h2 class="section-title">Technologies Used</h2>
-            <div class="tech-stack" *ngIf="project().techStack">
-              <span class="tech-tag" *ngFor="let tech of getUniqueTechStack(project().techStack)">
-                {{ tech }}
-              </span>
+      
+      <!-- Premium Split card layout -->
+      <div class="project-main-card">
+        <!-- Left side: Description block -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div>
+            <h1 class="project-title" style="font-size: 2.5rem; font-weight: 900; line-height: 1.2; margin: 0; background: linear-gradient(135deg, #ffffff 0%, var(--accent-purple-light) 50%, var(--accent-cyan) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">{{ project().name }}</h1>
+            <div class="project-date" *ngIf="project().startDate || project().endDate" style="display: inline-flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan); background: rgba(6, 182, 212, 0.08); border: 1px solid rgba(6, 182, 212, 0.15); padding: 6px 14px; border-radius: 12px; margin-top: 12px;">
+              <span style="display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan);"></span>
+              <span>{{ getProjectDateRange(project()) }}</span>
             </div>
-            <p *ngIf="!project().techStack" style="color: var(--text-secondary);">No technologies listed.</p>
           </div>
+          <div style="border-top: 1px solid var(--glass-border); padding-top: 20px;">
+            <h2 class="section-title" style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 12px;">About This Project</h2>
+            <p class="description" style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; white-space: pre-line; margin: 0;">{{ project().description || 'No description available for this project.' }}</p>
+          </div>
+        </div>
 
-          <!-- Actions Card -->
-          <div class="sidebar-card" *ngIf="project().link">
-            <h2 class="section-title">Project Links</h2>
-            <a [href]="project().link" target="_blank" rel="noopener noreferrer" class="action-btn">
-              <i class="fas fa-external-link-alt"></i>
-              View Live Project
-            </a>
+        <!-- Right side: Cover image & Action deck -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+          <div class="project-details-image">
+            <img *ngIf="project().image" [src]="getProjectImageUrl(project().image)" [alt]="project().name" style="width: 100%; height: 100%; object-fit: cover;" />
+            <div *ngIf="!project().image" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--bg-secondary), var(--bg-tertiary)); font-size: 5rem; color: rgba(255, 255, 255, 0.1);">📦</div>
           </div>
+          
+          <!-- Actions Deck Card (View Live / Github Code) -->
+          <div class="actions-card" *ngIf="project().link || project().githubLink">
+            <h2 class="section-title" style="font-size: 1.1rem; font-weight: 800; color: #fff; margin-bottom: 4px; display: flex; align-items: center; gap: 8px;">
+              <i class="fas fa-link" style="font-size: 0.95rem; color: var(--accent-cyan);"></i> Project Links
+            </h2>
+            <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%;">
+              <a *ngIf="project().link" [href]="project().link" target="_blank" rel="noopener noreferrer" class="action-btn" style="flex: 1; min-width: 120px;">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+              <a *ngIf="project().githubLink" [href]="project().githubLink" target="_blank" rel="noopener noreferrer" class="action-btn-github" style="flex: 1; min-width: 120px;">
+                <i class="fab fa-github"></i> Code Github
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom full-width section: Stack architecture -->
+      <div class="tech-card" *ngIf="project().techStack">
+        <h2 class="section-title" style="font-size: 1.25rem; font-weight: 800; color: #fff; margin-bottom: 20px; display: flex; align-items: center; gap: 10px;">
+          <i class="fas fa-tools" style="color: var(--accent-purple-light);"></i> Technologies & System Architecture
+        </h2>
+        <div class="tech-stack">
+          <span class="tech-tag" *ngFor="let tech of getUniqueTechStack(project().techStack)">
+            {{ tech }}
+          </span>
         </div>
       </div>
     </div>
