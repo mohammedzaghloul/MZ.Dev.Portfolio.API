@@ -2167,6 +2167,20 @@ export class DashboardComponent implements OnInit {
     this.themeService.applyTheme(num);
     const vis = this.themeService.visibility();
     this.saveVisibility(vis);
+
+    // Instantly apply theme attribute to preview iframe body without reloading
+    try {
+      const iframe = this.previewIframe?.nativeElement;
+      if (iframe) {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+        if (iframeDoc && iframeDoc.body) {
+          const themeName = this.themeService.themeMap[num] || 'nebula';
+          iframeDoc.body.setAttribute('data-theme', themeName);
+        }
+      }
+    } catch (e) {
+      console.warn('Could not inject theme into iframe:', e);
+    }
   }
 
   toggleSectionVisibility(section: string): void {
@@ -2281,6 +2295,21 @@ export class DashboardComponent implements OnInit {
     this.showToast('Section order updated!', 'success');
   }
 
+  reloadPreviewIframe(): void {
+    try {
+      const iframe = this.previewIframe?.nativeElement;
+      if (iframe) {
+        const currentSrc = iframe.src;
+        iframe.src = '';
+        setTimeout(() => {
+          iframe.src = currentSrc;
+        }, 50);
+      }
+    } catch (e) {
+      console.warn('Failed to reload preview iframe:', e);
+    }
+  }
+
   saveAppearance(): void {
     const p = this.profile();
     if (!p) return;
@@ -2301,6 +2330,7 @@ export class DashboardComponent implements OnInit {
         this.profile.set(res);
         this.isSubmitting.set(false);
         this.appearanceSaved.set(true);
+        this.reloadPreviewIframe(); // Reload live preview to fully sync layout & visibility settings
         setTimeout(() => this.appearanceSaved.set(false), 3000);
       },
       error: () => this.isSubmitting.set(false)

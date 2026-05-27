@@ -69,7 +69,7 @@ export class ThemeService {
     custom_css: ''
   });
 
-  private readonly themeMap: { [key: string]: string } = {
+  readonly themeMap: { [key: string]: string } = {
     '1': 'nebula',
     '2': 'ocean',
     '3': 'minimal',
