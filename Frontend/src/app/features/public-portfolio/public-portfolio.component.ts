@@ -1484,6 +1484,8 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
   readonly copied = signal<boolean>(false);
   readonly isLoginPage = signal<boolean>(false);
   readonly showBackToTop = signal<boolean>(false);
+  readonly activeCertUrl = signal<string | null>(null);
+  readonly showCertModal = signal<boolean>(false);
 
   // Section order
   readonly sectionOrder = signal<string[]>(['hero', 'about', 'skills', 'experience', 'projects', 'contact']);
@@ -1867,10 +1869,13 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
 
   openCertificate(event: Event, url: string): void {
     event.preventDefault();
-    // Open in same tab
-    window.location.href = url;
-    // Show toast notification
-    this.showToast('Certificate opened successfully');
+    this.activeCertUrl.set(url);
+    this.showCertModal.set(true);
+  }
+
+  closeCertModal(): void {
+    this.showCertModal.set(false);
+    this.activeCertUrl.set(null);
   }
 
   showToast(message: string): void {
