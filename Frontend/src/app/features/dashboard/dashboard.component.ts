@@ -1877,12 +1877,18 @@ export class DashboardComponent implements OnInit {
     const id = this.projectForm.get('id')?.value || 0;
     const isOngoing = this.projectForm.get('isOngoing')?.value;
 
+    const rawLink = this.projectForm.get('link')?.value || '';
+    const rawGithubLink = this.projectForm.get('githubLink')?.value || '';
+
+    const formattedLink = this.formatGeneralUrl(rawLink);
+    const formattedGithubLink = this.formatGeneralUrl(rawGithubLink);
+
     const form = new FormData();
     form.append('name', this.projectForm.get('name')?.value || '');
     form.append('description', this.projectForm.get('description')?.value || '');
-    form.append('link', this.projectForm.get('link')?.value || '');
+    form.append('link', formattedLink);
     form.append('techStack', this.projectForm.get('techStack')?.value || '');
-    form.append('githubLink', this.projectForm.get('githubLink')?.value || '');
+    form.append('githubLink', formattedGithubLink);
     form.append('startDate', this.projectForm.get('startDate')?.value || '');
     
     if (!isOngoing) {
@@ -2213,6 +2219,25 @@ export class DashboardComponent implements OnInit {
       default:
         return val;
     }
+  }
+
+  formatGeneralUrl(value: string): string {
+    if (!value) return '';
+    let val = value.trim();
+    if (!val) return '';
+
+    // If it's already a full absolute URL, return it
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      return val;
+    }
+
+    // If it's an email address, turn it into mailto:
+    if (val.includes('@') && !val.includes('/')) {
+      return `mailto:${val}`;
+    }
+
+    // Otherwise, assume it is a domain or path, prepend https://
+    return `https://${val}`;
   }
 
   // Appearance Section
