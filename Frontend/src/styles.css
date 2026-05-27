@@ -173,6 +173,25 @@ body[data-theme="sunset"] {
   --shadow-glow: 0 0 30px rgba(249,115,22,0.2);
 }
 
+/* ── Theme: Flame ── */
+body[data-theme="flame"] {
+  --bg:          #121212;
+  --surface:     #1a1a1a;
+  --surface2:    #242424;
+  --surface3:    #2e2e2e;
+  --border:      #2c2c2c;
+  --border-hi:   rgba(253,111,0,0.35);
+  --accent:      #fd6f00;
+  --accent-glow: rgba(253, 111, 0, 0.4);
+  --accent2:     #ff9500;
+  --accent3:     #ffbe59;
+  --text:        #f5f5f5;
+  --text-dim:    #b0b0b0;
+  --muted:       #707070;
+  --shadow-glow: 0 0 30px rgba(253,111,0,0.2);
+}
+
+
 /* ══════════════════════════════
    BASE
 ══════════════════════════════ */
@@ -232,6 +251,7 @@ body[data-theme="sakura"]::before    { background-image: linear-gradient(rgba(24
 body[data-theme="midnight"]::before  { background-image: linear-gradient(rgba(139,92,246,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.015) 1px, transparent 1px); }
 body[data-theme="forest"]::before    { background-image: linear-gradient(rgba(16,185,129,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.015) 1px, transparent 1px); }
 body[data-theme="sunset"]::before    { background-image: linear-gradient(rgba(249,115,22,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.015) 1px, transparent 1px); }
+body[data-theme="flame"]::before     { background-image: linear-gradient(rgba(253,111,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(253,111,0,0.015) 1px, transparent 1px); }
 
 /* Cyberpunk scanline */
 body[data-theme="cyberpunk"]::after {
@@ -271,6 +291,7 @@ body[data-theme="sakura"]    .glass-card { background: rgba(37,22,44,0.55); bord
 body[data-theme="midnight"]  .glass-card { background: rgba(15,13,34,0.55);  border-color: rgba(139,92,246,0.08); }
 body[data-theme="forest"]    .glass-card { background: rgba(10,28,21,0.55);  border-color: rgba(16,185,129,0.08); }
 body[data-theme="sunset"]    .glass-card { background: rgba(28,16,14,0.55);  border-color: rgba(249,115,22,0.08); }
+body[data-theme="flame"]     .glass-card { background: rgba(30,30,30,0.55);  border-color: rgba(253,111,0,0.08); }
 
 /* ══════════════════════════════
    NAVIGATION

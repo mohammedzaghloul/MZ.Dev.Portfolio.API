@@ -79,6 +79,7 @@ export class ThemeService {
     '7': 'midnight',
     '8': 'forest',
     '9': 'sunset',
+    '10': 'flame',
   };
 
   constructor() {

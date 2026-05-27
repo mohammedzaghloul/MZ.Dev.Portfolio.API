@@ -487,6 +487,10 @@
               <div class="theme-swatch swatch-sunset" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f97316 0%, #ef4444 100%); margin-bottom:8px;"></div>
               <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌅 Sunset</div>
             </div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '10'" (click)="selectThemeCard('10')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
+              <div class="theme-swatch swatch-flame" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #fd6f00 0%, #ff9500 100%); margin-bottom:8px;"></div>
+              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🔥 Flame</div>
+            </div>
           </div>
         </div>
 
