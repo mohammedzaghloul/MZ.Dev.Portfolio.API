@@ -36,6 +36,13 @@
             <a (click)="onLangSwitch('en')" style="cursor: pointer;" class="lang-item">English</a>
           </div>
         </li>
+
+        <!-- Create Account CTA Link -->
+        <li>
+          <a routerLink="/register" class="btn btn-primary" style="padding: 6px 14px; font-size: 0.85rem; border-radius: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent-purple, #7C3AED) 0%, var(--accent-purple-light, #A855F7) 100%); border: none; box-shadow: 0 4px 15px var(--glass-border-glow); text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+            <span>🚀</span> Build Yours
+          </a>
+        </li>
       </ul>
       <button class="mobile-menu-btn" (click)="toggleMobileMenu()"><i class="fas fa-bars"></i></button>
     </div>
@@ -50,6 +57,11 @@
       <li *ngIf="themeService.visibility().skills"><a href="#skills" (click)="toggleMobileMenu()">{{ t[activeLang()].skills }}</a></li>
       <li *ngIf="themeService.visibility().projects"><a href="#projects" (click)="toggleMobileMenu()">{{ t[activeLang()].projects }}</a></li>
       <li *ngIf="themeService.visibility().contact"><a href="#contact" (click)="toggleMobileMenu()">{{ t[activeLang()].contact }}</a></li>
+      <li style="margin-top: 15px;">
+        <a routerLink="/register" class="btn btn-primary" (click)="toggleMobileMenu()" style="padding: 10px 20px; font-size: 0.95rem; border-radius: 24px; font-weight: 700; width: 80%; text-align: center; text-decoration: none; justify-content: center; display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(135deg, var(--accent-purple, #7C3AED) 0%, var(--accent-purple-light, #A855F7) 100%);">
+          🚀 Build Your Own Portfolio
+        </a>
+      </li>
     </ul>
   </div>
 
@@ -279,6 +291,14 @@
       </button>
     </div>
   </footer>
+
+  <!-- Floating Builder Badge CTA -->
+  <div class="floating-builder-cta" [class.hidden]="loading() || notFound() || isLoginPage()">
+    <a routerLink="/register" class="cta-link">
+      <span style="font-size: 1.1rem; animation: pulse 2s infinite; display: inline-block;">🚀</span>
+      <span class="cta-text" style="max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.4s ease; display: inline-block;">Build Your Own Portfolio</span>
+    </a>
+  </div>
 </div>
 
 <!-- Back to Top Button -->
