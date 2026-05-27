@@ -23,10 +23,10 @@
     <div class="container nav-content">
       <a href="#" class="logo">{{ formatUserName(profile().userName) }}</a>
       <ul class="nav-links">
-        <li *ngIf="themeService.visibility().hero"><a href="#about">{{ t[activeLang()].about }}</a></li>
-        <li *ngIf="themeService.visibility().experience"><a href="#experience">{{ t[activeLang()].experience }}</a></li>
-        <li *ngIf="themeService.visibility().projects"><a href="#projects">{{ t[activeLang()].projects }}</a></li>
-        <li *ngIf="themeService.visibility().contact"><a href="#contact" class="btn-contact">{{ t[activeLang()].contact }}</a></li>
+        <li *ngIf="themeService.visibility().hero"><a (click)="scrollToSection($event, 'about')" style="cursor: pointer;">{{ t[activeLang()].about }}</a></li>
+        <li *ngIf="themeService.visibility().experience"><a (click)="scrollToSection($event, 'experience')" style="cursor: pointer;">{{ t[activeLang()].experience }}</a></li>
+        <li *ngIf="themeService.visibility().projects"><a (click)="scrollToSection($event, 'projects')" style="cursor: pointer;">{{ t[activeLang()].projects }}</a></li>
+        <li *ngIf="themeService.visibility().contact"><a (click)="scrollToSection($event, 'contact')" class="btn-contact" style="cursor: pointer;">{{ t[activeLang()].contact }}</a></li>
         
         <!-- Language Dropdown -->
         <li class="lang-dropdown">
@@ -45,11 +45,11 @@
   <div class="mobile-menu-overlay" [class.active]="mobileMenuOpen()">
     <button class="mobile-menu-close" (click)="toggleMobileMenu()">✕</button>
     <ul class="mobile-nav-links">
-      <li *ngIf="themeService.visibility().hero"><a href="#about" (click)="toggleMobileMenu()">{{ t[activeLang()].about }}</a></li>
-      <li *ngIf="themeService.visibility().experience"><a href="#experience" (click)="toggleMobileMenu()">{{ t[activeLang()].experience }}</a></li>
-      <li *ngIf="themeService.visibility().skills"><a href="#skills" (click)="toggleMobileMenu()">{{ t[activeLang()].skills }}</a></li>
-      <li *ngIf="themeService.visibility().projects"><a href="#projects" (click)="toggleMobileMenu()">{{ t[activeLang()].projects }}</a></li>
-      <li *ngIf="themeService.visibility().contact"><a href="#contact" (click)="toggleMobileMenu()">{{ t[activeLang()].contact }}</a></li>
+      <li *ngIf="themeService.visibility().hero"><a (click)="scrollToSection($event, 'about'); toggleMobileMenu()" style="cursor: pointer;">{{ t[activeLang()].about }}</a></li>
+      <li *ngIf="themeService.visibility().experience"><a (click)="scrollToSection($event, 'experience'); toggleMobileMenu()" style="cursor: pointer;">{{ t[activeLang()].experience }}</a></li>
+      <li *ngIf="themeService.visibility().skills"><a (click)="scrollToSection($event, 'skills'); toggleMobileMenu()" style="cursor: pointer;">{{ t[activeLang()].skills }}</a></li>
+      <li *ngIf="themeService.visibility().projects"><a (click)="scrollToSection($event, 'projects'); toggleMobileMenu()" style="cursor: pointer;">{{ t[activeLang()].projects }}</a></li>
+      <li *ngIf="themeService.visibility().contact"><a (click)="scrollToSection($event, 'contact'); toggleMobileMenu()" style="cursor: pointer;">{{ t[activeLang()].contact }}</a></li>
     </ul>
   </div>
 
@@ -63,8 +63,8 @@
         <h1 class="hero-title">{{ t[activeLang()].iAm }}<span>{{ formatUserName(profile().userName) }}</span>،<br> <span class="hero-title-role">{{ profile().title || t[activeLang()].titleFallback }}</span>.</h1>
         <p class="hero-subtitle">{{ getShortBio() }}</p>
         <div class="hero-actions">
-          <a href="#projects" class="btn btn-primary">{{ t[activeLang()].browseProjects }}</a>
-          <a href="#contact" class="btn btn-secondary">{{ t[activeLang()].contactMe }}</a>
+          <a (click)="scrollToSection($event, 'projects')" class="btn btn-primary" style="cursor: pointer;">{{ t[activeLang()].browseProjects }}</a>
+          <a (click)="scrollToSection($event, 'contact')" class="btn btn-secondary" style="cursor: pointer;">{{ t[activeLang()].contactMe }}</a>
         </div>
       </div>
       <div class="hero-image reveal reveal-delay active">

@@ -1935,6 +1935,16 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
     });
   }
 
+  scrollToSection(event: Event, sectionId: string): void {
+    event.preventDefault();
+    const element = document.getElementById(sectionId);
+    if (element) {
+      const yOffset = -90; // Exclude height of fixed navigation header
+      const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }
+
   formatSocialLink(value: string, platform: string): string {
     if (!value) return '';
     let val = value.trim();
