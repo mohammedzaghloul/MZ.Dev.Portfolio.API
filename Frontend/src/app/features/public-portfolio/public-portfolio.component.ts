@@ -1437,55 +1437,6 @@ import { ThemeService } from '../../core/services/theme.service';
         font-size: 2.75rem !important;
       }
     }
-
-    /* Floating Builder CTA */
-    :host ::ng-deep .floating-builder-cta {
-      position: fixed;
-      bottom: 25px;
-      left: 25px;
-      z-index: 1000;
-      animation: floatUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    :host ::ng-deep .floating-builder-cta .cta-link {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px 18px;
-      background: rgba(11, 16, 32, 0.75) !important;
-      border: 2px solid var(--accent-purple, #7C3AED) !important;
-      border-radius: 50px !important;
-      color: #fff !important;
-      text-decoration: none !important;
-      font-size: 0.85rem !important;
-      font-weight: 700 !important;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 15px rgba(124, 58, 237, 0.3) !important;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      transition: all 0.3s ease !important;
-    }
-
-    :host ::ng-deep .floating-builder-cta:hover .cta-text {
-      max-width: 180px !important;
-      margin-left: 4px;
-    }
-
-    :host ::ng-deep .floating-builder-cta:hover .cta-link {
-      transform: scale(1.05) translateY(-3px);
-      border-color: var(--accent-purple-light, #A855F7) !important;
-      box-shadow: 0 12px 40px rgba(0,0,0,0.6), 0 0 25px rgba(124, 58, 237, 0.5) !important;
-    }
-
-    @keyframes floatUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
   `]
 
 })
