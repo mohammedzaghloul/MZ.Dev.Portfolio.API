@@ -138,7 +138,7 @@ import { ThemeService } from '../../core/services/theme.service';
       color: var(--text-secondary);
       text-decoration: none;
       font-weight: 600;
-      font-size: 0.95rem;
+      font-size: 0.86rem;
       transition: var(--transition);
       position: relative;
     }
@@ -307,7 +307,7 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .btn {
-      padding: 1.1rem 2.2rem;
+      padding: 0.9rem 1.8rem;
       border-radius: 16px;
       font-weight: 700;
       text-decoration: none;
@@ -315,7 +315,7 @@ import { ThemeService } from '../../core/services/theme.service';
       display: inline-flex;
       align-items: center;
       gap: 0.75rem;
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       cursor: pointer;
     }
 

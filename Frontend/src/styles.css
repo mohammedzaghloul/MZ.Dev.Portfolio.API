@@ -340,8 +340,8 @@ body[data-theme="flame"]     .glass-card { background: rgba(30,30,30,0.55);  bor
   color: var(--text-dim);
   font-weight: 500;
   transition: var(--transition);
-  font-size: 0.95rem;
-  padding: 6px 14px;
+  font-size: 0.86rem;
+  padding: 5px 12px;
   border-radius: 8px;
 }
 .nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.05); }
