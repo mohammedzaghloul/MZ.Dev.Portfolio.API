@@ -32,8 +32,8 @@
         <li class="lang-dropdown">
           <button class="lang-dropdown-btn">🌐 <span class="lang-text">{{ t[activeLang()].langLabel }}</span> <i class="fas fa-chevron-down"></i></button>
           <div class="lang-dropdown-content">
-            <a (click)="onLangSwitch('ar')" style="cursor: pointer;" class="lang-item">العربية</a>
-            <a (click)="onLangSwitch('en')" style="cursor: pointer;" class="lang-item">English</a>
+            <a (click)="onLangSwitch('ar')" style="cursor: pointer;" class="lang-item" [class.active]="activeLang() === 'ar'">العربية</a>
+            <a (click)="onLangSwitch('en')" style="cursor: pointer;" class="lang-item" [class.active]="activeLang() === 'en'">English</a>
           </div>
         </li>
       </ul>
