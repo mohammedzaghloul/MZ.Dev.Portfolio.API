@@ -158,22 +158,22 @@ body[data-theme="forest"] {
   --shadow-glow: 0 0 30px rgba(16,185,129,0.2);
 }
 
-/* ── Theme: Sunset (Mahogany Crimson & Coral) ── */
+/* ── Theme: Sunset (Luxury Twilight & Coral) ── */
 body[data-theme="sunset"] {
-  --bg:          #080404;
-  --surface:     #120909;
-  --surface2:    #1e1010;
-  --surface3:    #2a1616;
-  --border:      #261313;
-  --border-hi:   rgba(249,115,22,0.35);
-  --accent:      #ff5e00;
-  --accent-glow: rgba(249, 115, 22, 0.4);
-  --accent2:     #ff4857;
-  --accent3:     #fda4af;
-  --text:        #fff5f5;
-  --text-dim:    #fecaca;
-  --muted:       #b91c1c;
-  --shadow-glow: 0 0 30px rgba(249,115,22,0.2);
+  --bg:          #0b0914;
+  --surface:     #131020;
+  --surface2:    #1d182f;
+  --surface3:    #2a2344;
+  --border:      #211b35;
+  --border-hi:   rgba(255,107,74,0.35);
+  --accent:      #ff6b4a;
+  --accent-glow: rgba(255,107,74,0.4);
+  --accent2:     #ff4d80;
+  --accent3:     #fed7aa;
+  --text:        #fff7f5;
+  --text-dim:    #ffd1c7;
+  --muted:       #8c1d40;
+  --shadow-glow: 0 0 30px rgba(255,107,74,0.2);
 }
 
 /* ── Theme: Flame (Volcanic Basalt & Magma Glow) ── */
@@ -253,7 +253,7 @@ body[data-theme="cyberpunk"]::before { background-image: linear-gradient(rgba(25
 body[data-theme="sakura"]::before    { background-image: linear-gradient(rgba(244,114,182,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(244,114,182,0.015) 1px, transparent 1px); }
 body[data-theme="midnight"]::before  { background-image: linear-gradient(rgba(139,92,246,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(139,92,246,0.015) 1px, transparent 1px); }
 body[data-theme="forest"]::before    { background-image: linear-gradient(rgba(16,185,129,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.015) 1px, transparent 1px); }
-body[data-theme="sunset"]::before    { background-image: linear-gradient(rgba(249,115,22,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(249,115,22,0.015) 1px, transparent 1px); }
+body[data-theme="sunset"]::before    { background-image: linear-gradient(rgba(255,107,74,0.012) 1px, transparent 1px), linear-gradient(90deg, rgba(255,107,74,0.012) 1px, transparent 1px); }
 body[data-theme="flame"]::before     { background-image: linear-gradient(rgba(253,111,0,0.015) 1px, transparent 1px), linear-gradient(90deg, rgba(253,111,0,0.015) 1px, transparent 1px); }
 
 /* Cyberpunk scanline */
@@ -293,7 +293,7 @@ body[data-theme="cyberpunk"] .glass-card { background: rgba(24,0,48,0.6);   bord
 body[data-theme="sakura"]    .glass-card { background: rgba(37,22,44,0.55); border-color: rgba(244,114,182,0.08); }
 body[data-theme="midnight"]  .glass-card { background: rgba(15,13,34,0.55);  border-color: rgba(139,92,246,0.08); }
 body[data-theme="forest"]    .glass-card { background: rgba(10,28,21,0.55);  border-color: rgba(16,185,129,0.08); }
-body[data-theme="sunset"]    .glass-card { background: rgba(28,16,14,0.55);  border-color: rgba(249,115,22,0.08); }
+body[data-theme="sunset"]    .glass-card { background: rgba(19, 16, 32, 0.6);  border-color: rgba(255, 107, 74, 0.08); }
 body[data-theme="flame"]     .glass-card { background: rgba(30,30,30,0.55);  border-color: rgba(253,111,0,0.08); }
 
 /* ══════════════════════════════
@@ -1057,6 +1057,8 @@ body[data-theme="sakura"]    .glow-1 { background: #f472b6; }
 body[data-theme="sakura"]    .glow-2 { background: #c084fc; }
 body[data-theme="minimal"]   .glow-1 { background: #f59e0b; }
 body[data-theme="minimal"]   .glow-2 { background: #fbbf24; opacity: 0.18; }
+body[data-theme="sunset"]    .glow-1 { background: #ff6b4a; opacity: 0.22; }
+body[data-theme="sunset"]    .glow-2 { background: #ff4d80; opacity: 0.22; }
 
 /* ══════════════════════════════
    RESPONSIVE
