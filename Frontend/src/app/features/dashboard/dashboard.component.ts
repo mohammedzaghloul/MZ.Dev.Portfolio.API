@@ -1386,6 +1386,11 @@ export class DashboardComponent implements OnInit {
   readonly loadingExperiences = signal<boolean>(true);
   readonly loadingContacts = signal<boolean>(true);
 
+  // Contacts Interactive Signals
+  readonly showQrCode = signal<boolean>(false);
+  readonly copiedMail = signal<boolean>(false);
+  readonly copiedWeb = signal<boolean>(false);
+
   showToast(message: string, type: 'success' | 'error' = 'success'): void {
     if (this.toastTimeout) {
       clearTimeout(this.toastTimeout);
@@ -1704,6 +1709,51 @@ export class DashboardComponent implements OnInit {
       console.error('Copy failed:', err);
       this.showToast('❌ Failed to copy profile link', 'error');
     });
+  }
+
+  // Contacts Interactive Helper Methods
+  toggleQrCode(): void {
+    this.showQrCode.set(!this.showQrCode());
+  }
+
+  copyMailTo(email: string): void {
+    const mailto = `mailto:${email}`;
+    navigator.clipboard.writeText(mailto).then(() => {
+      this.copiedMail.set(true);
+      this.showToast('📧 Direct email link copied to clipboard!', 'success');
+      setTimeout(() => this.copiedMail.set(false), 2000);
+    });
+  }
+
+  copyPortfolioDirectLink(): void {
+    const uid = this.authService.userId();
+    const url = `${window.location.protocol}//${window.location.host}/portfolio/${uid}`;
+    navigator.clipboard.writeText(url).then(() => {
+      this.copiedWeb.set(true);
+      this.showToast('🔗 Portfolio link copied to clipboard!', 'success');
+      setTimeout(() => this.copiedWeb.set(false), 2000);
+    });
+  }
+
+  getConnectedCount(c: any): number {
+    if (!c) return 0;
+    let count = 0;
+    if (c.email) count++;
+    if (c.github) count++;
+    if (c.linkedin) count++;
+    if (c.facebook) count++;
+    if (c.instagram) count++;
+    if (c.tikTok) count++;
+    return count;
+  }
+
+  get livePortfolioUrl(): string {
+    const uid = this.authService.userId();
+    return `${window.location.protocol}//${window.location.host}/portfolio/${uid}`;
+  }
+
+  get encodedPortfolioUrl(): string {
+    return encodeURIComponent(this.livePortfolioUrl);
   }
 
   // Profile Edit

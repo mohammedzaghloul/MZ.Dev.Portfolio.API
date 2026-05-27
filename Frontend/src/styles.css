@@ -2296,4 +2296,256 @@ body[data-theme="minimal"]   .glow-2 { background: #fbbf24; opacity: 0.18; }
   }
 }
 
+/* ── Contacts Split Dashboard Layout ── */
+@media (min-width: 992px) {
+  .contacts-split-layout {
+    display: grid !important;
+    grid-template-columns: 1.2fr 2.2fr !important;
+    gap: 30px !important;
+    align-items: start !important;
+  }
+}
+
+/* ── Contacts Premium Layout & Visual Redesign ── */
+
+/* Left Pane Wrapper */
+.contacts-left-pane {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Quick Utility Buttons */
+.btn-utility {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  border: 1px solid var(--border) !important;
+}
+
+.btn-utility:hover {
+  background: rgba(255, 255, 255, 0.05) !important;
+  border-color: rgba(var(--accent-rgb), 0.3) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.btn-utility:active {
+  transform: translateY(0);
+}
+
+/* QR Code Portal Container */
+.contacts-qr-container {
+  animation: qrSlideDown 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes qrSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Social Grid Links */
+.social-links-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)) !important;
+  gap: 16px !important;
+  width: 100%;
+}
+
+/* Premium Platforms Card Design */
+.premium-networking-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px !important;
+  background: var(--surface) !important;
+  border: 2px solid var(--border) !important;
+  border-radius: 16px !important;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  min-height: 145px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+}
+
+.premium-networking-card .card-glow-element {
+  position: absolute;
+  top: -40px;
+  right: -40px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  filter: blur(30px);
+  opacity: 0.15;
+  transition: all 0.4s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Hover effects */
+.premium-networking-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
+  border-color: var(--border-hi) !important;
+}
+
+.premium-networking-card:hover .card-glow-element {
+  opacity: 0.35;
+  width: 120px;
+  height: 120px;
+}
+
+/* Platform Icons */
+.platform-icon-wrapper {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.03);
+  transition: all 0.3s ease;
+}
+
+.premium-networking-card:hover .platform-icon-wrapper {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Titles and Handles */
+.platform-title {
+  font-weight: 700;
+  color: #fff;
+  font-size: 0.95rem;
+}
+
+.platform-handle {
+  color: var(--text-dim);
+  font-size: 0.8rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Platform-Specific Theme Settings */
+
+/* GitHub */
+.card-github .card-glow-element {
+  background: #fff;
+}
+.card-github:hover {
+  border-color: rgba(255, 255, 255, 0.35) !important;
+  box-shadow: 0 8px 25px rgba(255, 255, 255, 0.06);
+}
+.btn-github {
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
+  color: var(--text) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+.btn-github:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+}
+
+/* LinkedIn */
+.card-linkedin .card-glow-element {
+  background: #0ea5e9;
+}
+.card-linkedin:hover {
+  border-color: #0ea5e9 !important;
+  box-shadow: 0 8px 25px rgba(14, 165, 233, 0.15);
+}
+.btn-linkedin {
+  border: 1px solid rgba(14, 165, 233, 0.25) !important;
+  color: #0ea5e9 !important;
+  background: rgba(14, 165, 233, 0.04) !important;
+}
+.btn-linkedin:hover {
+  background: #0ea5e9 !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(14, 165, 233, 0.3);
+}
+
+/* Facebook */
+.card-facebook .card-glow-element {
+  background: #3b82f6;
+}
+.card-facebook:hover {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+}
+.btn-facebook {
+  border: 1px solid rgba(59, 130, 246, 0.25) !important;
+  color: #3b82f6 !important;
+  background: rgba(59, 130, 246, 0.04) !important;
+}
+.btn-facebook:hover {
+  background: #3b82f6 !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Instagram */
+.card-instagram .card-glow-element {
+  background: #f472b6;
+}
+.card-instagram:hover {
+  border-color: #f472b6 !important;
+  box-shadow: 0 8px 25px rgba(244, 114, 182, 0.15);
+}
+.btn-instagram {
+  border: 1px solid rgba(244, 114, 182, 0.25) !important;
+  color: #f472b6 !important;
+  background: rgba(244, 114, 182, 0.04) !important;
+}
+.btn-instagram:hover {
+  background: #f472b6 !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(244, 114, 182, 0.3);
+}
+
+/* TikTok */
+.card-tiktok .card-glow-element {
+  background: #ff007a;
+}
+.card-tiktok:hover {
+  border-color: #ff007a !important;
+  box-shadow: 0 8px 25px rgba(255, 0, 122, 0.15);
+}
+.btn-tiktok {
+  border: 1px solid rgba(255, 0, 122, 0.25) !important;
+  color: #ff007a !important;
+  background: rgba(255, 0, 122, 0.04) !important;
+}
+.btn-tiktok:hover {
+  background: #ff007a !important;
+  color: #fff !important;
+  box-shadow: 0 0 15px rgba(255, 0, 122, 0.3);
+}
+
+/* General Visit Profile Buttons */
+.platform-visit-btn {
+  font-size: 0.8rem;
+  text-align: center;
+  padding: 7px 12px;
+  border-radius: 10px;
+  display: block;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  position: relative;
+  z-index: 1;
+}
+
+.platform-visit-btn:hover {
+  transform: translateY(-1px);
+}
 
