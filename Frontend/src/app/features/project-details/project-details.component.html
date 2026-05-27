@@ -52,10 +52,10 @@
               <i class="fas fa-link" style="font-size: 0.95rem; color: var(--accent-cyan);"></i> Project Links
             </h2>
             <div style="display: flex; gap: 12px; flex-wrap: wrap; width: 100%;">
-              <a *ngIf="project().link" [href]="project().link" target="_blank" rel="noopener noreferrer" class="action-btn" style="flex: 1; min-width: 120px;">
+              <a *ngIf="project().link" [href]="formatGeneralUrl(project().link)" target="_blank" rel="noopener noreferrer" class="action-btn" style="flex: 1; min-width: 120px;">
                 <i class="fas fa-external-link-alt"></i> Live Demo
               </a>
-              <a *ngIf="project().githubLink" [href]="project().githubLink" target="_blank" rel="noopener noreferrer" class="action-btn-github" style="flex: 1; min-width: 120px;">
+              <a *ngIf="project().githubLink" [href]="formatGeneralUrl(project().githubLink)" target="_blank" rel="noopener noreferrer" class="action-btn-github" style="flex: 1; min-width: 120px;">
                 <i class="fab fa-github"></i> Code Github
               </a>
             </div>

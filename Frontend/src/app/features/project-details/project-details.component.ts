@@ -401,7 +401,28 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   goBack(): void {
-    this.router.navigate(['/', 'portfolio', this.route.snapshot.paramMap.get('userId')]);
+    const userId = this.route.snapshot.paramMap.get('userId');
+    const isEnglish = document.documentElement.lang === 'en';
+    this.router.navigate(['/', isEnglish ? 'profile' : 'portfolio', userId]);
+  }
+
+  formatGeneralUrl(value: string): string {
+    if (!value) return '';
+    let val = value.trim();
+    if (!val) return '';
+
+    // If it's already a full absolute URL, return it
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      return val;
+    }
+
+    // If it's an email address, turn it into mailto:
+    if (val.includes('@') && !val.includes('/')) {
+      return `mailto:${val}`;
+    }
+
+    // Otherwise, assume it is a domain or path, prepend https://
+    return `https://${val}`;
   }
 
   getProjectImageUrl(img: string): string {

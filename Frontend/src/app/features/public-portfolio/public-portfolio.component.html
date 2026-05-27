@@ -237,19 +237,19 @@
             <a [href]="'mailto:' + contact().email" class="social-icon" *ngIf="contact().email">
               <i class="fas fa-envelope"></i>
             </a>
-            <a [href]="contact().github" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().github">
+            <a [href]="formatSocialLink(contact().github, 'github')" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().github">
               <i class="fab fa-github"></i>
             </a>
-            <a [href]="contact().linkedin" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().linkedin">
+            <a [href]="formatSocialLink(contact().linkedin, 'linkedin')" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().linkedin">
               <i class="fab fa-linkedin-in"></i>
             </a>
-            <a [href]="contact().facebook" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().facebook">
+            <a [href]="formatSocialLink(contact().facebook, 'facebook')" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().facebook">
               <i class="fab fa-facebook-f"></i>
             </a>
-            <a [href]="contact().instagram" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().instagram">
+            <a [href]="formatSocialLink(contact().instagram, 'instagram')" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().instagram">
               <i class="fab fa-instagram"></i>
             </a>
-            <a [href]="contact().tikTok" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().tikTok">
+            <a [href]="formatSocialLink(contact().tikTok, 'tiktok')" target="_blank" rel="noopener" class="social-icon" *ngIf="contact().tikTok">
               <i class="fab fa-tiktok"></i>
             </a>
           </div>

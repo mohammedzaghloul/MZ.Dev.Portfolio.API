@@ -1935,6 +1935,61 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
     });
   }
 
+  formatSocialLink(value: string, platform: string): string {
+    if (!value) return '';
+    let val = value.trim();
+    if (!val) return '';
+
+    // If it's already a full URL, return it as-is
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      return val;
+    }
+
+    // Extract handle if it's an email address
+    let handle = val;
+    if (val.includes('@')) {
+      handle = val.split('@')[0];
+    }
+
+    // Remove leading slashes, @ symbols or whitespace
+    handle = handle.replace(/^[/\s@]+/, '');
+
+    // Now format based on platform
+    switch (platform.toLowerCase()) {
+      case 'github':
+        return `https://github.com/${handle}`;
+      case 'linkedin':
+        return `https://linkedin.com/in/${handle}`;
+      case 'facebook':
+        return `https://facebook.com/${handle}`;
+      case 'instagram':
+        return `https://instagram.com/${handle}`;
+      case 'tiktok':
+        return `https://tiktok.com/@${handle}`;
+      default:
+        return val;
+    }
+  }
+
+  formatGeneralUrl(value: string): string {
+    if (!value) return '';
+    let val = value.trim();
+    if (!val) return '';
+
+    // If it's already a full absolute URL, return it
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      return val;
+    }
+
+    // If it's an email address, turn it into mailto:
+    if (val.includes('@') && !val.includes('/')) {
+      return `mailto:${val}`;
+    }
+
+    // Otherwise, assume it is a domain or path, prepend https://
+    return `https://${val}`;
+  }
+
   ngOnDestroy(): void {
     window.removeEventListener('scroll', this.onScroll.bind(this));
   }
