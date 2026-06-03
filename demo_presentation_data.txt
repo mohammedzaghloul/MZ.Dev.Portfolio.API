@@ -1,0 +1,56 @@
+[Register]
+Email: mohammed@example.com
+Username: mohammed_zaghloul
+Password: Password123!
+
+[Profile]
+Title: Software Engineer & Full Stack .NET Developer
+About: I am a passionate Full Stack Developer with experience in building secure, scalable web applications using ASP.NET Core on the backend and Angular on the frontend. I enjoy solving complex problems, optimizing database queries, and creating modern, interactive user interfaces.
+
+[Project 1]
+Name: E-Commerce Cloud Platform
+TechStack: ASP.NET Core Web API, EF Core, SQL Server, Angular, JWT, Redis, TailwindCSS
+Description: A secure, scalable e-commerce application featuring a dynamic shopping cart, product catalog management, stripe payment integration, and real-time order tracking notifications.
+LiveLink: https://my-eshop-demo.vercel.app
+GithubLink: https://github.com/mohammedzaghloul/E-Commerce-Platform
+StartDate: 2025-01-01
+EndDate: 2025-04-15
+
+[Project 2]
+Name: Collaborative Task Manager
+TechStack: Angular, TypeScript, ASP.NET Core, SignalR, SQL Server, JWT Auth
+Description: A real-time collaborative task management tool supporting Kanban boards, task assignments, due date notifications, and instant messaging for project teams.
+LiveLink: https://task-collab-demo.vercel.app
+GithubLink: https://github.com/mohammedzaghloul/Task-Manager
+StartDate: 2025-05-01
+EndDate: 2025-06-01
+
+[Experience 1]
+Title: Full Stack Developer
+Company: Link Development
+StartDate: 2024-06-01
+EndDate: 
+Description: Developing and maintaining enterprise-level web applications using .NET Core and Angular. Collaborating with cross-functional teams to deliver high-quality features and integrating secure RESTful APIs.
+
+[Experience 2]
+Title: Junior .NET Developer
+Company: Tech Solutions Co.
+StartDate: 2023-01-15
+EndDate: 2024-05-30
+Description: Developed backend RESTful APIs, optimized SQL queries, and integrated third-party payment gateways. Assisted in frontend component styling and testing.
+
+[Skills]
+C# / .NET Core
+ASP.NET Core Web API
+SQL Server & Entity Framework Core
+Angular / TypeScript
+RESTful APIs & JWT Authentication
+Git & CI/CD Pipelines
+
+[Contact]
+Email: mohammed@example.com
+Github: https://github.com/mohammedzaghloul
+Linkedin: https://linkedin.com/in/mohammedzaghloul
+Facebook: https://facebook.com/mohammedzaghloul
+Instagram: https://instagram.com/mohammedzaghloul
+TikTok: https://tiktok.com/@mohammedzaghloul
