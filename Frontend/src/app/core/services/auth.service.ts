@@ -10,7 +10,7 @@ export class AuthService {
   
   private readonly baseUrl = window.location.hostname === 'localhost' 
     ? 'https://localhost:7208/api' 
-    : 'https://mohammedzaghloul01.runasp.net/api';
+    : 'https://mz-dev-portfolio.runasp.net/api';
 
   // Signals for state management
   readonly token = signal<string | null>(localStorage.getItem('ld_token'));

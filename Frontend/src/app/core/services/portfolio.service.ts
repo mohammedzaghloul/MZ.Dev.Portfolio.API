@@ -10,7 +10,7 @@ export class PortfolioService {
 
   private readonly baseUrl = window.location.hostname === 'localhost' 
     ? 'https://localhost:7208/api' 
-    : 'https://mohammedzaghloul01.runasp.net/api';
+    : 'https://mz-dev-portfolio.runasp.net/api';
 
   readonly apiHost = this.baseUrl.replace('/api', '');
 
