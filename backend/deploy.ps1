@@ -2,12 +2,12 @@ Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host "   MZ Portfolio Auto-Deploy Script 🚀" -ForegroundColor Cyan
 Write-Host "=============================================" -ForegroundColor Cyan
 
-$workspace = "H:\[All-Project]\API\Portfolio"
-$projectPath = "$workspace\Link.Dev.Portfolio.Api\Link.Dev.Portfolio.Api.csproj"
-$publishDir = "$workspace\publish"
-$ftpServer = "ftp://site69577.siteasp.net/wwwroot"
-$username = "site69577"
-$password = "qK=89yE@N_x7"
+$workspace = Split-Path -Parent $PSScriptRoot
+$projectPath = "$PSScriptRoot\Link.Dev.Portfolio.Api\Link.Dev.Portfolio.Api.csproj"
+$publishDir = "$PSScriptRoot\publish"
+$ftpServer = "ftp://site72280.siteasp.net/wwwroot"
+$username = "site72280"
+$password = "dL-53@bF+oS9"
 
 # 1. Compile & Publish the C# ASP.NET Core Project
 Write-Host "`n[1/3] Compiling & Publishing C# API in Release mode..." -ForegroundColor Yellow
@@ -145,7 +145,7 @@ Remove-Item -LiteralPath $tempZip -Force -ErrorAction SilentlyContinue
 Write-Host "✅ Frontend files zipped successfully to: $zipPath" -ForegroundColor Green
 Write-Host "`n=============================================" -ForegroundColor Green
 Write-Host "🎉 DEPLOYMENT COMPLETE!" -ForegroundColor Green
-Write-Host "1. API is Live: http://mohammedzaghloul01.runasp.net" -ForegroundColor Cyan
+Write-Host "1. API is Live: http://mz-dev-portfolio.runasp.net" -ForegroundColor Cyan
 Write-Host "2. Upload 'frontend_deploy.zip' to InfinityFree htdocs!" -ForegroundColor Cyan
 Write-Host "=============================================" -ForegroundColor Green
 Pause
