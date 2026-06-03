@@ -70,16 +70,12 @@ export class ThemeService {
   });
 
   readonly themeMap: { [key: string]: string } = {
-    '1': 'nebula',
-    '2': 'ocean',
-    '3': 'minimal',
-    '4': 'aurora',
-    '5': 'cyberpunk',
-    '6': 'sakura',
-    '7': 'midnight',
-    '8': 'forest',
-    '9': 'sunset',
-    '10': 'flame',
+    '1': 'purple',
+    '2': 'blue',
+    '3': 'green',
+    '4': 'orange',
+    '5': 'red',
+    '6': 'gold',
   };
 
   constructor() {
@@ -142,16 +138,20 @@ export class ThemeService {
     
     if (parts[1]) {
       parts[1].split(',').forEach(pair => {
-        const [key, val] = pair.split(':');
-        if (key && val !== undefined) {
-          if (key === 'sectionOrder') {
-            vis[key] = val.split('-');
-          } else if (val === 'true') {
-            vis[key] = true;
-          } else if (val === 'false') {
-            vis[key] = false;
-          } else {
-            vis[key] = val;
+        const colonIndex = pair.indexOf(':');
+        if (colonIndex > -1) {
+          const key = pair.substring(0, colonIndex);
+          const val = pair.substring(colonIndex + 1);
+          if (key && val !== undefined) {
+            if (key === 'sectionOrder') {
+              vis[key] = val.split('-');
+            } else if (val === 'true') {
+              vis[key] = true;
+            } else if (val === 'false') {
+              vis[key] = false;
+            } else {
+              vis[key] = val;
+            }
           }
         }
       });

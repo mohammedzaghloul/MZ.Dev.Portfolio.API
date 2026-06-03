@@ -16,9 +16,9 @@ namespace Link.Dev.Profolie.BLL.Dto.ExperienceDto
         public string Company { get; set; } = null!;
 
         [Required]
-        public string StartDate { get; set; } = null!;
+        public DateOnly StartDate { get; set; }
 
-        public string? EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         [MaxLength(2000)]
         public string? Description { get; set; }

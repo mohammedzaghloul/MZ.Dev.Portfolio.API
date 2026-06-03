@@ -49,12 +49,36 @@ namespace Link.Dev.Profolie.BLL.Services
             if (!string.IsNullOrWhiteSpace(dto.Template)) user.Template = dto.Template;
             if (dto.IsActive.HasValue)                 user.IsActive = dto.IsActive.Value;
 
+            if (dto.RemoveImage && !string.IsNullOrEmpty(user.Image))
+            {
+                var fileName = Path.GetFileName(user.Image);
+                _attachmentService.DeleteFile(fileName, "avatars");
+                user.Image = null;
+            }
+
             if (dto.ImageFile != null)
             {
                 user.Image = await _attachmentService.UpdateFileAsync(
                     dto.ImageFile,
                     user.Image ?? "",
                     "avatars");
+            }
+
+            if (dto.RemoveResume && !string.IsNullOrEmpty(user.ResumeUrl))
+            {
+                var fileName = Path.GetFileName(user.ResumeUrl);
+                _attachmentService.DeleteFile(fileName, "resumes");
+                user.ResumeUrl = null;
+            }
+
+            if (dto.ResumeFile != null)
+            {
+                user.ResumeUrl = await _attachmentService.UpdateFileAsync(
+                    dto.ResumeFile,
+                    user.ResumeUrl ?? "",
+                    "resumes",
+                    new List<string> { ".pdf", ".doc", ".docx" },
+                    5 * 1024 * 1024);
             }
 
             var result = await _userManager.UpdateAsync(user);
@@ -78,6 +102,12 @@ namespace Link.Dev.Profolie.BLL.Services
             {
                 var fileName = Path.GetFileName(user.Image);
                 _attachmentService.DeleteFile(fileName, "avatars");
+            }
+
+            if (!string.IsNullOrEmpty(user.ResumeUrl))
+            {
+                var fileName = Path.GetFileName(user.ResumeUrl);
+                _attachmentService.DeleteFile(fileName, "resumes");
             }
 
             var result = await _userManager.DeleteAsync(user);

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { DomSanitizer, SafeHtml, SafeResourceUrl } from '@angular/platform-browser';
 import { PortfolioService } from '../../core/services/portfolio.service';
 import { ThemeService } from '../../core/services/theme.service';
 
@@ -13,24 +13,22 @@ import { ThemeService } from '../../core/services/theme.service';
     styles: [`
     /* Premium Dark Cosmic Variables */
     :host {
-      --bg-primary: #0B1020;
-      --bg-secondary: #0f172a;
-      --bg-tertiary: #1e293b;
-      --accent-purple: #7C3AED;
-      --accent-purple-light: #A855F7;
-      --accent-blue: #3B82F6;
-      --accent-cyan: #06B6D4;
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --glass-bg: rgba(11, 16, 32, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --glass-border-glow: rgba(124, 58, 237, 0.3);
-      --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #3B82F6 100%);
-      --gradient-cosmic: linear-gradient(135deg, #0B1020 0%, #070a14 100%);
-      --shadow-glow: 0 0 50px rgba(124, 58, 237, 0.3);
-      --shadow-glow-cyan: 0 0 50px rgba(6, 182, 212, 0.3);
-      --shadow-card: 0 25px 50px rgba(0, 0, 0, 0.5);
+      --bg-primary: var(--bg);
+      --bg-secondary: var(--surface);
+      --bg-tertiary: var(--surface2);
+      --accent-purple: var(--accent);
+      --accent-purple-light: var(--accent2);
+      --accent-blue: var(--accent2);
+      --accent-cyan: var(--accent3);
+      --text-primary: var(--text);
+      --text-secondary: var(--text-dim);
+      --text-muted: var(--muted);
+      --glass-bg: color-mix(in srgb, var(--surface) 72%, transparent);
+      --glass-border: color-mix(in srgb, var(--border) 75%, rgba(255,255,255,0.16));
+      --glass-border-glow: var(--border-hi);
+      --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 55%, var(--accent3) 100%);
+      --gradient-cosmic: linear-gradient(135deg, var(--bg) 0%, var(--surface) 100%);
+      --shadow-glow-cyan: 0 0 28px rgba(var(--accent2-rgb), 0.2);
       --border-radius: 20px;
       --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -100,7 +98,7 @@ import { ThemeService } from '../../core/services/theme.service';
       left: 0;
       right: 0;
       z-index: 1000;
-      background: rgba(11, 16, 32, 0.7);
+      background: color-mix(in srgb, var(--bg-primary) 82%, transparent);
       backdrop-filter: blur(24px);
       border-bottom: 1px solid var(--glass-border);
       padding: 1.25rem 0;
@@ -163,39 +161,40 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .btn-contact {
-      background: linear-gradient(135deg, rgba(124, 90, 246, 0.1) 0%, rgba(6, 182, 212, 0.1) 100%);
-      border: 1px solid rgba(124, 90, 246, 0.3) !important;
+      background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.12) 0%, rgba(var(--accent2-rgb), 0.1) 100%);
+      border: 1px solid rgba(var(--accent-rgb), 0.32) !important;
       color: #fff !important;
       padding: 0.6rem 1.4rem;
       border-radius: 12px;
       font-weight: 700;
-      box-shadow: 0 0 30px rgba(124, 90, 246, 0.15);
+      box-shadow: 0 0 30px rgba(var(--accent-rgb), 0.16);
       transition: var(--transition);
     }
 
     :host ::ng-deep .btn-contact:hover {
-      border-color: rgba(6, 182, 212, 0.8) !important;
-      background: linear-gradient(135deg, rgba(124, 90, 246, 0.2) 0%, rgba(6, 182, 212, 0.2) 100%);
+      border-color: rgba(var(--accent2-rgb), 0.75) !important;
+      background: linear-gradient(135deg, rgba(var(--accent-rgb), 0.2) 0%, rgba(var(--accent2-rgb), 0.2) 100%);
       transform: none;
-      box-shadow: 0 0 40px rgba(6, 182, 212, 0.3);
+      box-shadow: 0 0 40px rgba(var(--accent2-rgb), 0.3);
     }
 
     /* Premium Glass Cards */
     :host ::ng-deep .glass-card {
       background: var(--glass-bg);
-      backdrop-filter: blur(24px) saturate(120%);
-      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(40px) saturate(140%);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--border-radius);
       padding: 2.5rem;
-      box-shadow: var(--shadow-card);
+      box-shadow: none !important;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       position: relative;
       overflow: hidden;
     }
 
     :host ::ng-deep .glass-card:hover {
-      border-color: rgba(124, 90, 246, 0.3);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(124, 90, 246, 0.15);
+      border-color: rgba(var(--accent-rgb), 0.65);
+      box-shadow: none !important;
+      transform: translateY(-2px);
     }
 
     /* Container Utility */
@@ -264,21 +263,21 @@ import { ThemeService } from '../../core/services/theme.service';
     :host ::ng-deep .badge {
       display: inline-block;
       padding: 0.75rem 1.8rem;
-      background: rgba(124, 90, 246, 0.1);
-      border: 1px solid rgba(124, 90, 246, 0.25);
+      background: rgba(var(--accent-rgb), 0.1);
+      border: 1px solid rgba(var(--accent-rgb), 0.25);
       border-radius: 50px;
       font-size: 1rem;
       font-weight: 700;
       color: var(--accent-purple-light);
       margin-bottom: 2.5rem;
-      box-shadow: 0 4px 20px rgba(124, 90, 246, 0.15);
+      box-shadow: 0 4px 20px rgba(var(--accent-rgb), 0.15);
     }
 
     :host ::ng-deep .hero-title {
-      font-size: 4.5rem;
+      font-size: clamp(2.35rem, 5vw, 3.65rem);
       font-weight: 900;
-      line-height: 1.15;
-      margin-bottom: 2rem;
+      line-height: 1.12;
+      margin-bottom: 1.35rem;
       background: linear-gradient(135deg, #ffffff 0%, rgba(255,255,255,0.7) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -294,11 +293,12 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .hero-subtitle {
-      font-size: 1.4rem;
+      font-size: clamp(1rem, 2vw, 1.16rem);
       color: var(--text-secondary);
-      margin-bottom: 3rem;
-      line-height: 1.8;
+      margin-bottom: 2.15rem;
+      line-height: 1.75;
       font-weight: 500;
+      max-width: 620px;
     }
 
     :host ::ng-deep .hero-actions {
@@ -327,7 +327,7 @@ import { ThemeService } from '../../core/services/theme.service';
 
     :host ::ng-deep .btn-primary:hover {
       transform: none;
-      box-shadow: 0 0 50px rgba(124, 58, 237, 0.45);
+      box-shadow: 0 0 50px var(--accent-glow);
     }
 
     :host ::ng-deep .btn-secondary {
@@ -357,7 +357,7 @@ import { ThemeService } from '../../core/services/theme.service';
       border-radius: 50%;
       overflow: visible;
       box-shadow: var(--shadow-glow);
-      border: 2px solid rgba(124, 90, 246, 0.25);
+      border: 2px solid rgba(var(--accent-rgb), 0.25);
     }
 
     :host ::ng-deep .profile-avatar-image {
@@ -365,7 +365,7 @@ import { ThemeService } from '../../core/services/theme.service';
       height: 100%;
       object-fit: cover;
       border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-      border: 2px solid rgba(124, 90, 246, 0.3);
+      border: 2px solid rgba(var(--accent-rgb), 0.3);
       animation: morph 8s ease-in-out infinite;
       box-shadow: var(--shadow-glow);
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
@@ -376,7 +376,7 @@ import { ThemeService } from '../../core/services/theme.service';
     :host ::ng-deep .hero-float-badge {
       position: absolute;
       padding: 0.8rem 1.4rem;
-      background: rgba(11, 16, 32, 0.8);
+      background: color-mix(in srgb, var(--surface) 85%, transparent);
       backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 50px;
@@ -426,8 +426,8 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .about-main-card:hover {
-      border-color: rgba(6, 182, 212, 0.4);
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(6, 182, 212, 0.25);
+      border-color: rgba(var(--accent2-rgb), 0.42);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 30px rgba(var(--accent2-rgb), 0.25);
       transform: none;
     }
 
@@ -438,7 +438,7 @@ import { ThemeService } from '../../core/services/theme.service';
       width: 300px;
       height: 300px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(6, 182, 212, 0.15) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(var(--accent2-rgb), 0.15) 0%, transparent 70%);
       filter: blur(50px);
       z-index: 1;
       pointer-events: none;
@@ -483,8 +483,8 @@ import { ThemeService } from '../../core/services/theme.service';
       font-size: 0.95rem;
       font-weight: 700;
       color: var(--accent-purple-light);
-      background: rgba(168, 85, 247, 0.08);
-      border: 1px solid rgba(168, 85, 247, 0.2);
+      background: rgba(var(--accent-rgb), 0.08);
+      border: 1px solid rgba(var(--accent-rgb), 0.2);
       padding: 0.4rem 1.2rem;
       border-radius: 50px;
       text-transform: uppercase;
@@ -570,23 +570,25 @@ import { ThemeService } from '../../core/services/theme.service';
 
     :host ::ng-deep .timeline-content {
       background: var(--glass-bg);
-      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(40px) saturate(140%);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--border-radius);
       padding: 2.5rem;
+      box-shadow: none !important;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     :host ::ng-deep .timeline-content:hover {
-      border-color: rgba(6, 182, 212, 0.4);
-      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.4), 0 0 25px rgba(6, 182, 212, 0.2);
-      transform: none;
+      border-color: rgba(var(--accent2-rgb), 0.65);
+      box-shadow: none !important;
+      transform: translateY(-2px);
     }
 
     :host ::ng-deep .timeline-date {
       display: inline-block;
       padding: 0.5rem 1.25rem;
-      background: rgba(6, 182, 212, 0.08);
-      border: 1px solid rgba(6, 182, 212, 0.2);
+      background: rgba(var(--accent2-rgb), 0.08);
+      border: 1px solid rgba(var(--accent2-rgb), 0.2);
       border-radius: 50px;
       font-size: 0.9rem;
       font-weight: 700;
@@ -731,8 +733,9 @@ import { ThemeService } from '../../core/services/theme.service';
       flex-direction: column;
       height: 100%;
       padding: 0 !important;
-      border: 1px solid rgba(255, 255, 255, 0.05);
-      background: rgba(11, 16, 32, 0.5) !important;
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
+      background: var(--glass-bg) !important;
+      backdrop-filter: blur(40px) saturate(140%);
     }
 
     /* Glass reflective sweep */
@@ -782,19 +785,19 @@ import { ThemeService } from '../../core/services/theme.service';
     :host ::ng-deep .fallback-icon {
       font-size: 4rem;
       color: rgba(255, 255, 255, 0.04);
-      filter: drop-shadow(0 0 10px rgba(124, 90, 246, 0.1));
+      filter: drop-shadow(0 0 10px rgba(var(--accent-rgb), 0.12));
       transition: var(--transition);
     }
 
     :host ::ng-deep .project-card-wrapper:hover .fallback-icon {
       transform: scale(1.1);
-      color: rgba(124, 90, 246, 0.3);
+      color: rgba(var(--accent-rgb), 0.3);
     }
 
     :host ::ng-deep .glass-overlay {
       position: absolute;
       inset: 0;
-      background: linear-gradient(180deg, transparent 60%, rgba(11, 16, 32, 0.9) 100%);
+      background: linear-gradient(180deg, transparent 60%, color-mix(in srgb, var(--bg-primary) 90%, transparent) 100%);
       z-index: 2;
     }
 
@@ -821,8 +824,8 @@ import { ThemeService } from '../../core/services/theme.service';
       font-size: 0.8rem;
       font-weight: 700;
       color: var(--accent-cyan);
-      background: rgba(6, 182, 212, 0.06);
-      border: 1px solid rgba(6, 182, 212, 0.15);
+      background: rgba(var(--accent2-rgb), 0.06);
+      border: 1px solid rgba(var(--accent2-rgb), 0.15);
       padding: 0.35rem 0.85rem;
       border-radius: 50px;
       display: inline-flex;
@@ -841,8 +844,8 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .project-card-wrapper:hover .tech-pill {
-      border-color: rgba(6, 182, 212, 0.5);
-      background: rgba(6, 182, 212, 0.12);
+      border-color: rgba(var(--accent2-rgb), 0.5);
+      background: rgba(var(--accent2-rgb), 0.12);
       color: #fff;
     }
 
@@ -912,8 +915,9 @@ import { ThemeService } from '../../core/services/theme.service';
 
     /* Hover card neon glow borders */
     :host ::ng-deep .project-card-wrapper:hover .project-card {
-      border-color: rgba(124, 90, 246, 0.5);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6), 0 0 35px rgba(124, 90, 246, 0.3);
+      border-color: rgba(var(--accent-rgb), 0.65);
+      box-shadow: none !important;
+      transform: translateY(-2px);
     }
 
     /* Contact Section styling */
@@ -924,25 +928,29 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .contact-box {
-      max-width: 850px;
+      max-width: 960px;
       margin: 0 auto;
-      text-align: center;
-      padding: 4rem 3rem;
-      background: linear-gradient(135deg, rgba(15, 23, 42, 0.6) 0%, rgba(11, 16, 32, 0.6) 100%);
-      border: 1px solid var(--glass-border);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 2rem;
+      text-align: start;
+      padding: 3.25rem;
+      background: linear-gradient(135deg, color-mix(in srgb, var(--surface2) 80%, transparent) 0%, color-mix(in srgb, var(--surface) 80%, transparent) 100%);
+      border: 1.5px solid rgba(255, 255, 255, 0.12);
       border-radius: var(--border-radius);
-      box-shadow: var(--shadow-card);
+      box-shadow: none !important;
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     :host ::ng-deep .contact-box:hover {
-      border-color: rgba(124, 90, 246, 0.35);
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5), 0 0 35px rgba(124, 90, 246, 0.25);
-      transform: none;
+      border-color: rgba(var(--accent-rgb), 0.65);
+      box-shadow: none !important;
+      transform: translateY(-2px);
     }
 
     :host ::ng-deep .contact-info h2 {
-      font-size: 2.8rem;
+      font-size: clamp(2rem, 4vw, 2.85rem);
       font-weight: 900;
       margin-bottom: 1.25rem;
       background: linear-gradient(135deg, #ffffff 0%, var(--accent-purple-light) 100%);
@@ -961,22 +969,24 @@ import { ThemeService } from '../../core/services/theme.service';
 
     :host ::ng-deep .contact-info p {
       color: var(--text-secondary);
-      font-size: 1.2rem;
-      margin-bottom: 3rem;
+      font-size: 1.05rem;
+      margin-bottom: 2rem;
       font-weight: 500;
+      max-width: 620px;
     }
 
     :host ::ng-deep .social-links {
       display: flex;
-      justify-content: center;
-      gap: 1.75rem;
-      margin-bottom: 3rem;
+      justify-content: flex-start;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      margin-bottom: 0;
     }
 
     :host ::ng-deep .social-icon {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid rgba(255, 255, 255, 0.08);
       display: flex;
@@ -997,19 +1007,25 @@ import { ThemeService } from '../../core/services/theme.service';
     }
 
     :host ::ng-deep .btn-large {
-      padding: 1.25rem 2.75rem;
-      font-size: 1.15rem;
+      min-width: 210px;
+      justify-content: center;
+      padding: 1rem 1.65rem;
+      border-radius: 16px;
+      font-size: 1rem;
+      box-shadow: 0 14px 36px rgba(var(--accent-rgb), 0.24);
     }
 
     /* Footer */
     :host ::ng-deep footer {
-      padding: 3rem 2rem;
+      padding: 2.5rem 2rem 2.75rem;
       text-align: center;
       border-top: 1px solid var(--glass-border);
       color: var(--text-muted);
       font-size: 0.95rem;
       font-weight: 500;
-      background: rgba(7, 10, 20, 0.95);
+      background:
+        radial-gradient(circle at 50% 0%, rgba(var(--accent-rgb), 0.12), transparent 34%),
+        color-mix(in srgb, var(--bg-primary) 94%, #000 6%);
       backdrop-filter: blur(10px);
       position: relative;
       overflow: hidden;
@@ -1030,22 +1046,108 @@ import { ThemeService } from '../../core/services/theme.service';
     :host ::ng-deep footer .container {
       position: relative;
       z-index: 1;
+      max-width: 980px;
     }
 
     :host ::ng-deep footer p {
       margin-bottom: 0.5rem;
       line-height: 1.8;
+      color: var(--text-secondary);
+      font-size: 0.88rem;
     }
 
     :host ::ng-deep footer .footer-brand {
-      font-size: 1.1rem;
-      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      border: 1px solid rgba(var(--accent-rgb), 0.18);
+      background: rgba(var(--accent-rgb), 0.06);
+      font-size: 0.95rem;
+      font-weight: 800;
       color: var(--text-primary);
-      margin-bottom: 0.5rem;
+      margin-bottom: 0.75rem;
       background: linear-gradient(90deg, var(--accent-purple-light), var(--accent-cyan));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+    }
+
+    :host ::ng-deep .footer-cta-banner {
+      display: none !important;
+      max-width: 920px;
+      margin: 0 auto 1.8rem !important;
+      padding: 1.35rem 1.45rem !important;
+      border-radius: 18px !important;
+      border: 1px solid rgba(var(--accent-rgb), 0.18) !important;
+      background:
+        linear-gradient(135deg, rgba(var(--accent-rgb), 0.12), rgba(var(--accent2-rgb), 0.06)),
+        color-mix(in srgb, var(--surface) 82%, transparent) !important;
+      text-align: start !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05) !important;
+    }
+
+    :host ::ng-deep .footer-cta-banner > div:first-child {
+      min-width: min(100%, 320px) !important;
+      gap: 0.95rem !important;
+      align-items: center !important;
+    }
+
+    :host ::ng-deep .footer-cta-banner > div:first-child > div:first-child {
+      width: 46px !important;
+      height: 46px !important;
+      border-radius: 14px !important;
+      background: linear-gradient(135deg, var(--accent), var(--accent2)) !important;
+      border: 0 !important;
+      color: white !important;
+      box-shadow: 0 12px 26px rgba(var(--accent-rgb), 0.24) !important;
+      animation: none !important;
+    }
+
+    :host ::ng-deep .footer-cta-banner h4 {
+      font-size: 1rem !important;
+      line-height: 1.35 !important;
+      margin-bottom: 0.3rem !important;
+      color: var(--text) !important;
+    }
+
+    :host ::ng-deep .footer-cta-banner p {
+      color: var(--text-secondary) !important;
+      font-size: 0.84rem !important;
+      line-height: 1.65 !important;
+      margin: 0 !important;
+    }
+
+    :host ::ng-deep .footer-cta-banner .btn {
+      padding: 0.75rem 1.05rem !important;
+      border-radius: 12px !important;
+      font-size: 0.84rem !important;
+      white-space: nowrap;
+      box-shadow: 0 10px 24px rgba(var(--accent-rgb), 0.22) !important;
+    }
+
+    :host ::ng-deep .footer-create-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 0.25rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      color: var(--text-secondary);
+      border: 1px solid transparent;
+      font-size: 0.68rem;
+      font-weight: 500;
+      text-decoration: none;
+      opacity: 0.55;
+      transition: color 0.2s ease, opacity 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+    }
+
+    :host ::ng-deep .footer-create-link:hover {
+      opacity: 1;
+      color: var(--accent2);
+      border-color: rgba(var(--accent-rgb), 0.18);
+      background: rgba(var(--accent-rgb), 0.06);
     }
 
     :host ::ng-deep footer .footer-divider {
@@ -1078,7 +1180,7 @@ import { ThemeService } from '../../core/services/theme.service';
 
     :host ::ng-deep .share-btn:hover {
       transform: none;
-      box-shadow: 0 0 50px rgba(124, 58, 237, 0.55);
+      box-shadow: 0 0 50px var(--accent-glow);
     }
 
     :host ::ng-deep .share-btn.hidden {
@@ -1117,7 +1219,7 @@ import { ThemeService } from '../../core/services/theme.service';
 
     :host ::ng-deep .back-to-top:hover {
       transform: translateY(-5px);
-      box-shadow: 0 0 60px rgba(124, 58, 237, 0.55);
+      box-shadow: 0 0 60px var(--accent-glow);
     }
 
     [dir="rtl"] :host ::ng-deep .back-to-top {
@@ -1142,7 +1244,7 @@ import { ThemeService } from '../../core/services/theme.service';
     :host ::ng-deep .mobile-menu-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(11, 16, 32, 0.97);
+      background: color-mix(in srgb, var(--bg-primary) 96%, #000 4%);
       backdrop-filter: blur(30px);
       z-index: 999;
       display: flex;
@@ -1244,7 +1346,7 @@ import { ThemeService } from '../../core/services/theme.service';
         text-align: center;
       }
       :host ::ng-deep .hero-title {
-        font-size: 3rem;
+        font-size: 2.6rem;
       }
       :host ::ng-deep .hero-actions {
         justify-content: center;
@@ -1318,13 +1420,47 @@ import { ThemeService } from '../../core/services/theme.service';
       }
 
       :host ::ng-deep .social-links {
-        gap: 1rem !important;
+        justify-content: center !important;
+        gap: 0.75rem !important;
       }
 
       :host ::ng-deep .social-icon {
         width: 40px !important;
         height: 40px !important;
         font-size: 1rem !important;
+      }
+
+      :host ::ng-deep .contact-box {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+        padding: 2.25rem 1.4rem !important;
+        gap: 1.5rem !important;
+      }
+
+      :host ::ng-deep .contact-info p {
+        margin-inline: auto !important;
+      }
+
+      :host ::ng-deep .contact-action .btn {
+        width: 100% !important;
+        max-width: 320px;
+      }
+
+      :host ::ng-deep .footer-cta-banner {
+        justify-content: center !important;
+        text-align: center !important;
+        padding: 1.25rem !important;
+      }
+
+      :host ::ng-deep .footer-cta-banner > div:first-child {
+        min-width: 100% !important;
+        flex-direction: column !important;
+        text-align: center !important;
+      }
+
+      :host ::ng-deep .footer-cta-banner .btn {
+        width: 100% !important;
+        justify-content: center !important;
       }
 
       :host ::ng-deep .footer-brand {
@@ -1354,7 +1490,7 @@ import { ThemeService } from '../../core/services/theme.service';
       }
 
       :host ::ng-deep .hero-title {
-        font-size: 1.75rem !important;
+        font-size: 1.7rem !important;
       }
 
       :host ::ng-deep .hero-subtitle {
@@ -1486,6 +1622,25 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
   readonly showBackToTop = signal<boolean>(false);
   readonly activeCertUrl = signal<string | null>(null);
   readonly showCertModal = signal<boolean>(false);
+  readonly certModalTitle = signal<string>('');
+
+  isPdfCert(): boolean {
+    const url = this.activeCertUrl();
+    if (!url) return false;
+    return url.toLowerCase().endsWith('.pdf') || url.toLowerCase().includes('.pdf');
+  }
+
+  isResumeOpen(): boolean {
+    const url = this.activeCertUrl();
+    if (!url) return false;
+    return url.toLowerCase().includes('/resumes/');
+  }
+
+  safeCertPdfUrl(): SafeResourceUrl {
+    const url = this.activeCertUrl() || '';
+    const pdfUrl = url.includes('#') ? url : `${url}#view=FitH`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl);
+  }
 
   // Section order
   readonly sectionOrder = signal<string[]>(['hero', 'about', 'skills', 'experience', 'projects', 'contact']);
@@ -1505,8 +1660,8 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
       contact: 'تواصل معي',
       welcome: 'مرحباً بك في مساحتي الإبداعية 👋',
       iAm: 'أنا ',
-      titleFallback: 'مطور برمجيات ومصمم',
-      aboutFallback: 'أسعى لتحويل الأفكار المعقدة إلى تجارب رقمية بسيطة، أنيقة، وعالية الأداء. أهتم بالتفاصيل المعمارية وأؤمن بقوة التصميم الجيد.',
+      titleFallback: '',
+      aboutFallback: '',
       browseProjects: 'تصفح أعمالي',
       contactMe: 'تواصل معي',
       projectSuffix: ' مشاريع',
@@ -1554,8 +1709,8 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
       contact: 'Contact',
       welcome: '✨ Welcome to my creative space',
       iAm: 'I am ',
-      titleFallback: 'Software Developer & Designer',
-      aboutFallback: 'I strive to transform complex ideas into simple, elegant, and high-performance digital experiences.',
+      titleFallback: '',
+      aboutFallback: '',
       browseProjects: 'View My Work',
       contactMe: 'Contact Me',
       projectSuffix: ' Projects',
@@ -1823,14 +1978,32 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
     return img.startsWith('/') ? `${this.portfolioService.apiHost}${img}` : img;
   }
 
+  getResumeUrl(): string {
+    const resumeUrl = this.profile()?.resumeUrl || '';
+    if (!resumeUrl) return '';
+    return resumeUrl.startsWith('/') ? `${this.portfolioService.apiHost}${resumeUrl}` : resumeUrl;
+  }
+
   formatUserName(name: string): string {
     if (!name) return '';
     return name.replace(/([a-z])([A-Z])/g, '$1 $2');
   }
 
+  getProfileTitle(): string {
+    return (this.profile()?.title || '').trim();
+  }
+
+  getAboutText(): string {
+    const about = (this.profile()?.about || '').trim();
+    if (about) return about;
+    return this.activeLang() === 'ar'
+      ? 'لم تتم إضافة نبذة شخصية بعد.'
+      : 'No biography has been added yet.';
+  }
+
   getShortBio(): string {
-    const fullBio = this.profile()?.about || '';
-    if (!fullBio) return this.t[this.activeLang()].aboutFallback;
+    const fullBio = (this.profile()?.about || '').trim();
+    if (!fullBio) return '';
     
     // If bio is short (less than 150 chars), use it as is
     if (fullBio.length < 150) return fullBio;
@@ -1843,20 +2016,41 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
   }
 
   formatDateString(dateString: string): string {
-    if (!dateString) return 'Present';
-    const date = new Date(dateString);
+    if (!dateString || dateString.toLowerCase() === 'present') {
+      return this.activeLang() === 'ar' ? 'الآن' : 'Present';
+    }
+    let cleanDateString = dateString;
+    if (/^\d{4}-\d{2}$/.test(dateString)) {
+      cleanDateString = `${dateString}-01`;
+    }
+    const date = new Date(cleanDateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+    
+    if (this.activeLang() === 'ar') {
+      return date.toLocaleDateString('ar-EG', { year: 'numeric', month: 'long' });
+    }
     return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
   }
 
   getProjectDateRange(project: any): string {
     const start = this.formatDateString(project.startDate);
-    const end = project.endDate ? this.formatDateString(project.endDate) : 'Present';
+    const end = project.endDate ? this.formatDateString(project.endDate) : (this.activeLang() === 'ar' ? 'الآن' : 'Present');
+    
+    if (start === end) {
+      return start;
+    }
     return `${start} - ${end}`;
   }
 
   getExperienceDateRange(exp: any): string {
     const start = this.formatDateString(exp.startDate);
-    const end = exp.endDate ? this.formatDateString(exp.endDate) : 'Present';
+    const end = exp.endDate ? this.formatDateString(exp.endDate) : (this.activeLang() === 'ar' ? 'الآن' : 'Present');
+    
+    if (start === end) {
+      return start;
+    }
     return `${start} - ${end}`;
   }
 
@@ -1867,15 +2061,28 @@ export class PublicPortfolioComponent implements OnInit, OnDestroy {
     return Array.from(new Set(techArray));
   }
 
-  openCertificate(event: Event, url: string): void {
+  openCertificate(event: Event, url: string, title?: string): void {
     event.preventDefault();
     this.activeCertUrl.set(url);
     this.showCertModal.set(true);
+    this.certModalTitle.set(title || '');
   }
 
   closeCertModal(): void {
     this.showCertModal.set(false);
     this.activeCertUrl.set(null);
+    this.certModalTitle.set('');
+  }
+
+  getDownloadUrl(url: string | null): string {
+    if (!url) return '';
+    if (url.includes('?view=true')) {
+      return url.replace('?view=true', '?download=true');
+    }
+    if (url.includes('?download=true')) {
+      return url;
+    }
+    return url + '?download=true';
   }
 
   showToast(message: string): void {

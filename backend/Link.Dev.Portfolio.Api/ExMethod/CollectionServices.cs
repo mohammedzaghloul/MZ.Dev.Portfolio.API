@@ -24,7 +24,8 @@ namespace Link.Dev.Profolie.Api.ExMethod
     {
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
         {
-           
+            // Register HttpContextAccessor for dynamic URL resolution in AutoMapper
+            services.AddHttpContextAccessor();
             //  Database 
            services.AddDbContext<ApplicationDbContext>(db =>
            {
@@ -43,6 +44,7 @@ namespace Link.Dev.Profolie.Api.ExMethod
             });
             //   AutoMapper   
             services.AddAutoMapper(a => a.AddProfile(new MappingAutoMapper()));
+            services.AddTransient<ImageUrlResolver>();
 
             //   Repositories & Unit of Work     
             services.AddScoped<IUnitOfWork, UnitOfWork>();

@@ -9,6 +9,9 @@ namespace Link.Dev.Profolie.BLL.Dto.UserProfileDto
         public string? About { get; set; }
         public string? Template { get; set; }
         public bool? IsActive { get; set; }
+        public bool RemoveImage { get; set; }
+        public bool RemoveResume { get; set; }
         public IFormFile? ImageFile { get; set; }
+        public IFormFile? ResumeFile { get; set; }
     }
 }

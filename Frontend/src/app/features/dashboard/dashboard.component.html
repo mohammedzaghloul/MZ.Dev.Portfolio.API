@@ -145,6 +145,21 @@
               <h4>About Me / Bio</h4>
               <p>{{ profile()?.about || 'No biography written yet.' }}</p>
             </div>
+
+            <!-- Profile QR Code Section -->
+            <div class="profile-qr-box" style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px dashed var(--border); display: flex; align-items: center; gap: 20px; text-align: left;">
+              <div style="padding: 10px; background: #fff; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.35); flex-shrink: 0;">
+                <img [src]="'https://api.qrserver.com/v1/create-qr-code/?size=95x95&color=0d0f17&bgcolor=ffffff&data=' + encodedPortfolioUrl" alt="Portfolio QR Code" style="width: 95px; height: 95px; display: block;" />
+              </div>
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <span style="font-weight: 700; color: #fff; font-size: 0.95rem; display: flex; align-items: center; gap: 6px;">
+                  <span>📱</span> Shareable QR Code
+                </span>
+                <span style="font-size: 0.8rem; color: var(--text-dim); line-height: 1.4;">
+                  Scan this code to instantly open your public portfolio site on any mobile device. Perfect for recruiters and clients!
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -155,12 +170,23 @@
 
           <!-- Profile Link Card -->
           <div class="sidebar-card glass-card" style="padding:1.5rem; border-radius:16px;">
-            <h4 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:#fff;"><span>🔗</span> <span class="card-title-text">Profile Link</span></h4>
-            <div style="background:var(--surface2); padding:1rem; border-radius:12px; border:1px solid var(--border); margin-bottom:1rem;">
-              <div style="font-size:0.85rem; color:var(--muted); margin-bottom:0.5rem;">Your public portfolio URL:</div>
-              <div style="font-size:0.9rem; color:var(--accent2); word-break:break-all;">{{ 'portfolio/' + authService.userId() }}</div>
+            <h4 style="font-size:1.1rem; font-weight:700; margin-bottom:1rem; color:#fff; display:flex; align-items:center; gap:8px;">
+              <span>🔗</span> <span class="card-title-text">Profile Link</span>
+            </h4>
+            <div style="background:var(--surface2); padding:1rem; border-radius:12px; border:1px solid var(--border); margin-bottom:1rem; display:flex; flex-direction:column; gap:8px;">
+              <div style="font-size:0.82rem; color:var(--muted); font-weight:600; display:flex; justify-content:space-between; align-items:center; width:100%;">
+                <span>Your public portfolio URL:</span>
+                <a [href]="fullPortfolioUrl" target="_blank" style="color:var(--accent2); text-decoration:none; transition:color 0.2s;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--accent2)'">
+                  <i class="fas fa-arrow-up-right-from-square" style="font-size:0.78rem;"></i>
+                </a>
+              </div>
+              <a [href]="fullPortfolioUrl" target="_blank" style="font-size:0.75rem; color:var(--accent2); text-decoration:none; word-break:break-all; line-height:1.45; transition:color 0.2s; font-family: 'Consolas', 'Courier New', monospace; font-weight: 600;" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--accent2)'">
+                {{ fullPortfolioUrl }}
+              </a>
             </div>
-            <button class="btn btn-primary" style="width:100%;" (click)="copyProfileLink()">🔗 Copy Profile Link</button>
+            <button class="btn btn-primary" style="width:100%; display:inline-flex; align-items:center; justify-content:center; gap:6px;" (click)="copyProfileLink()">
+              <i class="fas fa-copy"></i> Copy Profile Link
+            </button>
           </div>
 
           <!-- Visibility Card -->
@@ -291,12 +317,34 @@
         <!-- Experience Row -->
         <div class="exp-card glass-card" *ngFor="let e of experiences()" style="padding:20px; display:flex; justify-content:space-between; align-items:flex-start;">
           <div>
-            <span class="timeline-date" style="padding:3px 10px; background:var(--surface2); border-radius:12px; font-size:0.8rem; font-weight:600; color:var(--accent2);">{{ e.startDate || 'Present' }}{{ e.endDate ? ' - ' + e.endDate : '' }}</span>
+            <span class="timeline-date" style="padding:3px 10px; background:var(--surface2); border-radius:12px; font-size:0.8rem; font-weight:600; color:var(--accent2);">{{ getExperienceDateRange(e) }}</span>
             <h3 style="font-size:1.3rem; font-weight:700; margin:8px 0 3px 0; color:#fff;">{{ e.title }}</h3>
             <h4 style="font-size:0.95rem; font-weight:500; color:var(--accent); margin:0 0 10px 0;">{{ e.company }}</h4>
             <p style="color:var(--text); font-size:0.9rem; margin-bottom:8px;">{{ getCleanExpDesc(e.description) }}</p>
-            <div *ngIf="getExpCertState(e.description)" style="font-size:0.8rem; color:var(--success); font-weight:600; display:flex; align-items:center; gap:8px;">
-              ✓ Certificate Attached
+            <div *ngIf="getExpCertState(e.description)" style="font-size:0.8rem; color:var(--success); font-weight:600; display:flex; flex-direction:column; align-items:flex-start; gap:8px;">
+              <div style="display:flex; align-items:center; gap:12px;">
+                <span>✓ Certificate Attached</span>
+                <a [href]="getDownloadUrl(getExpCertUrl(e.description))" download target="_blank" style="color:var(--accent2); text-decoration:none; display:inline-flex; align-items:center; gap:4px; font-size:0.8rem;" title="Download Certificate">
+                  <i class="fas fa-download"></i> Download
+                </a>
+              </div>
+              <a href="javascript:void(0)" (click)="openCertViewerModal(getExpCertUrl(e.description)); $event.preventDefault();" class="cert-preview-card" style="margin-top:10px; display:block;">
+                <ng-container *ngIf="getExpCertUrl(e.description).toLowerCase().endsWith('.pdf'); else isImg">
+                  <div style="background:var(--surface2); padding:15px; display:flex; align-items:center; gap:10px; color:#fff;">
+                    <span style="font-size:2rem; color:var(--danger);">📄</span>
+                    <div style="display:flex; flex-direction:column; text-align:left;">
+                      <span style="font-size:0.85rem; font-weight:700;">Certificate.pdf</span>
+                      <span style="font-size:0.75rem; color:var(--muted);">Click to open PDF</span>
+                    </div>
+                  </div>
+                </ng-container>
+                <ng-template #isImg>
+                  <img [src]="getExpCertUrl(e.description)" alt="Certificate Preview" style="width:100%; height:auto; display:block; max-height:140px; object-fit:cover;" />
+                  <div class="cert-preview-overlay">
+                    🔍 Open Large View
+                  </div>
+                </ng-template>
+              </a>
             </div>
           </div>
           <div class="card-actions" style="display:flex; gap:10px;">
@@ -476,7 +524,7 @@
                   <div class="platform-icon-wrapper">🐙</div>
                   <div style="display:flex; flex-direction:column; min-width:0; flex:1;">
                     <span class="platform-title">GitHub</span>
-                    <span class="platform-handle" [title]="c.github">{{ c.github }}</span>
+                    <span class="platform-handle" [title]="c.github">{{ getCleanHandle(c.github) }}</span>
                   </div>
                 </div>
                 <a [href]="c.github" target="_blank" class="platform-visit-btn btn-github">Visit Profile →</a>
@@ -489,7 +537,7 @@
                   <div class="platform-icon-wrapper">💼</div>
                   <div style="display:flex; flex-direction:column; min-width:0; flex:1;">
                     <span class="platform-title">LinkedIn</span>
-                    <span class="platform-handle" [title]="c.linkedin">{{ c.linkedin }}</span>
+                    <span class="platform-handle" [title]="c.linkedin">{{ getCleanHandle(c.linkedin) }}</span>
                   </div>
                 </div>
                 <a [href]="c.linkedin" target="_blank" class="platform-visit-btn btn-linkedin">Visit Profile →</a>
@@ -502,7 +550,7 @@
                   <div class="platform-icon-wrapper">📘</div>
                   <div style="display:flex; flex-direction:column; min-width:0; flex:1;">
                     <span class="platform-title">Facebook</span>
-                    <span class="platform-handle" [title]="c.facebook">{{ c.facebook }}</span>
+                    <span class="platform-handle" [title]="c.facebook">{{ getCleanHandle(c.facebook) }}</span>
                   </div>
                 </div>
                 <a [href]="c.facebook" target="_blank" class="platform-visit-btn btn-facebook">Visit Profile →</a>
@@ -515,7 +563,7 @@
                   <div class="platform-icon-wrapper">📸</div>
                   <div style="display:flex; flex-direction:column; min-width:0; flex:1;">
                     <span class="platform-title">Instagram</span>
-                    <span class="platform-handle" [title]="c.instagram">{{ c.instagram }}</span>
+                    <span class="platform-handle" [title]="c.instagram">{{ getCleanHandle(c.instagram) }}</span>
                   </div>
                 </div>
                 <a [href]="c.instagram" target="_blank" class="platform-visit-btn btn-instagram">Visit Profile →</a>
@@ -528,7 +576,7 @@
                   <div class="platform-icon-wrapper">🎵</div>
                   <div style="display:flex; flex-direction:column; min-width:0; flex:1;">
                     <span class="platform-title">TikTok</span>
-                    <span class="platform-handle" [title]="c.tikTok">{{ c.tikTok }}</span>
+                    <span class="platform-handle" [title]="c.tikTok">{{ getCleanHandle(c.tikTok) }}</span>
                   </div>
                 </div>
                 <a [href]="c.tikTok" target="_blank" class="platform-visit-btn btn-tiktok">Visit Profile →</a>
@@ -566,46 +614,30 @@
         <div class="appearance-panel" style="background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:15px;">
           <div class="appearance-panel-title" style="font-weight:700; margin-bottom:15px; font-size:1.1rem; color:#fff;">🎨 Portfolio Theme Selection</div>
           
-          <div class="theme-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:12px;">
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '1'" (click)="selectThemeCard('1')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-nebula" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #6c63ff 0%, #a855f7 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌌 Nebula</div>
+          <div class="theme-grid" style="display:grid; grid-template-columns:repeat(3, 1fr); gap:16px;">
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '1'" (click)="selectThemeCard('1')" style="padding:15px; background:var(--bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; text-align:center; transition: all 0.3s ease;">
+              <div class="theme-swatch swatch-nebula" style="height:50px; border-radius:8px; background:linear-gradient(135deg, #8B5CF6 0%, #A78BFA 100%); margin-bottom:10px;"></div>
+              <div class="theme-name" style="font-size:0.9rem; font-weight:700; color:#fff;">🌌 Purple Nebula</div>
             </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '2'" (click)="selectThemeCard('2')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-ocean" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #0ea5e9 0%, #06b6d4 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌊 Ocean</div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '2'" (click)="selectThemeCard('2')" style="padding:15px; background:var(--bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; text-align:center; transition: all 0.3s ease;">
+              <div class="theme-swatch swatch-ocean" style="height:50px; border-radius:8px; background:linear-gradient(135deg, #2563EB 0%, #60A5FA 100%); margin-bottom:10px;"></div>
+              <div class="theme-name" style="font-size:0.9rem; font-weight:700; color:#fff;">🌊 Blue Pro</div>
             </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '3'" (click)="selectThemeCard('3')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-minimal" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">✨ Minimal</div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '3'" (click)="selectThemeCard('3')" style="padding:15px; background:var(--bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; text-align:center; transition: all 0.3s ease;">
+              <div class="theme-swatch" style="height:50px; border-radius:8px; background:linear-gradient(135deg, #10B981 0%, #34D399 100%); margin-bottom:10px;"></div>
+              <div class="theme-name" style="font-size:0.9rem; font-weight:700; color:#fff;">🌲 Emerald Green</div>
             </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '4'" (click)="selectThemeCard('4')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-aurora" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #00ffa3 0%, #00d4ff 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌌 Aurora</div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '4'" (click)="selectThemeCard('4')" style="padding:15px; background:var(--bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; text-align:center; transition: all 0.3s ease;">
+              <div class="theme-swatch" style="height:50px; border-radius:8px; background:linear-gradient(135deg, #FF6B00 0%, #FF9A3C 100%); margin-bottom:10px;"></div>
+              <div class="theme-name" style="font-size:0.9rem; font-weight:700; color:#fff;">🍊 Orange Dev</div>
             </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '5'" (click)="selectThemeCard('5')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-cyberpunk" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #ff007a 0%, #7928ca 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">⚡ Cyberpunk</div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '5'" (click)="selectThemeCard('5')" style="padding:15px; background:var(--bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; text-align:center; transition: all 0.3s ease;">
+              <div class="theme-swatch" style="height:50px; border-radius:8px; background:linear-gradient(135deg, #DC267F 0%, #FF6EB4 100%); margin-bottom:10px;"></div>
+              <div class="theme-name" style="font-size:0.9rem; font-weight:700; color:#fff;">🛡️ Cyber Security</div>
             </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '6'" (click)="selectThemeCard('6')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-sakura" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f472b6 0%, #fb7185 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌸 Sakura</div>
-            </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '7'" (click)="selectThemeCard('7')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-midnight" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #1e1b4b 0%, #4c1d95 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌙 Midnight</div>
-            </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '8'" (click)="selectThemeCard('8')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-forest" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #059669 0%, #10b981 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌲 Forest</div>
-            </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '9'" (click)="selectThemeCard('9')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-sunset" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #f97316 0%, #ef4444 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🌅 Sunset</div>
-            </div>
-            <div class="theme-card" [class.active]="themeService.currentTheme() === '10'" (click)="selectThemeCard('10')" style="padding:10px; background:var(--bg); border:1px solid var(--border); border-radius:10px; cursor:pointer; text-align:center;">
-              <div class="theme-swatch swatch-flame" style="height:40px; border-radius:8px; background:linear-gradient(135deg, #fd6f00 0%, #ff9500 100%); margin-bottom:8px;"></div>
-              <div class="theme-name" style="font-size:0.85rem; font-weight:600;">🔥 Flame</div>
+            <div class="theme-card" [class.active]="themeService.currentTheme() === '6'" (click)="selectThemeCard('6')" style="padding:15px; background:var(--bg); border:1px solid var(--border); border-radius:12px; cursor:pointer; text-align:center; transition: all 0.3s ease;">
+              <div class="theme-swatch" style="height:50px; border-radius:8px; background:linear-gradient(135deg, #FFB800 0%, #FFD54F 100%); margin-bottom:10px;"></div>
+              <div class="theme-name" style="font-size:0.9rem; font-weight:700; color:#fff;">⭐ Gold Premium</div>
             </div>
           </div>
         </div>
@@ -643,76 +675,69 @@
         </div>
       </div>
 
-      <div class="appearance-save-bar" style="margin-top:20px; display:flex; align-items:center; gap:15px;">
-        <button class="btn btn-primary" (click)="saveAppearance()" [disabled]="isSubmitting()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:12px; font-weight:700;">
-          <span *ngIf="!isSubmitting()" style="display:inline-flex; align-items:center; gap:8px;">
-            <span style="font-size:1.15rem; filter: drop-shadow(0 0 4px #fff);">⚡</span>
-            <span>Save Appearance Settings</span>
-          </span>
-          <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
-        </button>
-        <span class="appearance-saved-msg" *ngIf="appearanceSaved()" style="color:var(--success); font-weight:600;">✓ Saved successfully!</span>
-      </div>
+
     </section>
 
     <!-- ─── CUSTOM CSS SECTION ─── -->
-    <section class="content-section" [class.active]="activeSection() === 'custom-css'">
+    <section class="content-section custom-css-page" [class.active]="activeSection() === 'custom-css'">
       <div class="section-header" style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 2rem; text-align:left;">
         <div>
           <h2 class="section-title" style="font-size:2rem; margin-bottom:5px;">Custom CSS</h2>
           <p style="color:var(--muted); font-size:0.95rem;">Design custom styles, glows, and animations for your public portfolio.</p>
         </div>
-        <button class="btn btn-secondary" style="padding: 8px 18px; font-size:0.9rem;" (click)="copyProfileLink()">🔗 Copy Profile Link</button>
       </div>
 
       <!-- Custom CSS Editor Panel -->
       <div class="appearance-panel" style="background:var(--surface); border:1px solid var(--border); padding:20px; border-radius:15px;">
-        <div class="appearance-panel-title" style="font-weight:700; margin-bottom:15px; font-size:1.1rem; color:#fff;">💻 Custom CSS Stylesheet Editor &amp; Live Preview</div>
-        <div style="font-size:0.8rem; color:var(--muted); margin-bottom:12px;">Type custom CSS rules to override page variables, backgrounds, fonts, or animations. Preview your changes instantly on the right!</div>
-        <div style="font-size:0.75rem; color:var(--danger); margin-bottom:20px; padding:8px; background:rgba(255,0,0,0.1); border:1px solid var(--danger); border-radius:6px;">⚠️ Security Warning: Custom CSS can break your portfolio. Use with caution.</div>
+        <div class="appearance-panel-title" style="font-weight:700; margin-bottom:8px; font-size:1.1rem; color:#fff;">CSS Stylesheet Editor</div>
+        <div style="font-size:0.8rem; color:var(--muted); margin-bottom:15px;">Type custom CSS rules to override page variables, backgrounds, fonts, or animations. Preview your changes instantly on the right!</div>
+        
+        <div style="font-size:0.75rem; color:var(--danger); margin-bottom:20px; padding:10px 12px; background:rgba(244,63,94,0.04); border:1px dashed rgba(244,63,94,0.2); border-radius:10px; display: flex; align-items: center; gap: 8px;">
+          <span>⚠️</span> <span>Custom CSS can modify elements on your public page. Please use with caution.</span>
+        </div>
         
         <!-- Toolbar for CSS Workspace -->
         <div class="editor-toolbar" style="display: flex; justify-content: space-between; align-items: center; background: var(--surface2); padding: 10px 16px; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 20px; flex-wrap: wrap; gap: 10px;">
           <!-- Left: Layout Switcher -->
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Layout:</span>
-            <button class="btn-tool" (click)="setEditorLayout('split')" [style.background]="editorLayout() === 'split' ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="editorLayout() === 'split' ? 'var(--accent2)' : 'var(--muted)'" [style.border-color]="editorLayout() === 'split' ? 'var(--accent2)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
-              ◀️▶️ Split View
+            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">View Mode:</span>
+            <button class="btn-tool" (click)="setEditorLayout('split')" [style.background]="editorLayout() === 'split' ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="editorLayout() === 'split' ? 'var(--accent2)' : 'var(--muted)'" [style.border-color]="editorLayout() === 'split' ? 'var(--accent2)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+              <i class="fas fa-table-columns"></i> Split View
             </button>
-            <button class="btn-tool" (click)="setEditorLayout('stacked')" [style.background]="editorLayout() === 'stacked' ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="editorLayout() === 'stacked' ? 'var(--accent2)' : 'var(--muted)'" [style.border-color]="editorLayout() === 'stacked' ? 'var(--accent2)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
-              🔼🔽 Stacked View (Full Desktop)
+            <button class="btn-tool" (click)="setEditorLayout('stacked')" [style.background]="editorLayout() === 'stacked' ? 'rgba(108, 99, 255, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="editorLayout() === 'stacked' ? 'var(--accent2)' : 'var(--muted)'" [style.border-color]="editorLayout() === 'stacked' ? 'var(--accent2)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+              <i class="fas fa-layer-group"></i> Stacked View
             </button>
           </div>
           
           <!-- Right: Device Mode -->
           <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
-            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Preview Device:</span>
-            <button class="btn-tool" (click)="setPreviewMode('mobile')" [style.background]="previewMode() === 'mobile' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'mobile' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'mobile' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
-              📱 Mobile
+            <span style="font-size: 0.8rem; color: var(--muted); font-weight: 600;">Preview Size:</span>
+            <button class="btn-tool" (click)="setPreviewMode('mobile')" [style.background]="previewMode() === 'mobile' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'mobile' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'mobile' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+              <i class="fas fa-mobile-screen-button"></i> Mobile
             </button>
-            <button class="btn-tool" (click)="setPreviewMode('tablet')" [style.background]="previewMode() === 'tablet' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'tablet' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'tablet' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
-              📟 Tablet
+            <button class="btn-tool" (click)="setPreviewMode('tablet')" [style.background]="previewMode() === 'tablet' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'tablet' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'tablet' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+              <i class="fas fa-tablet-screen-button"></i> Tablet
             </button>
-            <button class="btn-tool" (click)="setPreviewMode('desktop')" [style.background]="previewMode() === 'desktop' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'desktop' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'desktop' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600;">
-              💻 Desktop
+            <button class="btn-tool" (click)="setPreviewMode('desktop')" [style.background]="previewMode() === 'desktop' ? 'rgba(6, 182, 212, 0.2)' : 'rgba(255,255,255,0.02)'" [style.color]="previewMode() === 'desktop' ? 'var(--accent)' : 'var(--muted)'" [style.border-color]="previewMode() === 'desktop' ? 'var(--accent)' : 'var(--border)'" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid; cursor: pointer; transition: all 0.2s; font-weight: 600; display: inline-flex; align-items: center; gap: 5px;">
+              <i class="fas fa-desktop"></i> Desktop
             </button>
             
-            <!-- Open in New Tab Link -->
-            <a [href]="'/portfolio/' + authService.userId()" target="_blank" class="btn-tool" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; background: rgba(255,255,255,0.02); color: var(--text-primary); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; font-weight: 600;">
-              ↗️ Open in New Tab
+            <!-- Open Live Link -->
+            <a [href]="'/portfolio/' + authService.userId()" target="_blank" class="btn-tool" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--border); cursor: pointer; background: rgba(255,255,255,0.02); color: var(--text-primary); text-decoration: none; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; font-weight: 600;">
+              <i class="fas fa-arrow-up-right-from-square"></i> Open Live
             </a>
             
-            <!-- Styling Guide Button -->
-            <button type="button" (click)="showCssGuideModal.set(true)" class="btn-tool" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--accent); cursor: pointer; background: rgba(108, 99, 255, 0.1); color: var(--accent2); display: inline-flex; align-items: center; gap: 4px; transition: all 0.2s; font-weight: 600;">
-              📖 Styling Guide
+            <!-- Guide Button -->
+            <button type="button" (click)="showCssGuideModal.set(true)" class="btn-tool" style="padding: 6px 12px; font-size: 0.8rem; border-radius: 6px; border: 1px solid var(--accent); cursor: pointer; background: rgba(108, 99, 255, 0.1); color: var(--accent2); display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s; font-weight: 600;">
+              <i class="fas fa-book-open"></i> Styling Guide
             </button>
           </div>
         </div>
 
         <div class="css-workspace-layout" [class.layout-split]="editorLayout() === 'split'" [class.layout-stacked]="editorLayout() === 'stacked'">
           <!-- Left Column: CSS Editor -->
-          <div class="css-editor-column" [style.height]="editorLayout() === 'split' ? 'auto' : '280px'" style="display: flex; flex-direction: column; gap: 10px; position: relative;">
-            <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent2);">✍️ Stylesheet Editor</div>
+          <div class="css-editor-column" [style.height]="editorLayout() === 'split' ? '560px' : '300px'" style="display: flex; flex-direction: column; gap: 10px; position: relative;">
+            <div style="font-size: 0.85rem; font-weight: 600; color: var(--accent2); display: flex; align-items: center; gap: 6px;"><i class="fas fa-code"></i> Stylesheet Editor</div>
             <div style="position: relative; flex: 1; display: flex; flex-direction: column; height: 100%;">
               <textarea 
                 #cssTextarea
@@ -720,7 +745,7 @@
                 (input)="onCssInput($any($event.target).value, cssTextarea)"
                 (keydown)="onKeyDown($event, cssTextarea)"
                 rows="18" 
-                placeholder="/* Example: */&#10;body { background: #0b1020 !important; }&#10;.hero-title span { color: #00ffc4 !important; }&#10;.navbar { background: rgba(0,0,0,0.8) !important; }" 
+                placeholder="/* Add your custom styles here */&#10;body { background: #0b1020 !important; }&#10;.hero-title span { color: #00ffc4 !important; }&#10;.navbar { background: rgba(0,0,0,0.8) !important; }" 
                 style="width:100%; height: 100%; min-height: 220px; font-family: 'Consolas', 'Courier New', monospace; font-size:0.85rem; padding:12px; background:var(--bg); border:1px solid var(--border); border-radius:10px; color:#a78bfa; line-height:1.5; resize:none;"
               ></textarea>
               
@@ -752,15 +777,15 @@
           
           <!-- Right Column: Interactive Live Preview -->
           <div class="css-preview-column" style="display: flex; flex-direction: column; gap: 10px; min-width: 0;">
-            <div style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; padding: 0 4px; margin-bottom: 12px; margin-top: 8px;">
-              <span style="font-size: 0.85rem; font-weight: 600; color: var(--accent2);">👁️ Interactive Live Preview</span>
+            <div style="display: flex; justify-content: flex-start; align-items: center; gap: 12px; padding: 0 4px; margin-top: 8px; margin-bottom: 2px;">
+              <span style="font-size: 0.85rem; font-weight: 600; color: var(--accent2); display: flex; align-items: center; gap: 6px;"><i class="fas fa-eye"></i> Live Interactive Preview</span>
               <span style="font-size: 0.7rem; color: var(--success); font-weight: 700; display: inline-flex; align-items: center; gap: 4px; padding: 3px 8px; background: rgba(34, 211, 165, 0.1); border: 1px solid rgba(34, 211, 165, 0.2); border-radius: 12px;">
                 <span style="width: 6px; height: 6px; border-radius: 50%; background: var(--success); box-shadow: 0 0 8px var(--success);"></span>
                 Connected
               </span>
             </div>
             <div class="preview-iframe-wrapper" 
-                 [style.height]="editorLayout() === 'split' ? '850px' : '1050px'"
+                 [style.height]="editorLayout() === 'split' ? '520px' : '720px'"
                  style="overflow-x: auto; overflow-y: hidden; background: #070913; background-image: radial-gradient(rgba(255,255,255,0.05) 1px, transparent 1px); background-size: 20px 20px; position: relative; border: 2px solid var(--border); border-radius: 12px; display: flex; align-items: stretch; justify-content: flex-start; padding: 25px 10px; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);">
               <iframe 
                 *ngIf="safePortfolioUrl()"
@@ -782,8 +807,8 @@
       <div class="appearance-save-bar" style="margin-top:20px; display:flex; align-items:center; gap:15px;">
         <button class="btn btn-primary" (click)="saveAppearance()" [disabled]="isSubmitting()" style="display:inline-flex; align-items:center; gap:8px; padding:10px 22px; border-radius:12px; font-weight:700;">
           <span *ngIf="!isSubmitting()" style="display:inline-flex; align-items:center; gap:8px;">
-            <span style="font-size:1.15rem; filter: drop-shadow(0 0 4px #fff);">⚡</span>
-            <span>Save Appearance Settings</span>
+            <i class="fas fa-floppy-disk"></i>
+            <span>Save Custom CSS</span>
           </span>
           <span class="ld-ring" *ngIf="isSubmitting()" style="width:20px; height:20px; border-width:2px; display:inline-block;"></span>
         </button>
@@ -795,10 +820,12 @@
 </div>
 
 <!-- Toast Notification -->
-<div *ngIf="toast()" class="toast" [class.success]="toast()?.type === 'success'" [class.error]="toast()?.type === 'error'" style="position:fixed; top:20px; right:20px; z-index:9999; animation:slideInRight 0.3s ease;">
-  <div style="display:flex; align-items:center; gap:10px; padding:16px 24px; border-radius:12px; background:var(--surface); border:2px solid var(--border); box-shadow:0 8px 24px rgba(0,0,0,0.4); min-width:300px;">
-    <span style="font-size:1.5rem;">{{ toast()?.type === 'success' ? '✅' : '❌' }}</span>
-    <span style="color:var(--text); font-weight:600;">{{ toast()?.message }}</span>
+<div *ngIf="toast()" class="toast" [class.success]="toast()?.type === 'success'" [class.error]="toast()?.type === 'error'">
+  <div class="toast-inner">
+    <div class="toast-icon">
+      <i class="fas" [class.fa-check]="toast()?.type === 'success'" [class.fa-xmark]="toast()?.type === 'error'"></i>
+    </div>
+    <span class="toast-message">{{ toast()?.message }}</span>
   </div>
 </div>
 
@@ -834,7 +861,7 @@
           <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Profile Image</label>
           
           <!-- Image Preview -->
-          <div *ngIf="profileImgPreviewUrl || getProfileImageUrl()" style="position:relative; width:120px; height:120px; margin-bottom:12px;">
+          <div *ngIf="profileImgPreviewUrl || (getProfileImageUrl() && !removeProfileImgRequested)" style="position:relative; width:120px; height:120px; margin-bottom:12px;">
             <img [src]="profileImgPreviewUrl || getProfileImageUrl()" alt="Profile preview" style="width:100%; height:100%; object-fit:cover; border-radius:50%; border:2px solid var(--border);" />
             <button type="button" (click)="removeProfileImage()" style="position:absolute; top:-8px; right:-8px; background:var(--danger); color:#fff; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer; font-size:12px; display:flex; align-items:center; justify-content:center;">✕</button>
           </div>
@@ -846,6 +873,43 @@
             <span style="font-size:0.85rem; color:var(--muted);">{{ selectedProfileImgFile ? selectedProfileImgFile.name : 'Click to upload or drag image here' }}</span>
           </div>
           <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Recommended: Square image, at least 400x400px. Max 5MB.</small>
+        </div>
+
+        <!-- Resume / CV Upload -->
+        <div class="field-group" style="grid-column: span 2; margin-bottom: 0; border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px;">
+          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Resume / CV (السيرة الذاتية)</label>
+          
+          <!-- Existing Resume Info -->
+          <div *ngIf="(getResumeUrl() || selectedResumeFile) && !removeResumeRequested" style="display:flex; align-items:center; justify-content:space-between; padding:10px 14px; background:rgba(108, 99, 255, 0.05); border:1px solid rgba(108, 99, 255, 0.15); border-radius:8px; margin-bottom:10px;">
+            <div style="display:flex; align-items:center; gap:8px; min-width: 0;">
+              <span style="font-size:1.25rem;">📄</span>
+              <div style="display:flex; flex-direction:column; min-width: 0;">
+                <span *ngIf="selectedResumeFile" style="font-size:0.85rem; font-weight:600; color:#fff; word-break: break-all;">{{ selectedResumeFile.name }}</span>
+                <span *ngIf="!selectedResumeFile && getResumeUrl()" style="font-size:0.85rem; font-weight:600; color:#fff; word-break: break-all;">Current Resume (CV) File</span>
+                <small *ngIf="selectedResumeFile" style="color:var(--muted); font-size:0.7rem;">Ready to upload</small>
+                <div style="display:flex; gap:10px; align-items:center; margin-top:4px;">
+                  <a *ngIf="!selectedResumeFile && getResumeUrl()" [href]="getResumeUrl()" target="_blank" style="color:var(--accent2); font-size:0.7rem; text-decoration:none; font-weight:700; display: inline-flex; align-items: center; gap: 3px;">
+                    <i class="fas fa-arrow-up-right-from-square"></i> View Current CV
+                  </a>
+                  <span *ngIf="!selectedResumeFile && getResumeUrl()" style="color:var(--muted); font-size:0.75rem;">|</span>
+                  <a *ngIf="!selectedResumeFile && getResumeUrl()" [href]="getDownloadUrl(getResumeUrl())" download target="_blank" style="color:var(--accent); font-size:0.7rem; text-decoration:none; font-weight:700; display: inline-flex; align-items: center; gap: 3px;">
+                    <i class="fas fa-download"></i> Download CV
+                  </a>
+                </div>
+              </div>
+            </div>
+            <button type="button" (click)="removeResume()" style="background:var(--danger); color:#fff; border:none; border-radius:6px; padding:4px 8px; cursor:pointer; font-size:0.75rem; font-weight:700; display:flex; align-items:center; gap:4px; transition: all 0.2s;">
+              <i class="fas fa-trash-can"></i> Remove
+            </button>
+          </div>
+          
+          <!-- Upload Area -->
+          <div class="file-upload-area" (click)="resumeInput.click()" style="cursor:pointer; min-height:60px; padding:12px; border:2px dashed var(--border); border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; background:var(--surface2); transition:all 0.2s;">
+            <input #resumeInput type="file" style="display:none;" accept=".pdf,.doc,.docx" (change)="onResumeFileSelected($event)" />
+            <span style="font-size:1.5rem; margin-bottom:4px;">💼</span>
+            <span style="font-size:0.85rem; color:var(--muted);">{{ selectedResumeFile ? selectedResumeFile.name : 'Click to upload or drag CV here' }}</span>
+          </div>
+          <small style="color:var(--muted); font-size:0.7rem; margin-top:4px; display:block;">Allowed formats: PDF, DOC, DOCX. Max size: 5MB.</small>
         </div>
       </div>
       <div class="modal-footer">
@@ -1069,46 +1133,57 @@
     </div>
     <form [formGroup]="contactForm" (ngSubmit)="handleSaveContact()">
       <div class="modal-body" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:15px; padding:1.25rem 1.5rem;">
+        <!-- Email Address -->
         <div class="field-group" style="margin-bottom: 0;">
-          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Email Address *</label>
-          <div style="position:relative; display:flex; align-items:center;">
-            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">📧</span>
-            <input type="email" formControlName="email" placeholder="contact@example.com" required style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label>Email Address *</label>
+          <div class="input-wrap">
+            <i class="fa-solid fa-envelope"></i>
+            <input type="email" formControlName="email" placeholder="contact@example.com" required />
           </div>
         </div>
+
+        <!-- GitHub -->
         <div class="field-group" style="margin-bottom: 0;">
-          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">GitHub Profile Link</label>
-          <div style="position:relative; display:flex; align-items:center;">
-            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">💻</span>
-            <input type="text" formControlName="github" placeholder="https://github.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label>GitHub Profile Link</label>
+          <div class="input-wrap">
+            <i class="fa-brands fa-github"></i>
+            <input type="text" formControlName="github" placeholder="https://github.com/..." />
           </div>
         </div>
+
+        <!-- LinkedIn -->
         <div class="field-group" style="margin-bottom: 0;">
-          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">LinkedIn Profile Link</label>
-          <div style="position:relative; display:flex; align-items:center;">
-            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">💼</span>
-            <input type="text" formControlName="linkedin" placeholder="https://linkedin.com/in/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label>LinkedIn Profile Link</label>
+          <div class="input-wrap">
+            <i class="fa-brands fa-linkedin"></i>
+            <input type="text" formControlName="linkedin" placeholder="https://linkedin.com/in/..." />
           </div>
         </div>
+
+        <!-- Facebook -->
         <div class="field-group" style="margin-bottom: 0;">
-          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Facebook Profile Link</label>
-          <div style="position:relative; display:flex; align-items:center;">
-            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">👥</span>
-            <input type="text" formControlName="facebook" placeholder="https://facebook.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label>Facebook Profile Link</label>
+          <div class="input-wrap">
+            <i class="fa-brands fa-facebook"></i>
+            <input type="text" formControlName="facebook" placeholder="https://facebook.com/..." />
           </div>
         </div>
+
+        <!-- Instagram -->
         <div class="field-group" style="margin-bottom: 0;">
-          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">Instagram Handle Link</label>
-          <div style="position:relative; display:flex; align-items:center;">
-            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">📸</span>
-            <input type="text" formControlName="instagram" placeholder="https://instagram.com/..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label>Instagram Handle Link</label>
+          <div class="input-wrap">
+            <i class="fa-brands fa-instagram"></i>
+            <input type="text" formControlName="instagram" placeholder="https://instagram.com/..." />
           </div>
         </div>
+
+        <!-- TikTok -->
         <div class="field-group" style="margin-bottom: 0;">
-          <label style="font-size:0.75rem; text-transform:uppercase; letter-spacing:0.5px; font-weight:700; color:var(--text-dim); margin-bottom:4px; display:block;">TikTok Account Link</label>
-          <div style="position:relative; display:flex; align-items:center;">
-            <span style="position:absolute; left:12px; font-size:1rem; pointer-events:none;">🎵</span>
-            <input type="text" formControlName="tiktok" placeholder="https://tiktok.com/@..." style="width:100%; padding:8px 12px 8px 34px; background:var(--surface2); border:1px solid var(--border); border-radius:8px; color:#fff;" />
+          <label>TikTok Account Link</label>
+          <div class="input-wrap">
+            <i class="fa-brands fa-tiktok"></i>
+            <input type="text" formControlName="tiktok" placeholder="https://tiktok.com/@..." />
           </div>
         </div>
         
@@ -1264,6 +1339,39 @@ body {{ '{' }}
     <div class="modal-footer" style="background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); border-top: 1px solid var(--border);">
       <button type="button" class="btn btn-secondary" (click)="showCssGuideModal.set(false)">Close Guide</button>
     </div>
+  </div>
+</div>
+
+<!-- Certificate Lightbox Modal Overlay -->
+<div class="modal-overlay" *ngIf="showCertViewerModal()" (click)="closeCertViewerModal()" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 16, 32, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; animation: fadeIn 0.3s ease;">
+  <div class="glass-card" (click)="$event.stopPropagation()" 
+       style="position: relative; width: 1200px; height: 78vh; max-width: 95vw; max-height: 95vh; display: flex; flex-direction: column; align-items: center; border: 2px solid var(--border); border-radius: 20px; background: rgba(20, 23, 32, 0.9); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); overflow: hidden; padding: 12px; animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+    
+    <!-- Header with controls -->
+    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 8px 15px 12px 15px; border-bottom: 1px solid var(--border);">
+      <span style="color: #fff; font-weight: 700; font-size: 0.95rem;">📜 Certificate Viewer</span>
+      <div style="display: flex; gap: 10px; align-items: center;">
+        <!-- Download button -->
+        <a [href]="getDownloadUrl(activeCertViewerUrl())" download target="_blank" style="background: rgba(255,255,255,0.04); border: 1px solid var(--border); color: #fff; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer;" title="Download">
+          <i class="fas fa-download"></i>
+        </a>
+        <!-- Close button -->
+        <button (click)="closeCertViewerModal()" style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); color: #f43f5e; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+          <i class="fas fa-xmark"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- PDF preview -->
+    <div *ngIf="safeCertPdfUrl()" style="width: 100%; flex: 1; min-height: 0; padding: 10px 0 5px 0; box-sizing: border-box;">
+      <iframe [src]="safeCertPdfUrl()" style="width: 100%; height: 100%; border: none; border-radius: 12px; background: #fff;"></iframe>
+    </div>
+
+    <!-- Image preview -->
+    <div *ngIf="!safeCertPdfUrl()" style="padding: 15px; display: flex; align-items: center; justify-content: center; overflow: auto; min-height: 150px; max-height: calc(100vh - 200px);">
+      <img [src]="activeCertViewerUrl()" alt="Certificate" style="max-width: 100%; max-height: calc(100vh - 230px); object-fit: contain; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);" />
+    </div>
+
   </div>
 </div>
 

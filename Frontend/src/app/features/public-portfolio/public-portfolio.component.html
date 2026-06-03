@@ -65,6 +65,10 @@
         <div class="hero-actions">
           <a (click)="scrollToSection($event, 'projects')" class="btn btn-primary" style="cursor: pointer;">{{ t[activeLang()].browseProjects }}</a>
           <a (click)="scrollToSection($event, 'contact')" class="btn btn-secondary" style="cursor: pointer;">{{ t[activeLang()].contactMe }}</a>
+          <a *ngIf="getResumeUrl()" [href]="getResumeUrl()" (click)="openCertificate($event, getResumeUrl() + '?view=true', activeLang() === 'ar' ? 'السيرة الذاتية' : 'Resume / CV')" class="btn btn-secondary resume-btn" style="cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fas fa-file-pdf"></i>
+            <span>{{ activeLang() === 'ar' ? 'عرض السيرة الذاتية' : 'View Resume' }}</span>
+          </a>
         </div>
       </div>
       <div class="hero-image reveal reveal-delay active">
@@ -125,9 +129,12 @@
             <p *ngIf="getExperienceDescription(exp.description).text">{{ getExperienceDescription(exp.description).text }}</p>
             
             <!-- Certificate Badge -->
-            <div style="margin-top: 15px;" *ngIf="getExperienceDescription(exp.description).certUrl">
-              <a [href]="getFullCertUrl(getExperienceDescription(exp.description).certUrl)" (click)="openCertificate($event, getFullCertUrl(getExperienceDescription(exp.description).certUrl))" class="btn btn-primary" style="padding: 6px 15px; font-size: 0.85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600; cursor: pointer; transition: var(--transition);">
+            <div style="margin-top: 15px; display: inline-flex; align-items: center; gap: 10px;" *ngIf="getExperienceDescription(exp.description).certUrl">
+              <a [href]="getFullCertUrl(getExperienceDescription(exp.description).certUrl)" (click)="openCertificate($event, getFullCertUrl(getExperienceDescription(exp.description).certUrl), t[activeLang()].viewCertificate)" class="btn btn-primary" style="padding: 6px 15px; font-size: 0.85rem; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; text-decoration: none; font-weight: 600; cursor: pointer; transition: var(--transition);">
                 <i class="fas fa-certificate"></i> {{ t[activeLang()].viewCertificate }}
+              </a>
+              <a [href]="getDownloadUrl(getFullCertUrl(getExperienceDescription(exp.description).certUrl))" download target="_blank" class="btn btn-secondary" style="padding: 0; width: 34px; height: 34px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; cursor: pointer; transition: var(--transition);" [title]="activeLang() === 'ar' ? 'تحميل الشهادة' : 'Download Certificate'">
+                <i class="fas fa-download"></i>
               </a>
             </div>
           </div>
@@ -289,33 +296,38 @@
       <p>
         &copy; 2026 {{ t[activeLang()].footerRights }}
       </p>
-      <button class="share-btn" [class.hidden]="loading() || notFound() || isLoginPage()" (click)="copyLink()" style="margin-top: 1.5rem;">
-        <i class="fas" [class.fa-link]="!copied()" [class.fa-check]="copied()"></i> {{ shareButtonText() }}
-      </button>
     </div>
   </footer>
 
   <!-- Certificate Lightbox Modal Overlay -->
   <div class="modal-overlay" *ngIf="showCertModal()" (click)="closeCertModal()" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(11, 16, 32, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; align-items: center; justify-content: center; z-index: 9999; padding: 20px; animation: fadeIn 0.3s ease;">
-    <div class="glass-card" (click)="$event.stopPropagation()" style="position: relative; max-width: 90%; max-height: 90%; display: flex; flex-direction: column; align-items: center; border: 2px solid var(--glass-border); border-radius: 20px; background: rgba(15, 23, 42, 0.8); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); overflow: hidden; padding: 10px; animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
+    <div class="glass-card" (click)="$event.stopPropagation()" 
+         [style.width]="isPdfCert() ? (isResumeOpen() ? '950px' : '1200px') : 'auto'" 
+         [style.height]="isPdfCert() ? (isResumeOpen() ? '90vh' : '78vh') : 'auto'" 
+         style="position: relative; max-width: 95vw; max-height: 95vh; display: flex; flex-direction: column; align-items: center; border: 2px solid var(--glass-border); border-radius: 20px; background: rgba(15, 23, 42, 0.8); box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6); overflow: hidden; padding: 12px; animation: zoomIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;">
       
       <!-- Header with controls -->
       <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 8px 15px 12px 15px; border-bottom: 1px solid var(--glass-border);">
-        <span style="color: #fff; font-weight: 700; font-size: 0.95rem;">📜 {{ t[activeLang()].viewCertificate }}</span>
+        <span style="color: #fff; font-weight: 700; font-size: 0.95rem;">📜 {{ certModalTitle() || t[activeLang()].viewCertificate }}</span>
         <div style="display: flex; gap: 10px; align-items: center;">
           <!-- Download button -->
-          <a [href]="activeCertUrl()" download target="_blank" style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: #fff; border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease;" title="Download Certificate">
-            📥
+          <a [href]="getDownloadUrl(activeCertUrl())" download target="_blank" style="background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); color: #fff; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; cursor: pointer;" title="Download">
+            <i class="fas fa-download"></i>
           </a>
           <!-- Close button -->
-          <button (click)="closeCertModal()" style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); color: #f43f5e; border-radius: 8px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
-            ✕
+          <button (click)="closeCertModal()" style="background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); color: #f43f5e; border-radius: 8px; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease;">
+            <i class="fas fa-xmark"></i>
           </button>
         </div>
       </div>
 
+      <!-- PDF preview -->
+      <div *ngIf="isPdfCert()" style="width: 100%; flex: 1; min-height: 0; padding: 10px 0 5px 0; box-sizing: border-box;">
+        <iframe [src]="safeCertPdfUrl()" style="width: 100%; height: 100%; border: none; border-radius: 12px; background: #fff;"></iframe>
+      </div>
+
       <!-- Image preview -->
-      <div style="padding: 15px; display: flex; align-items: center; justify-content: center; overflow: auto; min-height: 150px; max-height: calc(100vh - 200px);">
+      <div *ngIf="!isPdfCert()" style="padding: 15px; display: flex; align-items: center; justify-content: center; overflow: auto; min-height: 150px; max-height: calc(100vh - 200px);">
         <img [src]="activeCertUrl()" alt="Certificate" style="max-width: 100%; max-height: calc(100vh - 230px); object-fit: contain; border-radius: 12px; box-shadow: 0 8px 30px rgba(0,0,0,0.5);" />
       </div>
 

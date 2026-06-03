@@ -51,7 +51,22 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
-app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    OnPrepareResponse = ctx =>
+    {
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Origin", "*");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Headers", "*");
+        ctx.Context.Response.Headers.Append("Access-Control-Allow-Methods", "*");
+        
+        if ((ctx.Context.Request.Path.StartsWithSegments("/resumes") ||
+             ctx.Context.Request.Path.StartsWithSegments("/uploads")) &&
+            ctx.Context.Request.Query.ContainsKey("download"))
+        {
+            ctx.Context.Response.Headers.Append("Content-Disposition", "attachment");
+        }
+    }
+});
 
 app.UseCors("AllowAll");
 

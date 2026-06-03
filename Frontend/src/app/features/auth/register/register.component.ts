@@ -31,6 +31,17 @@ export class RegisterComponent implements OnInit {
   readonly errorMsg = signal<string | null>(null);
   readonly successMsg = signal<string | null>(null);
   readonly isLoading = signal<boolean>(false);
+  readonly showPassword = signal<boolean>(false);
+  readonly showConfirmPassword = signal<boolean>(false);
+
+  togglePasswordVisibility(field: 'password' | 'confirmPassword'): void {
+    if (field === 'password') {
+      this.showPassword.update((value) => !value);
+      return;
+    }
+
+    this.showConfirmPassword.update((value) => !value);
+  }
 
   private passwordMatchValidator(control: AbstractControl): ValidationErrors | null {
     const password = control.get('password');

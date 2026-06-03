@@ -18,8 +18,14 @@ namespace Link.Dev.Profolie.BLL.AutoMapper
             CreateMap<UpdateContactDto, Contact>();
 
             // Project Mappings
-            CreateMap<Project, GetAllProject>().ReverseMap();
-            CreateMap<Project, GetByIdProject>().ReverseMap();
+            CreateMap<Project, GetAllProject>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom<ImageUrlResolver, string?>(src => src.Image));
+            CreateMap<GetAllProject, Project>();
+
+            CreateMap<Project, GetByIdProject>()
+                .ForMember(dest => dest.Image, opt => opt.MapFrom<ImageUrlResolver, string?>(src => src.Image));
+            CreateMap<GetByIdProject, Project>();
+
             CreateMap<CreateProjectDto, Project>()
                 .ForMember(dest => dest.Image, opt => opt.Ignore());
             CreateMap<ProjectUpdateDto, Project>()
@@ -46,7 +52,8 @@ namespace Link.Dev.Profolie.BLL.AutoMapper
                 .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
                 .ForMember(dest => dest.Title, opt => opt.MapFrom(src => src.Title))
                 .ForMember(dest => dest.About, opt => opt.MapFrom(src => src.About))
-                .ForMember(dest => dest.Image, opt => opt.MapFrom(src => src.Image))
+                .ForMember(dest => dest.Image, opt => opt.MapFrom<ImageUrlResolver, string?>(src => src.Image))
+                .ForMember(dest => dest.ResumeUrl, opt => opt.MapFrom<ImageUrlResolver, string?>(src => src.ResumeUrl))
                 .ForMember(dest => dest.IsActive, opt => opt.MapFrom(src => src.IsActive))
                 .ForMember(dest => dest.Template, opt => opt.MapFrom(src => src.Template));
         }

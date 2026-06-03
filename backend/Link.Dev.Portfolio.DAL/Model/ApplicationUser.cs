@@ -12,6 +12,7 @@ namespace Link.Dev.Profolie.DAL.Model
         public string? About { get; set; }
         public bool IsActive { get; set; }
         public string? Image { get; set; }
+        public string? ResumeUrl { get; set; }
         public string Template { get; set; } = "1"; // 1=Nebula, 2=Ocean, 3=Minimal
         // Relations
         public virtual ICollection<Skill>? Skills { get; set; }

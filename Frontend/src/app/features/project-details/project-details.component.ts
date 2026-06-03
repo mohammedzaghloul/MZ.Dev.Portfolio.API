@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { PortfolioService } from '../../core/services/portfolio.service';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'app-project-details',
@@ -10,21 +11,19 @@ import { PortfolioService } from '../../core/services/portfolio.service';
   templateUrl: './project-details.component.html',
   styles: [`
     :host {
-      --bg-primary: #0B1020;
-      --bg-secondary: #0f172a;
-      --bg-tertiary: #1e293b;
-      --accent-purple: #7C3AED;
-      --accent-purple-light: #A855F7;
-      --accent-blue: #3B82F6;
-      --accent-cyan: #06B6D4;
-      --text-primary: #f8fafc;
-      --text-secondary: #94a3b8;
-      --text-muted: #64748b;
-      --glass-bg: rgba(11, 16, 32, 0.7);
-      --glass-border: rgba(255, 255, 255, 0.08);
-      --gradient-primary: linear-gradient(135deg, #7C3AED 0%, #A855F7 50%, #3B82F6 100%);
-      --shadow-card: 0 25px 50px rgba(0, 0, 0, 0.5);
-      --shadow-glow: 0 0 50px rgba(124, 58, 237, 0.3);
+      --bg-primary: var(--bg);
+      --bg-secondary: var(--surface);
+      --bg-tertiary: var(--surface2);
+      --accent-purple: var(--accent);
+      --accent-purple-light: var(--accent2);
+      --accent-blue: var(--accent2);
+      --accent-cyan: var(--accent3);
+      --text-primary: var(--text);
+      --text-secondary: var(--text-dim);
+      --text-muted: var(--muted);
+      --glass-bg: color-mix(in srgb, var(--surface) 72%, transparent);
+      --glass-border: color-mix(in srgb, var(--border) 75%, rgba(255,255,255,0.16));
+      --gradient-primary: linear-gradient(135deg, var(--accent) 0%, var(--accent2) 55%, var(--accent3) 100%);
       --border-radius: 20px;
       --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -46,7 +45,7 @@ import { PortfolioService } from '../../core/services/portfolio.service';
     .project-details {
       padding: 8rem 2rem 4rem;
       min-height: 100vh;
-      background: radial-gradient(circle at 50% 0%, rgba(124, 58, 237, 0.08) 0%, rgba(11, 16, 32, 0) 70%);
+      background: radial-gradient(circle at 50% 0%, rgba(var(--accent-rgb), 0.1) 0%, transparent 70%);
     }
 
     .container {
@@ -103,8 +102,8 @@ import { PortfolioService } from '../../core/services/portfolio.service';
       align-items: center;
       gap: 0.5rem;
       padding: 0.5rem 1rem;
-      background: rgba(6, 182, 212, 0.08);
-      border: 1px solid rgba(6, 182, 212, 0.2);
+      background: rgba(var(--accent2-rgb), 0.08);
+      border: 1px solid rgba(var(--accent2-rgb), 0.22);
       border-radius: 50px;
       font-size: 0.9rem;
       font-weight: 600;
@@ -206,8 +205,8 @@ import { PortfolioService } from '../../core/services/portfolio.service';
 
     .tech-tag {
       padding: 0.5rem 1rem;
-      background: rgba(6, 182, 212, 0.08);
-      border: 1px solid rgba(6, 182, 212, 0.2);
+      background: rgba(var(--accent2-rgb), 0.08);
+      border: 1px solid rgba(var(--accent2-rgb), 0.22);
       border-radius: 50px;
       font-size: 0.9rem;
       font-weight: 600;
@@ -216,8 +215,8 @@ import { PortfolioService } from '../../core/services/portfolio.service';
     }
 
     .tech-tag:hover {
-      background: rgba(6, 182, 212, 0.15);
-      border-color: rgba(6, 182, 212, 0.4);
+      background: rgba(var(--accent2-rgb), 0.15);
+      border-color: rgba(var(--accent2-rgb), 0.42);
     }
 
     .action-btn {
@@ -241,7 +240,7 @@ import { PortfolioService } from '../../core/services/portfolio.service';
 
     .action-btn:hover {
       transform: translateY(-2px);
-      box-shadow: 0 0 60px rgba(124, 58, 237, 0.45);
+      box-shadow: 0 0 60px var(--accent-glow);
     }
 
     /* GitHub Button */
@@ -274,17 +273,17 @@ import { PortfolioService } from '../../core/services/portfolio.service';
       transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
     }
     .tech-tag:hover {
-      background: rgba(6, 182, 212, 0.12) !important;
+      background: rgba(var(--accent2-rgb), 0.12) !important;
       border-color: var(--accent-cyan) !important;
       transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(6, 182, 212, 0.15) !important;
+      box-shadow: 0 6px 15px rgba(var(--accent2-rgb), 0.16) !important;
     }
 
     .project-main-card {
       display: grid;
       grid-template-columns: 1.2fr 1fr;
       gap: 35px;
-      background: rgba(11, 16, 32, 0.65);
+      background: var(--glass-bg);
       border: 2px solid var(--glass-border);
       padding: 35px;
       border-radius: 24px;
@@ -300,7 +299,7 @@ import { PortfolioService } from '../../core/services/portfolio.service';
       overflow: hidden;
       border: 2px solid var(--glass-border);
       position: relative;
-      background: #070a14;
+      background: var(--bg-secondary);
     }
 
     .actions-card {
@@ -315,7 +314,7 @@ import { PortfolioService } from '../../core/services/portfolio.service';
     }
 
     .tech-card {
-      background: rgba(11, 16, 32, 0.65);
+      background: var(--glass-bg);
       border: 2px solid var(--glass-border);
       padding: 30px;
       border-radius: 24px;
@@ -364,6 +363,7 @@ export class ProjectDetailsComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly portfolioService = inject(PortfolioService);
+  private readonly themeService = inject(ThemeService);
 
   readonly project = signal<any>(null);
   readonly loading = signal<boolean>(true);
@@ -382,6 +382,14 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   private loadProject(userId: string, projectId: string): void {
+    this.portfolioService.getUserProfile(userId).subscribe({
+      next: (profile) => {
+        const { theme } = this.themeService.unpackTemplate(profile?.template);
+        this.themeService.applyTheme(theme);
+      },
+      error: () => {}
+    });
+
     this.portfolioService.getProjects(userId).subscribe({
       next: (projects) => {
         const project = projects.find(p => p.id === parseInt(projectId));

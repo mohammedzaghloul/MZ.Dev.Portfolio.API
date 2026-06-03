@@ -14,6 +14,9 @@ namespace Link.Dev.Profolie.DAL.Data.Configuration.UserConfg
             builder.Property(u => u.About)
                 .HasMaxLength(2000);
 
+            builder.Property(u => u.ResumeUrl)
+                .HasMaxLength(500);
+
             builder.Property(u => u.IsActive)
                 .HasDefaultValue(true);
 

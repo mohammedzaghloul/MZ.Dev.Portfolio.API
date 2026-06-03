@@ -6,8 +6,8 @@ namespace Link.Dev.Profolie.DAL.Model
     {
         public string Title { get; set; } = null!;
         public string Company { get; set; } = null!;
-        public string StartDate { get; set; } = null!;
-        public string? EndDate { get; set; }
+        public DateOnly StartDate { get; set; } 
+        public DateOnly? EndDate { get; set; }
         public string? Description { get; set; }
 
         // FK

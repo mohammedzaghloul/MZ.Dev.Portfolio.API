@@ -870,23 +870,68 @@ import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-
 
     /* Toast Notifications */
     .toast {
+      position: fixed;
+      top: 18px;
+      right: 18px;
+      z-index: 9999;
       animation: slideInRight 0.3s ease;
     }
 
-    .toast.success {
-      border-color: var(--success);
+    .toast-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      min-width: min(320px, calc(100vw - 36px));
+      max-width: min(420px, calc(100vw - 36px));
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      background: rgba(15, 18, 29, 0.9);
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
     }
 
-    .toast.success div {
-      background: linear-gradient(135deg, rgba(0, 255, 163, 0.1), rgba(0, 255, 163, 0.05));
+    .toast-icon {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      font-size: 0.8rem;
     }
 
-    .toast.error {
-      border-color: var(--danger);
+    .toast-message {
+      color: #fff;
+      font-size: 0.88rem;
+      font-weight: 600;
+      line-height: 1.4;
     }
 
-    .toast.error div {
-      background: linear-gradient(135deg, rgba(255, 0, 122, 0.1), rgba(255, 0, 122, 0.05));
+    .toast.success .toast-inner {
+      border-color: rgba(34, 211, 165, 0.25);
+      background: rgba(15, 18, 29, 0.9);
+    }
+
+    .toast.success .toast-icon {
+      background: rgba(34, 211, 165, 0.12);
+      color: #22d3a5;
+      border: 1px solid rgba(34, 211, 165, 0.25);
+      box-shadow: 0 0 12px rgba(34, 211, 165, 0.15);
+    }
+
+    .toast.error .toast-inner {
+      border-color: rgba(244, 63, 94, 0.25);
+      background: rgba(15, 18, 29, 0.9);
+    }
+
+    .toast.error .toast-icon {
+      background: rgba(244, 63, 94, 0.12);
+      color: #f43f5e;
+      border: 1px solid rgba(244, 63, 94, 0.25);
+      box-shadow: 0 0 12px rgba(244, 63, 94, 0.15);
     }
 
     @keyframes slideInRight {
@@ -1127,8 +1172,8 @@ import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-
     @media (min-width: 1025px) {
       .css-workspace-layout.layout-split {
         display: grid !important;
-        grid-template-columns: 1fr 1fr !important;
-        gap: 20px !important;
+        grid-template-columns: minmax(360px, 0.9fr) minmax(460px, 1.1fr) !important;
+        gap: 16px !important;
         flex-direction: row !important;
       }
       
@@ -1147,6 +1192,295 @@ import { CdkDragDrop, moveItemInArray, DragDropModule } from '@angular/cdk/drag-
 
     .preview-iframe-wrapper iframe {
       margin: 0 auto !important; /* Perfect auto-centering when preview fits, robust left-aligned scrolling when it overflows */
+    }
+
+    /* Custom CSS workspace polish */
+    .custom-css-page .section-header {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: flex-start !important;
+      gap: 1rem !important;
+      margin-bottom: 1.5rem !important;
+      text-align: left !important;
+    }
+
+    .custom-css-page .section-title {
+      font-size: 1.65rem !important;
+      margin-bottom: 0.35rem !important;
+      color: var(--text) !important;
+      -webkit-text-fill-color: var(--text) !important;
+    }
+
+    .custom-css-page .section-header p {
+      color: var(--muted) !important;
+      font-size: 0.95rem !important;
+      max-width: 560px;
+    }
+
+    .custom-css-page > .appearance-panel {
+      padding: 1rem !important;
+      border-radius: 18px !important;
+      border: 1px solid color-mix(in srgb, var(--border) 70%, rgba(var(--accent-rgb), 0.3)) !important;
+      background:
+        linear-gradient(135deg, rgba(var(--accent-rgb), 0.08), transparent 34%),
+        linear-gradient(180deg, var(--surface), color-mix(in srgb, var(--surface2) 72%, var(--surface))) !important;
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
+      overflow: hidden;
+    }
+
+    .custom-css-page .appearance-panel-title {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      margin-bottom: 0.7rem !important;
+      color: var(--text) !important;
+      font-size: 1.08rem !important;
+    }
+
+    .custom-css-page .appearance-panel-title + div {
+      color: var(--text-dim) !important;
+      margin-bottom: 0 !important;
+    }
+
+    .custom-css-page .appearance-panel-title + div + div {
+      display: none !important;
+      align-items: flex-start !important;
+      gap: 0.55rem !important;
+      padding: 0.75rem 0.9rem !important;
+      margin-bottom: 1rem !important;
+      border-radius: 12px !important;
+      color: #fecdd3 !important;
+      background: rgba(244, 63, 94, 0.08) !important;
+      border: 1px solid rgba(244, 63, 94, 0.22) !important;
+    }
+
+    .custom-css-page .editor-toolbar {
+      display: flex !important;
+      justify-content: space-between !important;
+      align-items: center !important;
+      background: color-mix(in srgb, var(--surface2) 82%, transparent) !important;
+      border: 1px solid var(--border) !important;
+      border-radius: 14px !important;
+      padding: 0.55rem !important;
+      margin-top: 0.85rem !important;
+      margin-bottom: 0.85rem !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    }
+
+    .custom-css-page .appearance-panel-title + div + div.editor-toolbar {
+      display: flex !important;
+    }
+
+    .custom-css-page .editor-toolbar > div {
+      gap: 0.5rem !important;
+      flex-wrap: wrap !important;
+    }
+
+    .custom-css-page .editor-toolbar span {
+      color: var(--text-dim) !important;
+    }
+
+    .custom-css-page .btn-tool {
+      min-height: 32px !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 0.4rem !important;
+      padding: 0.4rem 0.7rem !important;
+      border-radius: 10px !important;
+      border: 1px solid var(--border) !important;
+      background: rgba(255, 255, 255, 0.035) !important;
+      color: var(--text-dim) !important;
+      font-size: 0.8rem !important;
+      font-weight: 700 !important;
+      text-decoration: none !important;
+      cursor: pointer !important;
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, color 0.2s ease !important;
+    }
+
+    .custom-css-page .btn-tool i,
+    .custom-css-page .section-header .btn i,
+    .custom-css-page .appearance-save-bar .btn i {
+      font-size: 0.82rem;
+      opacity: 0.9;
+    }
+
+    .custom-css-page .btn-tool:hover {
+      transform: translateY(-1px);
+      color: var(--text) !important;
+      border-color: var(--accent2) !important;
+      background: rgba(var(--accent-rgb), 0.1) !important;
+    }
+
+    .custom-css-page .btn-tool[style*="rgba(108, 99, 255, 0.2)"],
+    .custom-css-page .btn-tool[style*="rgba(6, 182, 212, 0.2)"] {
+      color: var(--accent2) !important;
+      border-color: var(--accent2) !important;
+      background: rgba(var(--accent-rgb), 0.16) !important;
+      box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.08);
+    }
+
+    .custom-css-page .css-editor-column,
+    .custom-css-page .css-preview-column {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 0.55rem !important;
+      min-width: 0;
+    }
+
+    .custom-css-page .css-editor-column > div:first-child,
+    .custom-css-page .css-preview-column > div:first-child span:first-child {
+      color: var(--accent2) !important;
+      font-size: 0.86rem !important;
+      font-weight: 800 !important;
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.45rem !important;
+    }
+
+    .custom-css-page .css-preview-column > div:first-child span:nth-child(2) {
+      display: none !important;
+    }
+
+    .custom-css-page textarea {
+      width: 100% !important;
+      height: 100% !important;
+      min-height: 220px !important;
+      padding: 1rem !important;
+      resize: vertical !important;
+      color: #d6ccff !important;
+      caret-color: var(--accent2);
+      background:
+        linear-gradient(180deg, rgba(var(--accent-rgb), 0.05), transparent 140px),
+        #070912 !important;
+      border: 1px solid color-mix(in srgb, var(--border) 70%, rgba(var(--accent-rgb), 0.35)) !important;
+      border-radius: 14px !important;
+      font-family: Consolas, "Courier New", monospace !important;
+      font-size: 0.86rem !important;
+      line-height: 1.65 !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.025), 0 14px 30px rgba(0, 0, 0, 0.22);
+      outline: none;
+    }
+
+    .custom-css-page textarea:focus {
+      border-color: var(--accent2) !important;
+      box-shadow: 0 0 0 3px rgba(var(--accent-rgb), 0.14), inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+    }
+
+    .custom-css-page .css-autocomplete-dropdown {
+      position: absolute !important;
+      bottom: 12px !important;
+      left: 12px !important;
+      right: 12px !important;
+      overflow: hidden !important;
+      border-radius: 12px !important;
+      border: 1px solid var(--border) !important;
+      background: color-mix(in srgb, var(--surface2) 92%, #000) !important;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.44) !important;
+      z-index: 100 !important;
+    }
+
+    .custom-css-page .css-autocomplete-dropdown ul {
+      list-style: none !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    .custom-css-page .css-autocomplete-dropdown > div:first-child {
+      display: flex !important;
+      justify-content: space-between !important;
+      gap: 1rem !important;
+      padding: 0.5rem 0.75rem !important;
+      color: var(--text-dim) !important;
+      font-size: 0.72rem !important;
+      border-bottom: 1px solid var(--border) !important;
+      background: rgba(255, 255, 255, 0.03) !important;
+    }
+
+    .custom-css-page .suggestion-item {
+      display: flex !important;
+      align-items: center !important;
+      justify-content: space-between !important;
+      gap: 1rem !important;
+      padding: 0.65rem 0.75rem !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.03) !important;
+      cursor: pointer !important;
+    }
+
+    .custom-css-page .suggestion-item > div {
+      display: flex !important;
+      align-items: center !important;
+      gap: 0.5rem !important;
+    }
+
+    .custom-css-page .suggestion-item span[style*="font-size: 0.65rem"] {
+      border-radius: 6px !important;
+    }
+
+    .custom-css-page .preview-iframe-wrapper {
+      position: relative !important;
+      display: flex !important;
+      align-items: stretch !important;
+      justify-content: flex-start !important;
+      padding: 0.9rem 0.65rem !important;
+      border-radius: 16px !important;
+      border: 1px solid color-mix(in srgb, var(--border) 70%, rgba(var(--accent2-rgb), 0.28)) !important;
+      background:
+        radial-gradient(circle at 18px 18px, rgba(255,255,255,0.08) 1px, transparent 1.5px),
+        linear-gradient(135deg, #060812, color-mix(in srgb, var(--surface) 35%, #05070d)) !important;
+      background-size: 22px 22px, auto !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 12px 30px rgba(0, 0, 0, 0.24);
+    }
+
+    .custom-css-page .preview-iframe-wrapper iframe {
+      height: 100% !important;
+      display: block !important;
+      background: var(--bg) !important;
+      transition: width 0.28s ease, max-width 0.28s ease, box-shadow 0.28s ease, border-radius 0.28s ease !important;
+    }
+
+    .custom-css-page .appearance-save-bar {
+      margin-top: 0.85rem !important;
+      display: flex !important;
+      align-items: center !important;
+      gap: 1rem !important;
+      flex-wrap: wrap !important;
+    }
+
+    .custom-css-page .appearance-save-bar .btn {
+      border-radius: 12px !important;
+      padding: 0.7rem 1rem !important;
+    }
+
+    .custom-css-page .appearance-save-bar .btn > span {
+      display: inline-flex !important;
+      align-items: center !important;
+      gap: 0.55rem !important;
+    }
+
+    .custom-css-page .appearance-saved-msg {
+      color: var(--success) !important;
+      font-weight: 700 !important;
+    }
+
+    @media (max-width: 768px) {
+      .custom-css-page .section-header {
+        flex-direction: column !important;
+        align-items: stretch !important;
+      }
+
+      .custom-css-page .section-header > div:last-child,
+      .custom-css-page .section-header button {
+        width: 100% !important;
+      }
+
+      .custom-css-page .btn-tool {
+        flex: 1 1 auto !important;
+      }
+
+      .custom-css-page .preview-iframe-wrapper {
+        padding: 0.75rem !important;
+      }
     }
   `]
 })
@@ -1349,7 +1683,9 @@ export class DashboardComponent implements OnInit {
       if (!styleElement) {
         styleElement = iframeDoc.createElement('style');
         styleElement.id = 'live-css-preview';
-        iframeDoc.head.appendChild(styleElement);
+        const target = iframeDoc.head || iframeDoc.getElementsByTagName('head')[0] || iframeDoc.body;
+        if (!target) return;
+        target.appendChild(styleElement);
       }
 
       styleElement.textContent = cssValue;
@@ -1404,29 +1740,33 @@ export class DashboardComponent implements OnInit {
   getInitials(name: string): string {
     if (!name) return '??';
     
-    // Custom check for Mohamed Zaghloul single-word username combinations
-    const lower = name.toLowerCase().trim();
-    if (lower === 'mohammedzaghloul' || lower === 'mohamedzaghloul' || lower === 'mohammed_zaghloul' || lower === 'mohamed_zaghloul') {
-      return 'MZ';
+    // Normalize and handle camelCase or spaced words
+    let processedName = name.trim();
+    
+    // If it is a single camelCase word, split it (e.g. "MohammedZaghloul" -> "Mohammed Zaghloul")
+    if (!processedName.includes(' ') && !processedName.includes('_') && !processedName.includes('-')) {
+      processedName = processedName.replace(/([a-z])([A-Z])/g, '$1 $2');
     }
     
-    const words = name.trim().split(/[\s_\-\.]+/);
-    let initials = '';
-    for (const word of words) {
-      if (word.length > 0) {
-        initials += word.charAt(0).toUpperCase();
+    const words = processedName.split(/[\s_\-\.]+/).filter(w => w.length > 0);
+    
+    if (words.length >= 2) {
+      // First two letters of first word + first two letters of second word (e.g. "MoZa")
+      const first = words[0].substring(0, 2);
+      const second = words[1].substring(0, 2);
+      const formatted = (first.charAt(0).toUpperCase() + first.charAt(1).toLowerCase()) +
+                        (second.charAt(0).toUpperCase() + second.charAt(1).toLowerCase());
+      return formatted;
+    } else if (words.length === 1) {
+      // If it's a single word, take first 4 letters (e.g. "Mohammed" -> "Moha")
+      const word = words[0];
+      if (word.length >= 4) {
+        return word.substring(0, 2).toUpperCase() + word.substring(2, 4).toLowerCase();
       }
-    }
-    if (initials.length >= 2) {
-      return initials.substring(0, 2).toUpperCase();
+      return word.toUpperCase();
     }
     
-    // If it's a single camelCase word, split and extract
-    const parts = name.replace(/([a-z])([A-Z])/g, '$1 $2').trim().split(/\s+/);
-    if (parts.length >= 2) {
-      return (parts[0].charAt(0) + parts[1].charAt(0)).toUpperCase();
-    }
-    return name.substring(0, Math.min(name.length, 2)).toUpperCase();
+    return '??';
   }
 
   formatUserName(name: string): string {
@@ -1463,6 +1803,10 @@ export class DashboardComponent implements OnInit {
         this.themeService.applyTheme(theme);
         this.themeService.applyVisibility(vis);
 
+        // Inject custom CSS into live preview iframe on load
+        const rawCss = this.decodeCss(vis.custom_css || '');
+        this.injectCssIntoIframe(rawCss);
+
         // Load other items
         this.loadProjects();
         this.loadSkills();
@@ -1483,11 +1827,16 @@ export class DashboardComponent implements OnInit {
     const newStatus = !this.profile().isActive;
     const action = newStatus ? 'activate' : 'deactivate';
 
+    const themeStr = this.themeService.currentTheme();
+    const vis = this.themeService.visibility();
+    const packed = this.themeService.packTemplate(themeStr, vis);
+
     const formData = new FormData();
-    formData.append('userName', this.profile().userName || '');
-    formData.append('title', this.profile().title || '');
-    formData.append('about', this.profile().about || '');
-    formData.append('isActive', newStatus.toString());
+    formData.append('UserName', this.profile().userName || '');
+    formData.append('Title', this.profile().title || '');
+    formData.append('About', this.profile().about || '');
+    formData.append('IsActive', newStatus.toString());
+    formData.append('Template', packed);
 
     console.log('Updating portfolio status to:', newStatus);
 
@@ -1584,10 +1933,16 @@ export class DashboardComponent implements OnInit {
   readonly showContactModal = signal<boolean>(false);
   readonly showDeleteModal = signal<boolean>(false);
   readonly showCssGuideModal = signal<boolean>(false);
+  readonly showCertViewerModal = signal<boolean>(false);
+  readonly activeCertViewerUrl = signal<string>('');
+  readonly safeCertPdfUrl = signal<any | null>(null);
 
   // File Upload State
   selectedProfileImgFile: File | null = null;
   profileImgPreviewUrl: string | null = null;
+  removeProfileImgRequested = false;
+  selectedResumeFile: File | null = null;
+  removeResumeRequested = false;
 
   selectedProjectImgFile: File | null = null;
   projectImgPreviewUrl: string | null = null;
@@ -1686,7 +2041,7 @@ export class DashboardComponent implements OnInit {
 
   getUserInitials(): string {
     const p = this.profile();
-    return p ? (p.userName || '?')[0].toUpperCase() : '?';
+    return p ? this.getInitials(p.userName || p.email || '') : '?';
   }
 
   getProfileImageUrl(): string {
@@ -1700,14 +2055,20 @@ export class DashboardComponent implements OnInit {
     return img.startsWith('/') ? `${this.portfolioService.apiHost}${img}` : img;
   }
 
+  get fullPortfolioUrl(): string {
+    const uid = this.authService.userId();
+    if (!uid) return '';
+    return `${window.location.protocol}//${window.location.host}/portfolio/${uid}`;
+  }
+
   copyProfileLink(): void {
     const uid = this.authService.userId();
     const url = `${window.location.protocol}//${window.location.host}/portfolio/${uid}`;
     navigator.clipboard.writeText(url).then(() => {
-      this.showToast('✅ Profile link copied to clipboard!', 'success');
+      this.showToast('Profile link copied to clipboard', 'success');
     }).catch((err: any) => {
       console.error('Copy failed:', err);
-      this.showToast('❌ Failed to copy profile link', 'error');
+      this.showToast('Failed to copy profile link', 'error');
     });
   }
 
@@ -1720,7 +2081,7 @@ export class DashboardComponent implements OnInit {
     const mailto = `mailto:${email}`;
     navigator.clipboard.writeText(mailto).then(() => {
       this.copiedMail.set(true);
-      this.showToast('📧 Direct email link copied to clipboard!', 'success');
+      this.showToast('Direct email link copied to clipboard', 'success');
       setTimeout(() => this.copiedMail.set(false), 2000);
     });
   }
@@ -1730,7 +2091,7 @@ export class DashboardComponent implements OnInit {
     const url = `${window.location.protocol}//${window.location.host}/portfolio/${uid}`;
     navigator.clipboard.writeText(url).then(() => {
       this.copiedWeb.set(true);
-      this.showToast('🔗 Portfolio link copied to clipboard!', 'success');
+      this.showToast('Portfolio link copied to clipboard', 'success');
       setTimeout(() => this.copiedWeb.set(false), 2000);
     });
   }
@@ -1770,6 +2131,9 @@ export class DashboardComponent implements OnInit {
       });
       this.profileImgPreviewUrl = this.getProfileImageUrl();
       this.selectedProfileImgFile = null;
+      this.removeProfileImgRequested = false;
+      this.selectedResumeFile = null;
+      this.removeResumeRequested = false;
     }
     this.showProfileModal.set(true);
   }
@@ -1779,42 +2143,95 @@ export class DashboardComponent implements OnInit {
     if (file) {
       this.selectedProfileImgFile = file;
       this.profileImgPreviewUrl = URL.createObjectURL(file);
+      this.removeProfileImgRequested = false;
     }
   }
 
   removeProfileImage(): void {
     this.selectedProfileImgFile = null;
     this.profileImgPreviewUrl = null;
+    this.removeProfileImgRequested = true;
+  }
+
+  onResumeFileSelected(event: any): void {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    const allowedTypes = [
+      'application/pdf',
+      'application/msword',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    ];
+    const allowedExtensions = ['.pdf', '.doc', '.docx'];
+    const extension = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+
+    if (!allowedTypes.includes(file.type) && !allowedExtensions.includes(extension)) {
+      this.showToast('Resume must be PDF, DOC, or DOCX', 'error');
+      event.target.value = '';
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      this.showToast('Resume file must be 5MB or less', 'error');
+      event.target.value = '';
+      return;
+    }
+
+    this.selectedResumeFile = file;
+    this.removeResumeRequested = false;
+  }
+
+  removeResume(): void {
+    this.selectedResumeFile = null;
+    this.removeResumeRequested = true;
+  }
+
+  getResumeUrl(): string {
+    const resumeUrl = this.profile()?.resumeUrl || '';
+    if (!resumeUrl) return '';
+    return resumeUrl.startsWith('/') ? `${this.portfolioService.apiHost}${resumeUrl}` : resumeUrl;
   }
 
   handleSaveProfile(): void {
     if (this.profileForm.invalid) return;
     this.isSubmitting.set(true);
 
-    // Sanitize username to remove spaces
     let userName = this.profileForm.get('userName')?.value || '';
+    userName = userName.trim();
+    // Remove all spaces from username to make it clean & valid for route parsing
     userName = userName.replace(/\s+/g, '');
 
     const form = new FormData();
-    form.append('userName', userName);
-    form.append('title', this.profileForm.get('title')?.value || '');
-    form.append('email', this.profileForm.get('email')?.value || '');
-    form.append('about', this.profileForm.get('about')?.value || '');
+    form.append('UserName', userName);
+    form.append('Title', this.profileForm.get('title')?.value || '');
+    form.append('Email', this.profileForm.get('email')?.value || '');
+    form.append('About', this.profileForm.get('about')?.value || '');
 
     // Pack current visibility
     const themeStr = this.profileForm.get('template')?.value || '1';
     const vis = this.themeService.visibility();
     const packed = this.themeService.packTemplate(themeStr, vis);
-    form.append('template', packed);
+    form.append('Template', packed);
+    form.append('RemoveImage', String(this.removeProfileImgRequested && !this.selectedProfileImgFile));
+    form.append('RemoveResume', String(this.removeResumeRequested && !this.selectedResumeFile));
 
     if (this.selectedProfileImgFile) {
-      form.append('imageFile', this.selectedProfileImgFile);
+      form.append('ImageFile', this.selectedProfileImgFile);
+    }
+
+    if (this.selectedResumeFile) {
+      form.append('ResumeFile', this.selectedResumeFile);
     }
 
     this.portfolioService.updateUserProfile(form).subscribe({
       next: (res) => {
         this.profile.set(res);
         this.themeService.applyTheme(themeStr);
+        this.removeProfileImgRequested = false;
+        this.removeResumeRequested = false;
+        this.selectedProfileImgFile = null;
+        this.selectedResumeFile = null;
+        this.profileImgPreviewUrl = res?.image ? (res.image.startsWith('/') ? `${this.portfolioService.apiHost}${res.image}` : res.image) : null;
         this.isSubmitting.set(false);
         this.showProfileModal.set(false);
       },
@@ -2081,12 +2498,23 @@ export class DashboardComponent implements OnInit {
 
   private submitExperience(id: number, uid: string, description: string): void {
     const isCurrentRole = this.experienceForm.get('isCurrentRole')?.value || false;
+    let startDate = this.experienceForm.get('startDate')?.value || '';
+    let endDate = isCurrentRole ? null : (this.experienceForm.get('endDate')?.value || '');
+
+    // Convert YYYY-MM to YYYY-MM-DD for backend DateOnly parsing
+    if (startDate && startDate.length === 7) {
+      startDate = `${startDate}-01`;
+    }
+    if (endDate && endDate.length === 7) {
+      endDate = `${endDate}-01`;
+    }
+
     const payload = {
       id,
       title: this.experienceForm.get('title')?.value || '',
       company: this.experienceForm.get('company')?.value || '',
-      startDate: this.experienceForm.get('startDate')?.value || '',
-      endDate: isCurrentRole ? null : (this.experienceForm.get('endDate')?.value || ''),
+      startDate: startDate,
+      endDate: endDate,
       description,
       userId: uid
     };
@@ -2119,6 +2547,42 @@ export class DashboardComponent implements OnInit {
   getCleanExpDesc(desc: string): string {
     if (!desc) return '';
     return desc.replace(/\[CERTIFICATE:(.+?)\]/, '').trim();
+  }
+
+  getExpCertUrl(desc: string): string {
+    if (!desc) return '';
+    const match = desc.match(/\[CERTIFICATE:(.+?)\]/);
+    if (!match) return '';
+    const url = match[1];
+    return url.startsWith('/') ? `${this.portfolioService.apiHost}${url}` : url;
+  }
+
+  openCertViewerModal(url: string): void {
+    this.activeCertViewerUrl.set(url);
+    if (url.toLowerCase().endsWith('.pdf')) {
+      const pdfUrl = url.includes('#') ? url : `${url}#view=FitH`;
+      this.safeCertPdfUrl.set(this.sanitizer.bypassSecurityTrustResourceUrl(pdfUrl));
+    } else {
+      this.safeCertPdfUrl.set(null);
+    }
+    this.showCertViewerModal.set(true);
+  }
+
+  closeCertViewerModal(): void {
+    this.showCertViewerModal.set(false);
+    this.activeCertViewerUrl.set('');
+    this.safeCertPdfUrl.set(null);
+  }
+
+  getDownloadUrl(url: string | null): string {
+    if (!url) return '';
+    if (url.includes('?view=true')) {
+      return url.replace('?view=true', '?download=true');
+    }
+    if (url.includes('?download=true')) {
+      return url;
+    }
+    return url + '?download=true';
   }
 
   // Contacts
@@ -2221,6 +2685,30 @@ export class DashboardComponent implements OnInit {
     }
   }
 
+  getCleanHandle(value: string): string {
+    if (!value) return '';
+    let val = value.trim();
+    if (val.startsWith('http://') || val.startsWith('https://')) {
+      try {
+        const url = new URL(val);
+        let path = url.pathname.replace(/^\/|\/$/g, '');
+        if (url.hostname.includes('linkedin.com')) {
+          path = path.replace(/^in\//, '');
+        }
+        if (url.hostname.includes('tiktok.com')) {
+          path = path.replace(/^@/, '');
+        }
+        return path || url.hostname;
+      } catch {
+        return val;
+      }
+    }
+    if (val.includes('@')) {
+      return val.split('@')[0];
+    }
+    return val;
+  }
+
   formatGeneralUrl(value: string): string {
     if (!value) return '';
     let val = value.trim();
@@ -2248,10 +2736,10 @@ export class DashboardComponent implements OnInit {
     const packed = this.themeService.packTemplate(themeStr, vis);
 
     const form = new FormData();
-    form.append('userName', p.userName || '');
-    form.append('title', p.title || '');
-    form.append('about', p.about || '');
-    form.append('template', packed);
+    form.append('UserName', p.userName || '');
+    form.append('Title', p.title || '');
+    form.append('About', p.about || '');
+    form.append('Template', packed);
 
     this.portfolioService.updateUserProfile(form).subscribe({
       next: (res) => {
@@ -2437,10 +2925,10 @@ export class DashboardComponent implements OnInit {
     const packed = this.themeService.packTemplate(themeStr, vis);
 
     const form = new FormData();
-    form.append('userName', p.userName || '');
-    form.append('title', p.title || '');
-    form.append('about', p.about || '');
-    form.append('template', packed);
+    form.append('UserName', p.userName || '');
+    form.append('Title', p.title || '');
+    form.append('About', p.about || '');
+    form.append('Template', packed);
 
     this.portfolioService.updateUserProfile(form).subscribe({
       next: (res) => {
@@ -2495,4 +2983,27 @@ export class DashboardComponent implements OnInit {
       });
     }
   }
+
+  formatDateString(dateString: string): string {
+    if (!dateString || dateString.toLowerCase() === 'present') {
+      return 'Present';
+    }
+    let cleanDateString = dateString;
+    if (/^\d{4}-\d{2}$/.test(dateString)) {
+      cleanDateString = `${dateString}-01`;
+    }
+    const date = new Date(cleanDateString);
+    if (isNaN(date.getTime())) {
+      return dateString;
+    }
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'short' });
+  }
+
+  getExperienceDateRange(exp: any): string {
+    const start = this.formatDateString(exp.startDate);
+    const end = exp.endDate ? this.formatDateString(exp.endDate) : 'Present';
+    if (start === end) return start;
+    return `${start} - ${end}`;
+  }
 }
+

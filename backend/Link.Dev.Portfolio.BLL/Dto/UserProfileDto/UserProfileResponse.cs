@@ -8,6 +8,7 @@ namespace Link.Dev.Profolie.BLL.Dto.UserProfileDto
         public string? Title { get; set; }
         public string? About { get; set; }
         public string? Image { get; set; }
+        public string? ResumeUrl { get; set; }
         public bool IsActive { get; set; }
         public string Template { get; set; } = "1";
     }
